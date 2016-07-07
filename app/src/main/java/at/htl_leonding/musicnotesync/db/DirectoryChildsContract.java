@@ -6,14 +6,14 @@ package at.htl_leonding.musicnotesync.db;
 public final class DirectoryChildsContract {
     private DirectoryChildsContract(){}
 
-    public static final String TABLE = "DIRECTORY_CHILD";
+    public static final String TABLE = "MNS_DIRECTORY_CHILD";
     public static final String SEPERATOR = DatabaseContract.SEPERATOR;
     public static final String CREATE = "CREATE TABLE " + TABLE + "(" +
             DirectoryChildsEntry.COLUMN_PARENT_ID + " INTEGER NOT NULL" + SEPERATOR +
             DirectoryChildsEntry.COLUMN_CHILD_ID + " INTEGER NOT NULL" + SEPERATOR +
-            "FOREIGN KEY " + DirectoryChildsEntry.COLUMN_PARENT_ID + "REFERENCES " +
+            "FOREIGN KEY (" + DirectoryChildsEntry.COLUMN_PARENT_ID + ") REFERENCES " +
                 DirectoryContract.TABLE + "(" + DirectoryContract.DirectoryEntry._ID + ")" + SEPERATOR +
-            "FOREIGN KEY " + DirectoryChildsEntry.COLUMN_CHILD_ID + "REFERENCES " +
+            "FOREIGN KEY (" + DirectoryChildsEntry.COLUMN_CHILD_ID + ") REFERENCES " +
             DirectoryContract.TABLE + "(" + DirectoryContract.DirectoryEntry._ID + ")" +
             ");";
     public static final String DROP = "DROP TABLE IF EXISTS " + TABLE + ";";

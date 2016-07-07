@@ -18,7 +18,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(DatabaseContract.CREATE);
+        sqLiteDatabase.execSQL(DirectoryContract.CREATE);
+        sqLiteDatabase.execSQL(NotesheetContract.CREATE);
+        sqLiteDatabase.execSQL(DirectoryChildsContract.CREATE);
     }
 
     /**
@@ -30,11 +32,16 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL(DatabaseContract.DROP);
+        sqLiteDatabase.execSQL(DirectoryContract.DROP);
+        sqLiteDatabase.execSQL(NotesheetContract.DROP);
+        sqLiteDatabase.execSQL(DirectoryChildsContract.DROP);
         onCreate(sqLiteDatabase);
     }
 
     public void dropDatabase(){
-        this.getWritableDatabase().execSQL(DatabaseContract.DROP);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(DirectoryContract.DROP);
+        db.execSQL(NotesheetContract.DROP);
+        db.execSQL(DirectoryChildsContract.DROP);
     }
 }

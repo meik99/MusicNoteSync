@@ -14,6 +14,7 @@ public final class NotesheetContract {
     public static final String TABLE = "MNS_NOTESHEET";
     public static final String SEPERATOR = DatabaseContract.SEPERATOR;
     public static final String CREATE = "CREATE TABLE " + TABLE + "(" +
+            NotesheetEntry._ID + " INTEGER PRIMARY KEY" + SEPERATOR +
             NotesheetEntry.COLUMN_DIRECTORY_ID + " INTEGER NOT NULL" + SEPERATOR +
             NotesheetEntry.COLUMN_FILE_NAME + " TEXT NOT NULL" + SEPERATOR +
             "FOREIGN KEY(" + NotesheetEntry.COLUMN_DIRECTORY_ID + ")" +

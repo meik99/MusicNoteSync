@@ -14,7 +14,7 @@ public final class DirectoryContract {
     public static final String CREATE = "CREATE TABLE " + TABLE + "(" +
             DirectoryEntry._ID + " INTEGER PRIMARY KEY" + SEPERATOR +
             DirectoryEntry.COLUMN_DIR_NAME + " TEXT NOT NULL CHECK(length(" +
-                DirectoryEntry.COLUMN_DIR_NAME + ") > 0)" + SEPERATOR
+                DirectoryEntry.COLUMN_DIR_NAME + ") > 0)"
             + ");";
 
     public static final String DROP = "DROP TABLE IF EXISTS " + TABLE + ";";
