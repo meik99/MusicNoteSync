@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
+import at.htl_leonding.musicnotesync.io.Storage;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,12 +40,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Dialog selectTypeDialog = new Dialog(MainActivity.this);
-//                selectTypeDialog.requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
-//                selectTypeDialog.setContentView(R.layout.select_format_dialog);
-//                selectTypeDialog.setTitle(getString(R.string.select_format));
-//                selectTypeDialog.show();
-
                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.select_format_dialog, null);
@@ -77,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onActivityResult: Camera intent closed");
                 if(resultCode == RESULT_OK && mPhotoFile != null && mPhotoFile.exists()){
                     Log.d(TAG, "onActivityResult: Photo exists");
+                    Storage storage = new Storage(this);
+                    storage.copyFileToInternalStorage(mPhotoFile, "camera", null);
                 }
                 break;
         }
