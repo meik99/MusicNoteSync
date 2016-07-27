@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class CameraIntentHelper {
                 extension,
                 storageDir
         );
-
+        Log.w(CameraIntentHelper.class.getSimpleName(), "Nicememe");
         return image;
     }
 
