@@ -1,6 +1,7 @@
 package at.htl_leonding.musicnotesync.io;
 
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -34,6 +35,28 @@ public class Storage {
         this.context = context;
         this.INTERNAL_STORAGE = this.context.getFilesDir();
         this.EXTERNAL_STORAGE = this.context.getExternalFilesDir(null);
+    }
+
+    /**
+     * Creates a temporary file.
+     * Can be used to store a picture taken by
+     * a camera-intent
+     * @param filename Filename of created file. If null, 'tmp_file' will be used
+     * @param extension Extension for created file. If null, no extension will be added
+     * @return Returns created file
+     * @throws IOException Throws if File cannot be created for whatever reason
+     */
+    public static File createTemporaryStorageFile(@Nullable String filename, @Nullable String extension) throws IOException {
+        filename = filename == null ? "tmp_file" : filename;
+        extension = extension == null ? "" : extension;
+
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                filename,
+                extension,
+                storageDir
+        );
+        return image;
     }
 
     /**

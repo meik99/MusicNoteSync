@@ -1,6 +1,7 @@
 package at.htl_leonding.musicnotesync;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +17,9 @@ import at.htl_leonding.musicnotesync.io.Storage;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private MainController controller;
     private File mPhotoFile = null;
 
     @Override
@@ -27,36 +28,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        controller = new MainController(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new FabOnClickListener(this));
+        fab.setOnClickListener(controller.getFabListener());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case CameraIntentHelper.REQUEST_CODE:
-                Log.d(TAG, "onActivityResult: Camera intent closed");
-                if(resultCode == RESULT_OK && mPhotoFile != null && mPhotoFile.exists()){
-                    Log.d(TAG, "onActivityResult: Photo exists");
-                    Storage storage = new Storage(this);
-                    storage.copyFileToInternalStorage(mPhotoFile, "camera", null);
-                }
+                controller.storeFileFromCameraIntent(resultCode);
+                break;
+            case FabOnClickListener.SELECT_FILE_REQUEST_CODE:
+                controller.storeFileFromFileChooser(resultCode,
+                        data.getData().getPath());
                 break;
         }
         
         super.onActivityResult(requestCode, resultCode, data);
     }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        switch (requestCode){
-//            case PermissionHelper.CAMERA_REQUEST_CODE:
-//
-//                break;
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,14 +71,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    protected void onResume() {
-//        if(mSelectFormatDialog != null){
-//            mSelectFormatDialog.dismiss();
-//            mSelectFormatDialog = null;
-//        }
-//
-//        super.onResume();
-//    }
+    @Override
+    protected void onResume() {
+        controller.dismissDialog();
+        super.onResume();
+    }
 
 }

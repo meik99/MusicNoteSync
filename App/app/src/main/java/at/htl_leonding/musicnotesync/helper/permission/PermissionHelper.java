@@ -13,8 +13,7 @@ import android.support.v13.app.ActivityCompat;
 public class PermissionHelper {
     private PermissionHelper(){}
 
-    public static final int STANDARD_REQUEST_CODE = 2;
-    public static final int CAMERA_REQUEST_CODE = 3;
+    public static final int STANDARD_PERMISSION_REQUEST_CODE = 2;
 
 
     public static boolean verifyPermissions(@NonNull Activity activity, String[] permissions){
@@ -30,7 +29,7 @@ public class PermissionHelper {
         }
 
         if(permissionsGranted == false){
-            ActivityCompat.requestPermissions(activity, permissions, STANDARD_REQUEST_CODE);
+            ActivityCompat.requestPermissions(activity, permissions, STANDARD_PERMISSION_REQUEST_CODE);
         }
 
         return permissionsGranted;

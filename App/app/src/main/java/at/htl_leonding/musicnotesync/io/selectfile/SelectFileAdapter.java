@@ -19,13 +19,13 @@ public class SelectFileAdapter extends RecyclerView.Adapter {
     private List<File> mFiles;
 
     public class SelectFileViewHolder extends RecyclerView.ViewHolder{
-        private TextView txtSelectFileElementFileName;
+        private TextView txtFileChooserFileName;
 
         public SelectFileViewHolder(View itemView)
         {
             super(itemView);
-            this.txtSelectFileElementFileName =
-                    (TextView) itemView.findViewById(R.id.txtSelectFileElementFileName);
+            this.txtFileChooserFileName =
+                    (TextView) itemView.findViewById(R.id.txtFileChooserFileName);
         }
     }
 
@@ -42,7 +42,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        TextView txtFileName = ((SelectFileViewHolder) holder).txtSelectFileElementFileName;
+        TextView txtFileName = ((SelectFileViewHolder) holder).txtFileChooserFileName;
         txtFileName.setText(mFiles.get(position).getAbsolutePath());
     }
 

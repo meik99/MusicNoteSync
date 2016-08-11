@@ -3,14 +3,13 @@ package at.htl_leonding.musicnotesync.helper.intent;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+
+import at.htl_leonding.musicnotesync.io.Storage;
 
 /**
  * Created by michael on 07.07.16.
@@ -19,29 +18,6 @@ public class CameraIntentHelper {
     private CameraIntentHelper(){}
 
     public static final int REQUEST_CODE = 1;
-
-    /**
-     * Creates a temporary file.
-     * Can be used to store a picture taken by
-     * a camera-intent
-     * @param filename Filename of created file. If null, 'tmp_file' will be used
-     * @param extension Extension for created file. If null, no extension will be added
-     * @return Returns created file
-     * @throws IOException Throws if File cannot be created for whatever reason
-     */
-    public static File createStorageFile(@Nullable String filename, @Nullable String extension) throws IOException {
-        filename = filename == null ? "tmp_file" : filename;
-        extension = extension == null ? "" : extension;
-
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                filename,
-                extension,
-                storageDir
-        );
-        Log.w(CameraIntentHelper.class.getSimpleName(), "Nicememe");
-        return image;
-    }
 
     /**
      * Creates a camera-intent and dispatches it. The intent stores the picture taken into
@@ -82,7 +58,7 @@ public class CameraIntentHelper {
         //Creates a storage file and calls dispatch-method
         return CameraIntentHelper.dispatchTakePictureIntent(
                     rootActivity,
-                    CameraIntentHelper.createStorageFile(null, ".jpg"));
+                    Storage.createTemporaryStorageFile(null, ".jpg"));
     }
 
 

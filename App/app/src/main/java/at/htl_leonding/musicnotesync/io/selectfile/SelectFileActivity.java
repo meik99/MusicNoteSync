@@ -25,7 +25,6 @@ public class SelectFileActivity extends AppCompatActivity {
         mFileChooserRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mFileChooserRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mFileChooserRecyclerView.setAdapter(new SelectFileAdapter(this,
-
                 mStorage.getDirectoryContent(null)));
 
     }
