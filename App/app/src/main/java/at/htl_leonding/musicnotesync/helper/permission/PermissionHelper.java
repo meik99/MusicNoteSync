@@ -47,4 +47,13 @@ public class PermissionHelper {
                 }
         );
     }
+
+    public static boolean verifySelectFilePermissions(@NonNull Activity activity){
+        return verifyPermissions(
+                activity,
+                new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                }
+        );
+    }
 }

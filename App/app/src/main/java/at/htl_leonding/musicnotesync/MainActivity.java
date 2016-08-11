@@ -1,33 +1,25 @@
 package at.htl_leonding.musicnotesync;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import java.io.File;
-import java.io.IOException;
 
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
-import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.io.Storage;
+import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private File mPhotoFile = null;
-    private Dialog mSelectFormatDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,32 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.select_format_dialog, null);
-
-                Button btnTakePicture = (Button) dialogView.findViewById(R.id.btnTakePicture);
-                btnTakePicture.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        boolean granted = PermissionHelper.verifyCameraPermissions(MainActivity.this);
-                        if(granted == true) {
-                            dispatchCameraIntent();
-                        }
-                    }
-                });
-
-                builder.setView(dialogView);
-                builder.setTitle(getString(R.string.select_format));
-
-
-                mSelectFormatDialog = builder.create();
-                mSelectFormatDialog.show();
-            }
-        });
+        fab.setOnClickListener(new FabOnClickListener(this));
     }
 
     @Override
@@ -80,16 +47,16 @@ public class MainActivity extends AppCompatActivity {
         
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case PermissionHelper.CAMERA_REQUEST_CODE:
-                dispatchCameraIntent();
-                break;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        switch (requestCode){
+//            case PermissionHelper.CAMERA_REQUEST_CODE:
+//
+//                break;
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,21 +80,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        if(mSelectFormatDialog != null){
-            mSelectFormatDialog.dismiss();
-            mSelectFormatDialog = null;
-        }
+//    @Override
+//    protected void onResume() {
+//        if(mSelectFormatDialog != null){
+//            mSelectFormatDialog.dismiss();
+//            mSelectFormatDialog = null;
+//        }
+//
+//        super.onResume();
+//    }
 
-        super.onResume();
-    }
-
-    private void dispatchCameraIntent(){
-        try {
-            mPhotoFile = CameraIntentHelper.dispatchTakePictureIntent(MainActivity.this);
-        } catch (IOException e) {
-            Log.e(TAG, "onClick: " + e.getMessage());
-        }
-    }
 }

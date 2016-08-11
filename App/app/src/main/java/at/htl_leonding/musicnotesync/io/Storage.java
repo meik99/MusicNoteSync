@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by michael on 09.07.16.
@@ -20,6 +22,7 @@ public class Storage {
     private Context context;
 
     private final File INTERNAL_STORAGE;
+    private final File EXTERNAL_STORAGE;
 
     private static final String TAG = Storage.class.getSimpleName();
 
@@ -30,6 +33,7 @@ public class Storage {
 
         this.context = context;
         this.INTERNAL_STORAGE = this.context.getFilesDir();
+        this.EXTERNAL_STORAGE = this.context.getExternalFilesDir(null);
     }
 
     /**
@@ -112,5 +116,17 @@ public class Storage {
 
         in.close();
         out.close();
+    }
+
+    public List<File> getDirectoryContent(File directory){
+        List<File> result = new LinkedList<>();
+        File[] files = directory != null ? directory.listFiles() :
+                                            EXTERNAL_STORAGE.listFiles();
+
+        for(File file : files){
+            result.add(file);
+        }
+
+        return result;
     }
 }

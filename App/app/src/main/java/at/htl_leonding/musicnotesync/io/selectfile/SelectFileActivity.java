@@ -7,20 +7,26 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.io.Storage;
 
 public class SelectFileActivity extends AppCompatActivity {
 
-    RecyclerView fileChooserRecyclerView;
+    RecyclerView mFileChooserRecyclerView;
+    Storage mStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_file);
 
-        fileChooserRecyclerView = (RecyclerView) findViewById(R.id.fileChooserRecyclerView);
-        fileChooserRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        fileChooserRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fileChooserRecyclerView.setAdapter(new SelectFileAdapter());
+        mStorage = new Storage(this);
+
+        mFileChooserRecyclerView = (RecyclerView) findViewById(R.id.fileChooserRecyclerView);
+        mFileChooserRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mFileChooserRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mFileChooserRecyclerView.setAdapter(new SelectFileAdapter(this,
+
+                mStorage.getDirectoryContent(null)));
 
     }
 }
