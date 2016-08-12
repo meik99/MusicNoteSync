@@ -9,5 +9,6 @@ public interface Directory {
     long getId();
     String getName();
     List<Directory> getChildren();
+    List<Notesheet> getNotesheets();
     Directory getParent();
 }

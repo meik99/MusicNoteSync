@@ -4,6 +4,7 @@
  */
 package at.htl_leonding.musicnotesync.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -21,6 +22,17 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(DirectoryContract.CREATE);
         sqLiteDatabase.execSQL(NotesheetContract.CREATE);
         sqLiteDatabase.execSQL(DirectoryChildsContract.CREATE);
+
+        ContentValues cvs = new ContentValues();
+        cvs.put(DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME, "ROOT");
+
+        sqLiteDatabase.insert(DirectoryContract.TABLE, null, cvs);
+
+        cvs = new ContentValues();
+        cvs.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID, -1);
+        cvs.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID, -1);
+
+        sqLiteDatabase.insert(DirectoryChildsContract.TABLE, null, cvs);
     }
 
     /**

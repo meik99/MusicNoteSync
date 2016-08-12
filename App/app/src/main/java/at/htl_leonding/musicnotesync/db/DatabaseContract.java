@@ -8,7 +8,7 @@ public final class DatabaseContract {
 
     public static final String SEPERATOR = ",";
     public static final String DATABASE = "MUSICNOTESYNC.db";
-    public static final int VERSION = 6;
+    public static final int VERSION = 9;
 
 //    public static final String DROP =
 //            DirectoryChildsContract.DROP +

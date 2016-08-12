@@ -10,6 +10,8 @@ import android.view.View;
 import java.io.File;
 import java.io.FileDescriptor;
 
+import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
+import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.io.Storage;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 
@@ -25,6 +27,9 @@ public class MainController {
         this.model = new MainModel();
         this.model.setActivity(activity);
         this.model.setListener(new FabOnClickListener(this.model.getActivity()));
+
+        DirectoryFacade df = new DirectoryFacade(activity);
+        df.getRoot();
     }
 
     public View.OnClickListener getFabListener() {
@@ -94,6 +99,9 @@ public class MainController {
         Log.d(TAG, "storePhotoFile: Photo exists");
         Storage storage = new Storage(this.model.getActivity());
         storage.copyFileToInternalStorage(this.model.getPhotoFile(), directory, null);
+
+        NotesheetFacade nf = new NotesheetFacade(this.model.getActivity());
+        nf.insertNotesheet(null, this.model.getPhotoFile().getName());
     }
 
     public void dismissDialog(){

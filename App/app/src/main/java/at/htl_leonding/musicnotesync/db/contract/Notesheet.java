@@ -5,4 +5,5 @@ package at.htl_leonding.musicnotesync.db.contract;
  */
 public interface Notesheet {
     String getName();
+    long getId();
 }

@@ -15,9 +15,7 @@ public final class DirectoryContract {
             DirectoryEntry._ID + " INTEGER PRIMARY KEY" + SEPERATOR +
             DirectoryEntry.COLUMN_DIR_NAME + " TEXT NOT NULL CHECK(length(" +
                 DirectoryEntry.COLUMN_DIR_NAME + ") > 0)"
-            + ");" +
-            "INSERT INTO " + TABLE + "(" + DirectoryEntry.COLUMN_DIR_NAME + ") VALUES " +
-            "('ROOT');";
+            + ");";
 
     public static final String DROP = "DROP TABLE IF EXISTS " + TABLE + ";";
 
