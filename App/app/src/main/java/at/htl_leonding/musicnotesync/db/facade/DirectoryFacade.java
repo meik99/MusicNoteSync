@@ -95,7 +95,7 @@ public class DirectoryFacade {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query =
-                "select * from " + DirectoryContract.TABLE
+                "select * from " + DirectoryContract.TABLE + ", " + DirectoryChildsContract.TABLE
                 + " where " + DirectoryContract.DirectoryEntry._ID
                 + " = " + DirectoryChildsContract.TABLE + "."  +
                         DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID

@@ -29,8 +29,8 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.insert(DirectoryContract.TABLE, null, cvs);
 
         cvs = new ContentValues();
-        cvs.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID, -1);
-        cvs.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID, -1);
+        cvs.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID, 1);
+        cvs.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID, 1);
 
         sqLiteDatabase.insert(DirectoryChildsContract.TABLE, null, cvs);
     }
@@ -44,16 +44,16 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL(DirectoryContract.DROP);
-        sqLiteDatabase.execSQL(NotesheetContract.DROP);
         sqLiteDatabase.execSQL(DirectoryChildsContract.DROP);
+        sqLiteDatabase.execSQL(NotesheetContract.DROP);
+        sqLiteDatabase.execSQL(DirectoryContract.DROP);
         onCreate(sqLiteDatabase);
     }
 
     public void dropDatabase(){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(DirectoryContract.DROP);
-        db.execSQL(NotesheetContract.DROP);
         db.execSQL(DirectoryChildsContract.DROP);
+        db.execSQL(NotesheetContract.DROP);
+        db.execSQL(DirectoryContract.DROP);
     }
 }
