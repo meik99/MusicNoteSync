@@ -5,19 +5,29 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.File;
+import java.util.List;
 
+import at.htl_leonding.musicnotesync.adapter.NotesheetArrayAdapter;
+import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.io.Storage;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private RecyclerView noteSheetRecyclerView;
+    private NotesheetArrayAdapter adapter;
+    private DirectoryFacade dirFacade;
 
     private MainController controller;
     private File mPhotoFile = null;
@@ -32,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(controller.getFabListener());
+
+        dirFacade = new DirectoryFacade(this);
+        adapter = new NotesheetArrayAdapter(dirFacade.getRoot().getNotesheets());
+        noteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
+        noteSheetRecyclerView.setAdapter(adapter);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        noteSheetRecyclerView.setLayoutManager(llm);
     }
 
     @Override
@@ -73,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        adapter.setSheets(dirFacade.getRoot().getNotesheets());
+        adapter.notifyDataSetChanged();
         controller.dismissDialog();
         super.onResume();
     }
