@@ -85,6 +85,9 @@ public class DirectoryFacade {
             return result;
         }
 
+        dbHelper.closeCursor(cursor);
+        db.close();
+
         return null;
     }
 
@@ -103,9 +106,10 @@ public class DirectoryFacade {
                         DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID
                 + " = " + directory.getId();
 
+        Cursor cursor = null;
         try {
 
-            Cursor cursor = db.rawQuery(query, null);
+            cursor = db.rawQuery(query, null);
 
 
             if (cursor != null && cursor.moveToFirst() == true) {
@@ -114,6 +118,11 @@ public class DirectoryFacade {
         }catch (SQLException ex){
             Log.e(TAG, "getChildren: " + ex.getMessage());
         }
+        finally {
+            dbHelper.closeCursor(cursor);
+        }
+
+        db.close();
 
         return new LinkedList<>();
     }

@@ -78,6 +78,9 @@ public class NotesheetFacade {
             }while(cursor.moveToNext() == true);
         }
 
+        dbHelper.closeCursor(cursor);
+        db.close();
+
         return result;
     }
 
@@ -96,6 +99,7 @@ public class NotesheetFacade {
 
         long id = db.insert(NotesheetContract.TABLE, null, cv);
 
+        db.close();
         return id > -1;
     }
 }

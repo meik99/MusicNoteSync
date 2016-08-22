@@ -6,6 +6,7 @@ package at.htl_leonding.musicnotesync.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -56,4 +57,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(NotesheetContract.DROP);
         db.execSQL(DirectoryContract.DROP);
     }
+
+    public void closeCursor(Cursor cursor){
+        if(cursor != null){
+            cursor.close();
+        }
+}
 }
