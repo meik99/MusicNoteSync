@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -32,6 +33,7 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList.setAdapter(mDeviceArrayAdapter);
 
         controller.registerDeviceFoundListener(mDeviceArrayAdapter);
+        controller.enableDiscoverability();
     }
 
     @Override
@@ -45,19 +47,35 @@ public class BluetoothActivity extends AppCompatActivity{
         else if (requestCode == BluetoothController.ENABLE_BLT_REQUEST){
             if(requestCode == RESULT_OK){
                 controller.discoverDevices();
+                controller.startServer();
             }
         }
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        this.controller.discoverDevices();
+        controller.startServer();
+    }
+
+    @Override
     protected void onResume() {
         controller.discoverDevices();
+        controller.startServer();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         controller.cancelDiscovery();
+        controller.stopServer();
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        controller.cancelDiscovery();
+        controller.stopServer();
+        super.onStop();
     }
 }
