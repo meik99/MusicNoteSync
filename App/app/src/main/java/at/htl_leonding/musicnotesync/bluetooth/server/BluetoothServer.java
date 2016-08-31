@@ -1,7 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth.server;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
@@ -18,30 +17,14 @@ import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 public class BluetoothServer extends Thread{
     private static final String TAG = BluetoothServer.class.getSimpleName();
 
-    private final List<BluetoothSocket> mClients;
-    private final BluetoothAdapter mBluetoothAdapter;
+    private final BluetoothServerController serverController;
 
     private boolean mRunning;
-    private BluetoothServerSocket mServerSocket;
+
 
     public BluetoothServer(BluetoothAdapter bluetoothAdapter){
-        mBluetoothAdapter = bluetoothAdapter;
-        mServerSocket = this.createServerSocket();
-        mClients = new LinkedList<>();
         mRunning = true;
-    }
-
-    private BluetoothServerSocket createServerSocket(){
-        BluetoothServerSocket serverSocket = null;
-
-        try {
-            serverSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(
-                    mBluetoothAdapter.getName(), BluetoothConstants.CONNECTION_UUID );
-        } catch (IOException e) {
-            Log.i(TAG, "BluetoothServer: " + e.getMessage());
-        }
-
-        return serverSocket;
+        serverController = new BluetoothServerController(bluetoothAdapter);
     }
 
     @Override
@@ -50,47 +33,17 @@ public class BluetoothServer extends Thread{
         mRunning = true;
 
         while(mRunning == true){
-            try {
-                if(mServerSocket != null) {
-                    socket = mServerSocket.accept();
-                }else{
-                    mServerSocket = this.createServerSocket();
-                }
-                Log.i(TAG, "run: Started bluetooth server");
-            } catch (IOException e) {
-                Log.i(TAG, "run: " + e.getMessage());
-            }
+            socket = serverController.waitForClient();
 
             if(socket != null){
-                mClients.add(socket);
-                try {
-                    byte[] buffer = "handshake".getBytes();
+                boolean handshakeSuccessful = serverController.performHandshake(socket);
 
-                    if(socket.getOutputStream() != null){
-                        socket.getOutputStream().write(buffer);
-                        Log.i(TAG, "run: Wrote to stream");
-                    }
-
-                    else{
-                        if(socket != null) {
-                            socket.connect();
-                        }
-                    }
-                } catch (IOException e) {
-                    Log.i(TAG, "run: " + e.getMessage());
-                }
+                Log.i(TAG, "run: handshake was success: " + handshakeSuccessful);
             }
         }
     }
 
     public void cancel(){
         mRunning = false;
-        try {
-            if(mServerSocket != null) {
-                mServerSocket.close();
-            }
-        } catch (IOException e) {
-            Log.i(TAG, "run: " + e.getMessage());
-        }
     }
 }

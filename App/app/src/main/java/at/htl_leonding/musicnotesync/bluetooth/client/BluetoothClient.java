@@ -1,15 +1,10 @@
 package at.htl_leonding.musicnotesync.bluetooth.client;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
 
 /**
@@ -18,76 +13,26 @@ import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
 public class BluetoothClient extends Thread{
     private static final String TAG = BluetoothClient.class.getSimpleName();
 
-    private final BluetoothSocket mSocket;
-    private final BluetoothDevice mServer;
     private final BluetoothController mController;
-
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    private final BluetoothClientController mClientController;
 
     public BluetoothClient(BluetoothDevice server, BluetoothController controller){
-        BluetoothSocket socket = null;
-
-        try {
-
-            socket = server.createRfcommSocketToServiceRecord(BluetoothConstants.CONNECTION_UUID);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mServer = server;
-        mSocket = socket;
         mController = controller;
+        mClientController = new BluetoothClientController(server);
     }
 
     @Override
     public void run() {
         mController.cancelDiscovery();
 
-        connectToSocket();
+        boolean handshakeSuccessful = mClientController.initiateHandshake();
 
-        while(mSocket != null && mSocket.isConnected()){
-            byte[] buffer = new byte[1024];
-            int bytes;
-            try {
-                while (mSocket.isConnected()){
-                    //TODO:
-                    //Read buffer and react
-                    bytes = inputStream.read(buffer);
-                    Log.i(TAG, "run: received bluetooth data");
-                }
-            } catch (IOException e) {
-                Log.i(TAG, "run: " + e.getMessage());
-            }
-        }
-    }
-
-    private void connectToSocket(){
-        if(mSocket.isConnected() == false){
-            try {
-                mSocket.connect();
-            } catch (IOException e) {
-                try {
-                    mSocket.close();
-                } catch (IOException e1) {
-                    Log.i(TAG, "connectToSocket: " + e1.getMessage());
-                }
-            }
-        }
-
-        if(mSocket != null && mSocket.isConnected() == true){
-            try {
-                inputStream = mSocket.getInputStream();
-                outputStream = mSocket.getOutputStream();
-            } catch (IOException e) {
-                Log.i(TAG, "connectToSocket: " + e.getMessage());
-            }
-        }
+        Log.i(TAG, "run: handshake was success: " + handshakeSuccessful);
     }
 
     public void cancel(){
         try {
-            mSocket.close();
+            mClientController.closeConnection();
         } catch (IOException e) {
             Log.i(TAG, "cancel: " + e.getMessage());
         }
