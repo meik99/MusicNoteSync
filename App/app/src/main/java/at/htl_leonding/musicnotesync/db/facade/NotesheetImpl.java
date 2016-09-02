@@ -7,6 +7,7 @@ import at.htl_leonding.musicnotesync.db.contract.Notesheet;
  */
 public class NotesheetImpl implements Notesheet{
     String name;
+    String uuid;
     long id;
 
     protected NotesheetImpl(){
@@ -16,6 +17,11 @@ public class NotesheetImpl implements Notesheet{
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getUUID() {
+        return uuid;
     }
 
     @Override

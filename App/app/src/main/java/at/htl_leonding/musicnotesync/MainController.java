@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
@@ -119,6 +120,8 @@ public class MainController {
     }
 
     public void openNotesheet(Notesheet ns) {
-
+        if(BluetoothCommunicator.isInitialized() == true) {
+            BluetoothCommunicator.getInstance().openNotesheet(ns);
+        }
     }
 }

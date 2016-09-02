@@ -3,15 +3,19 @@ package at.htl_leonding.musicnotesync.bluetooth.server;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.AsyncTaskLoader;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
 import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothProtocol;
+import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 
 /**
  * Created by michael on 30.08.16.
@@ -20,6 +24,7 @@ public class BluetoothServerController {
     private static final String TAG = BluetoothServerController.class.getSimpleName();
 
     private final BluetoothServerModel mModel;
+    private Exception sendException = null;
 
     public BluetoothServerController(BluetoothAdapter bluetoothAdapter) {
         BluetoothServerSocket serverSocket = null;
@@ -35,6 +40,8 @@ public class BluetoothServerController {
         }
 
         mModel.setSocket(serverSocket);
+
+        BluetoothCommunicator.init(null, this, null);
     }
 
     public BluetoothSocket waitForClient(){
@@ -101,5 +108,67 @@ public class BluetoothServerController {
 
         mModel.setHandshakeSucceeded(true);
         return true;
+    }
+
+    public boolean sendNotesheetToClients(Notesheet ns) {
+        boolean result = true;
+        List<BluetoothSocket> clients = mModel.getClients();
+
+        for(int i = 0; i < clients.size(); i++){
+            boolean tmpResult = true;
+            int tryCount = 0;
+
+            do {
+                if(clientHasFile(i, ns) == false){
+
+                }else{
+                    //Client has file
+                    //Open file on Client
+                }
+            }while(tmpResult == false && tryCount++ < 10);
+        }
+
+        return false;
+    }
+
+    private boolean clientHasFile(int i, Notesheet ns){
+        BluetoothSocket client = mModel.getClients().get(i);
+        OutputStream os = mModel.getOutputStream(i);
+        InputStream is = mModel.getInputStream(i);
+
+        if (client == null ||
+                os == null ||
+                is == null) {
+            sendException = new IllegalArgumentException();
+            return false;
+        }
+
+        byte[] buffer;
+        buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.ENQ.ordinal()).array();
+
+        try {
+            int response;
+
+            //Check if client has file
+            os.write(buffer);
+            buffer = ns.getUUID().getBytes();
+            os.write(buffer);
+
+            //Await response
+            buffer = new byte[4];
+            is.read(buffer);
+            response = ByteBuffer.wrap(buffer).getInt();
+            if(response == BluetoothProtocol.ACK.ordinal()){
+                return true;
+            }else if(response == BluetoothProtocol.NAK.ordinal()){
+                return false;
+            }else{
+                throw new IOException("Unexpected answer from client");
+            }
+
+        } catch (IOException e) {
+            sendException = e;
+            return false;
+        }
     }
 }

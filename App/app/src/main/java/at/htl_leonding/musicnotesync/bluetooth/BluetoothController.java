@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.client.BluetoothClient;
+import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
 import at.htl_leonding.musicnotesync.bluetooth.server.BluetoothServer;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
@@ -32,6 +33,7 @@ public class BluetoothController{
     private BluetoothServer mServer;
 
     private boolean mPermissionsGranted = false;
+    private boolean mIsServer = true;
 
     public BluetoothController(BluetoothActivity activity){
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -44,6 +46,7 @@ public class BluetoothController{
         this.mBluetoothAdapter = adapter;
         this.mActivity = activity;
         this.mBluetoothDeviceReciever = new BluetoothDeviceReciever(this);
+        BluetoothCommunicator.init(this, null, null);
     }
 
     public void getPermissions(){
@@ -109,6 +112,7 @@ public class BluetoothController{
         if(this.mServer == null) {
             this.mServer = new BluetoothServer(this.mBluetoothAdapter);
             this.mServer.start();
+            this.mIsServer = true;
         }
     }
 
@@ -116,7 +120,12 @@ public class BluetoothController{
         if(this.mServer != null && this.mServer.isAlive()){
             this.mServer.cancel();
             this.mServer = null;
+            this.mIsServer = false;
         }
+    }
+
+    public boolean isServer() {
+        return mIsServer;
     }
 
     public void addDevice(BluetoothDevice device) {

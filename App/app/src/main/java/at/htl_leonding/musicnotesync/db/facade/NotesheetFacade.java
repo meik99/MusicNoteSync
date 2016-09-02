@@ -11,6 +11,7 @@ import android.util.Log;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import at.htl_leonding.musicnotesync.db.DBHelper;
 import at.htl_leonding.musicnotesync.db.NotesheetContract;
@@ -96,6 +97,7 @@ public class NotesheetFacade {
 
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID, dir.getId());
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME, filename);
+        cv.put(NotesheetContract.NotesheetEntry.COLUMN_UUID, UUID.randomUUID().toString());
 
         long id = db.insert(NotesheetContract.TABLE, null, cv);
 

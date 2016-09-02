@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
 import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothProtocol;
 
 /**
@@ -32,6 +33,8 @@ public class BluetoothClientController {
         }
 
         this.mModel.setSocket(socket);
+
+        BluetoothCommunicator.init(null, null, this);
     }
 
     public boolean initiateHandshake() {
