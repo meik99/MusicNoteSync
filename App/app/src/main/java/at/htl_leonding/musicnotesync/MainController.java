@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
 import java.io.File;
 import java.io.FileDescriptor;
+import java.util.List;
 
+import at.htl_leonding.musicnotesync.db.contract.Directory;
+import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.io.Storage;
@@ -27,9 +31,6 @@ public class MainController {
         this.model = new MainModel();
         this.model.setActivity(activity);
         this.model.setListener(new FabOnClickListener(this.model.getActivity()));
-
-        DirectoryFacade df = new DirectoryFacade(activity);
-        df.getRoot();
     }
 
     public View.OnClickListener getFabListener() {
@@ -106,5 +107,18 @@ public class MainController {
 
     public void dismissDialog(){
         this.model.getListener().dismissDialog();
+    }
+
+    public List<Notesheet> getNotesheets(@Nullable Directory parent){
+        NotesheetFacade nf = new NotesheetFacade(model.getActivity());
+        DirectoryFacade df = new DirectoryFacade(model.getActivity());
+
+        Directory dir = parent == null ? df.getRoot() : parent;
+
+        return nf.getNotesheets(dir);
+    }
+
+    public void openNotesheet(Notesheet ns) {
+
     }
 }

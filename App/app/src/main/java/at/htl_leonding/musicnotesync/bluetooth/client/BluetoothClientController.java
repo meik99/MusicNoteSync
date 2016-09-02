@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
-import at.htl_leonding.musicnotesync.bluetooth.communication.RfcommProtocol;
+import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothProtocol;
 
 /**
  * Created by michael on 30.08.16.
@@ -55,7 +55,7 @@ public class BluetoothClientController {
         if(os == null) return false;
         if(is == null) return false;
 
-        byte[] buffer = ByteBuffer.allocate(4).putInt(RfcommProtocol.DTR.ordinal()).array();
+        byte[] buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.DTR.ordinal()).array();
         try {
             os.write(buffer);
         } catch (IOException e) {
@@ -72,12 +72,12 @@ public class BluetoothClientController {
 
             answer = ByteBuffer.wrap(buffer).getInt();
 
-            if(answer != RfcommProtocol.DSR.ordinal()) return false;
+            if(answer != BluetoothProtocol.DSR.ordinal()) return false;
 
             is.read(buffer);
             answer = ByteBuffer.wrap(buffer).getInt();
 
-            if(answer != RfcommProtocol.DCD.ordinal()) return false;
+            if(answer != BluetoothProtocol.DCD.ordinal()) return false;
 
         } catch (IOException e) {
             Log.i(TAG, "initiateHandshake: " + e.getMessage());

@@ -11,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import at.htl_leonding.musicnotesync.adapter.NotesheetArrayAdapter;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
@@ -23,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnTempBluetooth;
     private RecyclerView mNoteSheetRecyclerView;
     private NotesheetArrayAdapter mAdapter;
-    private DirectoryFacade mDirFacade;
     private MainController mController;
 
     @Override
@@ -41,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        mDirFacade = new DirectoryFacade(this);
-        mAdapter = new NotesheetArrayAdapter(mDirFacade.getRoot().getNotesheets());
+        mAdapter = new NotesheetArrayAdapter(mController);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
         mNoteSheetRecyclerView.setAdapter(mAdapter);
         mNoteSheetRecyclerView.setLayoutManager(llm);
@@ -93,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        mAdapter.setSheets(mDirFacade.getRoot().getNotesheets());
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setSheets(mController.getNotesheets(null));
         mController.dismissDialog();
         super.onResume();
     }

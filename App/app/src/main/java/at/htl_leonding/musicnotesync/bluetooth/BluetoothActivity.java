@@ -13,7 +13,7 @@ import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
-    BluetoothController controller;
+    private BluetoothController controller;
 
     private ListView mDeviceList;
     private BluetoothArrayAdapter mDeviceArrayAdapter;
@@ -25,7 +25,7 @@ public class BluetoothActivity extends AppCompatActivity{
         getSupportActionBar().setTitle(getString(R.string.bluetooth_connect));
 
         controller = new BluetoothController(this);
-        controller.getPermissions();
+        activateBluetooth();
 
         mDeviceList = (ListView) findViewById(R.id.lvBluetoothDevices);
         mDeviceArrayAdapter = new BluetoothArrayAdapter(this,
@@ -33,7 +33,6 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList.setAdapter(mDeviceArrayAdapter);
 
         controller.registerDeviceFoundListener(mDeviceArrayAdapter);
-        controller.enableDiscoverability();
     }
 
     @Override
@@ -45,37 +44,57 @@ public class BluetoothActivity extends AppCompatActivity{
             }
         }
         else if (requestCode == BluetoothController.ENABLE_BLT_REQUEST){
-            if(requestCode == RESULT_OK){
-                controller.discoverDevices();
-                controller.startServer();
+            if(resultCode == RESULT_OK){
+                activateBluetooth();
             }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        this.controller.discoverDevices();
-        controller.startServer();
+        activateBluetooth();
     }
 
     @Override
     protected void onResume() {
-        controller.discoverDevices();
-        controller.startServer();
+        activateBluetooth();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        controller.cancelDiscovery();
-        controller.stopServer();
+        //controller.cancelDiscovery();
+        //controller.stopServer();
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        controller.cancelDiscovery();
-        controller.stopServer();
+        if(controller.hasPermissions() == true) {
+            controller.cancelDiscovery();
+            controller.stopServer();
+        }
         super.onStop();
+    }
+
+    private void activateBluetooth(){
+        if(controller.hasPermissions() == true) {
+            if(controller.isBluetoothEnabled() == false){
+                controller.enableBluetooth();
+            }else if(controller.isDiscovering() == false){
+                controller.discoverDevices();
+
+                if(controller.isDiscoverable() == false){
+                    controller.enableDiscoverability();
+                }
+
+                if(controller.hasServerStarted() == false) {
+                    controller.startServer();
+                }
+            }
+        }
+        else{
+            controller.getPermissions();
+        }
     }
 }

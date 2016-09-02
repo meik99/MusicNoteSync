@@ -54,16 +54,20 @@ public class BluetoothController{
                 Manifest.permission.ACCESS_FINE_LOCATION
         });
     }
-    public void discoverDevices(){
+    public boolean discoverDevices(){
         if(mPermissionsGranted == true && this.mBluetoothAdapter.isDiscovering() == false) {
             if(mBluetoothAdapter.isEnabled() == false){
-                enableBluetooth();
+                return false;
             }
 
             Log.i(TAG, "discoverDevices: " + "starting discovery");
 
             IntentFilter bltFoundDeviceFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-
+            try{
+                mActivity.unregisterReceiver(this.mBluetoothDeviceReciever);
+            }catch(IllegalArgumentException e){
+                Log.i(TAG, "discoverDevices: receiver not yet registered");
+            }
             try {
                 mActivity.registerReceiver(this.mBluetoothDeviceReciever, bltFoundDeviceFilter);
             }catch(IllegalArgumentException e){
@@ -74,7 +78,15 @@ public class BluetoothController{
 
             this.mDeviceBuffer.clear();
             this.mBluetoothAdapter.startDiscovery();
+
+            return true;
         }
+
+        return false;
+    }
+
+    public boolean isBluetoothEnabled(){
+        return mBluetoothAdapter.isEnabled();
     }
 
     public void cancelDiscovery(){
@@ -158,6 +170,10 @@ public class BluetoothController{
         this.mPermissionsGranted = permssionGranted;
     }
 
+    public boolean hasPermissions(){
+        return this.mPermissionsGranted;
+    }
+
     public void registerDeviceFoundListener(BluetoothDeviceFoundListener listener){
         if(listener != null){
             this.mDeviceFoundListeners.add(listener);
@@ -168,5 +184,18 @@ public class BluetoothController{
         if(listener != null){
             this.mDeviceFoundListeners.remove(listener);
         }
+    }
+
+    public boolean isDiscovering() {
+        return mBluetoothAdapter.isDiscovering();
+    }
+
+    public boolean hasServerStarted() {
+        return mServer != null && mServer.isAlive();
+    }
+
+    public boolean isDiscoverable() {
+        return mBluetoothAdapter.getScanMode() ==
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE;
     }
 }

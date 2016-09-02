@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
-import at.htl_leonding.musicnotesync.bluetooth.communication.RfcommProtocol;
+import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothProtocol;
 
 /**
  * Created by michael on 30.08.16.
@@ -40,7 +40,9 @@ public class BluetoothServerController {
     public BluetoothSocket waitForClient(){
         BluetoothSocket newClient = null;
         try {
-            newClient = mModel.getSocket().accept();
+            if(mModel != null && mModel.getSocket() != null) {
+                newClient = mModel.getSocket().accept();
+            }
         } catch (IOException e) {
             Log.i(TAG, "waitForClient: " + e.getMessage());
         }
@@ -77,9 +79,9 @@ public class BluetoothServerController {
             return false;
         }
 
-        if(ByteBuffer.wrap(buffer).getInt() != RfcommProtocol.DTR.ordinal()) return false;
+        if(ByteBuffer.wrap(buffer).getInt() != BluetoothProtocol.DTR.ordinal()) return false;
 
-        buffer = ByteBuffer.allocate(4).putInt(RfcommProtocol.DSR.ordinal()).array();
+        buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.DSR.ordinal()).array();
 
         try {
             os.write(buffer);
@@ -88,7 +90,7 @@ public class BluetoothServerController {
             return false;
         }
 
-        buffer = ByteBuffer.allocate(4).putInt(RfcommProtocol.DCD.ordinal()).array();
+        buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.DCD.ordinal()).array();
 
         try {
             os.write(buffer);
