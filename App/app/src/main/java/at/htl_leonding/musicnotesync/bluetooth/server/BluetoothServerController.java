@@ -13,7 +13,7 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
-import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothProtocol;
+import at.htl_leonding.musicnotesync.bluetooth.communication.Operation;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.global.Constant;
 
@@ -86,9 +86,9 @@ public class BluetoothServerController {
             return false;
         }
 
-        if(ByteBuffer.wrap(buffer).getInt() != BluetoothProtocol.DTR.ordinal()) return false;
+        if(ByteBuffer.wrap(buffer).getInt() != Operation.DTR.ordinal()) return false;
 
-        buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.DSR.ordinal()).array();
+        buffer = ByteBuffer.allocate(4).putInt(Operation.DSR.ordinal()).array();
 
         try {
             os.write(buffer);
@@ -97,7 +97,7 @@ public class BluetoothServerController {
             return false;
         }
 
-        buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.DCD.ordinal()).array();
+        buffer = ByteBuffer.allocate(4).putInt(Operation.DCD.ordinal()).array();
 
         try {
             os.write(buffer);
@@ -153,22 +153,22 @@ public class BluetoothServerController {
             is.read(buffer);
             response = ByteBuffer.wrap(buffer).getInt();
 
-            if(response != BluetoothProtocol.RTS.ordinal()) return false;
+            if(response != Operation.RTS.ordinal()) return false;
 
-            buffer = BluetoothProtocol.toByteArray(BluetoothProtocol.CTS);
+            buffer = Operation.toByteArray(Operation.CTS);
             os.write(buffer);
 
             response = getResponse(is);
 
-            if(response != BluetoothProtocol.ACK.ordinal()) return false;
+            if(response != Operation.ACK.ordinal()) return false;
 
             //Send file metadata
-            buffer = BluetoothProtocol.toByteArray(BluetoothProtocol.SOH);
+            buffer = Operation.toByteArray(Operation.SOH);
             os.write(buffer);
 
             response = getResponse(is);
 
-            if(response != BluetoothProtocol.ACK.ordinal()) return false;
+            if(response != Operation.ACK.ordinal()) return false;
 
             StringBuilder message = new StringBuilder();
             message.append("UUID:");
@@ -181,19 +181,17 @@ public class BluetoothServerController {
                 buffer = message.toString().getBytes();
                 os.write(buffer);
                 response = getResponse(is);
-            }while(response != BluetoothProtocol.ACK.ordinal() && tryCount++ < Constant.TRY_MAX);
+            }while(response != Operation.ACK.ordinal() && tryCount++ < Constant.TRY_MAX);
 
             if(tryCount >= Constant.TRY_MAX) throw new IOException("Couldn't send metadata");
 
-
+            return true;
 
         } catch (IOException e) {
             sendException = e;
             Log.i(TAG, "sendMetadataToClient: " + e.getMessage());
             return false;
         }
-
-        return false;
     }
 
     private int getResponse(InputStream is) throws IOException {
@@ -222,7 +220,7 @@ public class BluetoothServerController {
             return false;
         }
 
-        buffer = ByteBuffer.allocate(4).putInt(BluetoothProtocol.ENQ.ordinal()).array();
+        buffer = ByteBuffer.allocate(4).putInt(Operation.ENQ.ordinal()).array();
 
         try {
             int response;
@@ -236,9 +234,9 @@ public class BluetoothServerController {
             buffer = new byte[4];
             is.read(buffer);
             response = ByteBuffer.wrap(buffer).getInt();
-            if(response == BluetoothProtocol.ACK.ordinal()){
+            if(response == Operation.ACK.ordinal()){
                 return true;
-            }else if(response == BluetoothProtocol.NAK.ordinal()){
+            }else if(response == Operation.NAK.ordinal()){
                 return false;
             }else{
                 throw new IOException("Unexpected answer from client");
@@ -250,10 +248,10 @@ public class BluetoothServerController {
         }
     }
 
-    private BluetoothProtocol sendCommandForResponse(
+    private Operation sendCommandForResponse(
             int i,
-            BluetoothProtocol command,
-            BluetoothProtocol expectedResponse){
+            Operation command,
+            Operation expectedResponse){
         BluetoothSocket client = mModel.getClients().get(i);
         OutputStream os = mModel.getOutputStream(i);
         InputStream is = mModel.getInputStream(i);
@@ -279,7 +277,7 @@ public class BluetoothServerController {
                 return expectedResponse;
             }
             else{
-                for(BluetoothProtocol com : BluetoothProtocol.values()){
+                for(Operation com : Operation.values()){
                     if(com.ordinal() == response){
                         return com;
                     }
