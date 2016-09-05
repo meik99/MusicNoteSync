@@ -13,7 +13,7 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
-import at.htl_leonding.musicnotesync.bluetooth.communication.Operation;
+import at.htl_leonding.musicnotesync.bluetooth.communication.Flag;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.global.Constant;
 
@@ -65,52 +65,24 @@ public class BluetoothServerController {
         }
     }
 
-    public boolean performHandshake(BluetoothSocket socket) {
-        int index;
-        byte[] buffer = new byte[4];
 
-        mModel.setHandshakeSucceeded(false);
-        mModel.getClients().add(socket);
-        index = mModel.getClients().size()-1;
-
-        InputStream is = mModel.getInputStream(index);
-        OutputStream os = mModel.getOutputStream(index);
-
-        if(is == null) return false;
-        if(os == null) return false;
-
+    public boolean addClient(BluetoothSocket socket) {
+        ClientWrapper client = new ClientWrapper(socket);
         try {
-            is.read(buffer);
+            if(client.performHandshake() == true){
+                mModel.getClients().add(client);
+                return true;
+            }
+
+            return false;
         } catch (IOException e) {
             Log.i(TAG, "performHandshake: " + e.getMessage());
             return false;
         }
-
-        if(ByteBuffer.wrap(buffer).getInt() != Operation.DTR.ordinal()) return false;
-
-        buffer = ByteBuffer.allocate(4).putInt(Operation.DSR.ordinal()).array();
-
-        try {
-            os.write(buffer);
-        } catch (IOException e) {
-            Log.i(TAG, "performHandshake: " + e.getMessage());
-            return false;
-        }
-
-        buffer = ByteBuffer.allocate(4).putInt(Operation.DCD.ordinal()).array();
-
-        try {
-            os.write(buffer);
-        } catch (IOException e) {
-            Log.i(TAG, "performHandshake: " + e.getMessage());
-            return false;
-        }
-
-        mModel.setHandshakeSucceeded(true);
-        return true;
     }
 
-    public boolean sendNotesheetToClients(Notesheet ns) {
+
+/*    public boolean sendNotesheetToClients(Notesheet ns) {
         boolean result = true;
         List<BluetoothSocket> clients = mModel.getClients();
 
@@ -153,22 +125,22 @@ public class BluetoothServerController {
             is.read(buffer);
             response = ByteBuffer.wrap(buffer).getInt();
 
-            if(response != Operation.RTS.ordinal()) return false;
+            if(response != Flag.RTS.ordinal()) return false;
 
-            buffer = Operation.toByteArray(Operation.CTS);
+            buffer = Flag.toByteArray(Flag.CTS);
             os.write(buffer);
 
             response = getResponse(is);
 
-            if(response != Operation.ACK.ordinal()) return false;
+            if(response != Flag.ACK.ordinal()) return false;
 
             //Send file metadata
-            buffer = Operation.toByteArray(Operation.SOH);
+            buffer = Flag.toByteArray(Flag.SOH);
             os.write(buffer);
 
             response = getResponse(is);
 
-            if(response != Operation.ACK.ordinal()) return false;
+            if(response != Flag.ACK.ordinal()) return false;
 
             StringBuilder message = new StringBuilder();
             message.append("UUID:");
@@ -181,7 +153,7 @@ public class BluetoothServerController {
                 buffer = message.toString().getBytes();
                 os.write(buffer);
                 response = getResponse(is);
-            }while(response != Operation.ACK.ordinal() && tryCount++ < Constant.TRY_MAX);
+            }while(response != Flag.ACK.ordinal() && tryCount++ < Constant.TRY_MAX);
 
             if(tryCount >= Constant.TRY_MAX) throw new IOException("Couldn't send metadata");
 
@@ -220,7 +192,7 @@ public class BluetoothServerController {
             return false;
         }
 
-        buffer = ByteBuffer.allocate(4).putInt(Operation.ENQ.ordinal()).array();
+        buffer = ByteBuffer.allocate(4).putInt(Flag.ENQ.ordinal()).array();
 
         try {
             int response;
@@ -234,9 +206,9 @@ public class BluetoothServerController {
             buffer = new byte[4];
             is.read(buffer);
             response = ByteBuffer.wrap(buffer).getInt();
-            if(response == Operation.ACK.ordinal()){
+            if(response == Flag.ACK.ordinal()){
                 return true;
-            }else if(response == Operation.NAK.ordinal()){
+            }else if(response == Flag.NAK.ordinal()){
                 return false;
             }else{
                 throw new IOException("Unexpected answer from client");
@@ -248,10 +220,10 @@ public class BluetoothServerController {
         }
     }
 
-    private Operation sendCommandForResponse(
+    private Flag sendCommandForResponse(
             int i,
-            Operation command,
-            Operation expectedResponse){
+            Flag command,
+            Flag expectedResponse){
         BluetoothSocket client = mModel.getClients().get(i);
         OutputStream os = mModel.getOutputStream(i);
         InputStream is = mModel.getInputStream(i);
@@ -277,7 +249,7 @@ public class BluetoothServerController {
                 return expectedResponse;
             }
             else{
-                for(Operation com : Operation.values()){
+                for(Flag com : Flag.values()){
                     if(com.ordinal() == response){
                         return com;
                     }
@@ -290,5 +262,5 @@ public class BluetoothServerController {
             sendException = e;
             return null;
         }
-    }
+    }*/
 }

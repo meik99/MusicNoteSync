@@ -1,5 +1,7 @@
 package at.htl_leonding.musicnotesync.db.facade;
 
+import java.io.File;
+
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 
 /**
@@ -9,9 +11,10 @@ public class NotesheetImpl implements Notesheet{
     String name;
     String uuid;
     long id;
+    int size;
 
-    protected NotesheetImpl(){
-
+    protected NotesheetImpl(String string){
+        uuid = string;
     }
 
     @Override
@@ -35,5 +38,10 @@ public class NotesheetImpl implements Notesheet{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public File getFile() {
+        return null;
     }
 }

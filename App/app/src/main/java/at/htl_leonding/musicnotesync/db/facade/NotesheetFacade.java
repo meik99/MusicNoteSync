@@ -45,7 +45,8 @@ public class NotesheetFacade {
 
         String[] columns = new String[]{
                 NotesheetContract.NotesheetEntry._ID,
-                NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME
+                NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME,
+                NotesheetContract.NotesheetEntry.COLUMN_UUID
         };
         String selection = NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID + "= ?";
         String[] selectionArgs = new String[]{
@@ -64,7 +65,9 @@ public class NotesheetFacade {
             Log.d(TAG, "getNotesheets: found " + cursor.getCount() + " entries");
 
             do{
-                NotesheetImpl note = new NotesheetImpl();
+                NotesheetImpl note = new NotesheetImpl(cursor.getString(
+                        cursor.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_UUID)
+                ));
                 long id = cursor.getInt(
                         cursor.getColumnIndex(NotesheetContract.NotesheetEntry._ID)
                 );

@@ -17,43 +17,16 @@ import java.util.List;
 public class BluetoothServerModel {
     private static final String TAG = BluetoothServerModel.class.getSimpleName();
 
-    private final List<BluetoothSocket> clients;
+    private final List<ClientWrapper> clients;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothServerSocket socket;
-    private boolean handshakeSucceeded = false;
 
     public BluetoothServerModel() {
         clients = new LinkedList<>();
     }
 
-    public OutputStream getOutputStream(int index){
-        if(index >= 0 && index < clients.size()){
-            if(clients.get(index) != null){
-                try {
-                    return clients.get(index).getOutputStream();
-                } catch (IOException e) {
-                    Log.i(TAG, "getOutputStream: " + e.getMessage());
-                    return null;
-                }
-            }else return null;
-        }else return null;
-    }
-
-    public InputStream getInputStream(int index){
-        if(index >= 0 && index < clients.size()){
-            if(clients.get(index) != null){
-                try {
-                    return clients.get(index).getInputStream();
-                } catch (IOException e) {
-                    Log.i(TAG, "getInputStream: " + e.getMessage());
-                    return null;
-                }
-            }else return null;
-        }else return null;
-    }
-
-    public List<BluetoothSocket> getClients() {
+    public List<ClientWrapper> getClients() {
         return clients;
     }
 
@@ -71,13 +44,5 @@ public class BluetoothServerModel {
 
     public void setSocket(BluetoothServerSocket socket) {
         this.socket = socket;
-    }
-
-    public boolean isHandshakeSucceeded() {
-        return handshakeSucceeded;
-    }
-
-    public void setHandshakeSucceeded(boolean handshakeSucceeded) {
-        this.handshakeSucceeded = handshakeSucceeded;
     }
 }

@@ -29,16 +29,20 @@ public class BluetoothServer extends Thread{
 
     @Override
     public void run() {
-        BluetoothSocket socket = null;
+        BluetoothSocket socket;
         mRunning = true;
 
         while(mRunning == true){
             socket = serverController.waitForClient();
 
             if(socket != null){
-                boolean handshakeSuccessful = serverController.performHandshake(socket);
+                boolean clientAdded = serverController.addClient(socket);
 
-                Log.i(TAG, "run: handshake was success: " + handshakeSuccessful);
+                if(clientAdded == true){
+                    Log.i(TAG, "run: Client was added");
+                }else{
+                    Log.i(TAG, "run: Adding client resulted in failure");
+                }
             }
         }
     }
