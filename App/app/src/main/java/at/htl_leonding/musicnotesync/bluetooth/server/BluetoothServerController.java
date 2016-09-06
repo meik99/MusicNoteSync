@@ -81,6 +81,12 @@ public class BluetoothServerController {
         }
     }
 
+    public void openNotesheetOnClients(Notesheet ns) throws IOException {
+        for(ClientWrapper cw : mModel.getClients()){
+            cw.sendNotesheet(ns);
+        }
+    }
+
 
 /*    public boolean sendNotesheetToClients(Notesheet ns) {
         boolean result = true;

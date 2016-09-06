@@ -14,6 +14,15 @@ public class BluetoothClientModel {
     private BluetoothSocket socket;
     private BluetoothDevice server;
     private boolean handshakeSucceeded;
+    private BluetoothClient currentClientThread;
+
+    public BluetoothClient getCurrentClientThread() {
+        return currentClientThread;
+    }
+
+    public void setCurrentClientThread(BluetoothClient currentClientThread) {
+        this.currentClientThread = currentClientThread;
+    }
 
     protected BluetoothClientModel(){
 

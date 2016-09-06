@@ -125,7 +125,7 @@ public class BluetoothController{
     }
 
     public boolean isServer() {
-        return mIsServer;
+        return mClients.size() > 0;
     }
 
     public void addDevice(BluetoothDevice device) {

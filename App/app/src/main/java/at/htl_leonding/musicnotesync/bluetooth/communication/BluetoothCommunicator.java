@@ -1,5 +1,7 @@
 package at.htl_leonding.musicnotesync.bluetooth.communication;
 
+import java.io.IOException;
+
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
 import at.htl_leonding.musicnotesync.bluetooth.client.BluetoothClientController;
 import at.htl_leonding.musicnotesync.bluetooth.server.BluetoothServerController;
@@ -73,14 +75,15 @@ public class BluetoothCommunicator {
         return instance;
     }
 
-    public void openNotesheet(Notesheet ns){
+    public void openNotesheet(Notesheet ns) throws IOException {
         if(mController.isServer() == true){
             //Send file to clients
-            mServerController.sendNotesheetToClients(ns);
+            mServerController.openNotesheetOnClients(ns);
         }
     }
 
     public void setController(BluetoothController controller) {
         this.mController = controller;
     }
+
 }

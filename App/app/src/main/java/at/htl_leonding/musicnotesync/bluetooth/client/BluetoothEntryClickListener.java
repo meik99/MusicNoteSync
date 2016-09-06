@@ -23,8 +23,7 @@ public class BluetoothEntryClickListener implements View.OnClickListener{
 
             if(client != null) {
                 client.start();
-                mController.getClients().add(client);
-                mController.stopServer();
+
             }
         }
     }

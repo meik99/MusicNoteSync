@@ -10,6 +10,7 @@ import android.view.View;
 
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
@@ -121,7 +122,11 @@ public class MainController {
 
     public void openNotesheet(Notesheet ns) {
         if(BluetoothCommunicator.isInitialized() == true) {
-            BluetoothCommunicator.getInstance().openNotesheet(ns);
+            try {
+                BluetoothCommunicator.getInstance().openNotesheet(ns);
+            } catch (IOException e) {
+                Log.i(TAG, "openNotesheet: " + e.getMessage());
+            }
         }
     }
 }

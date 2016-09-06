@@ -7,15 +7,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 import at.htl_leonding.musicnotesync.bluetooth.communication.Flag;
 import at.htl_leonding.musicnotesync.db.NotesheetContract;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.global.Constant;
 
 /**
  * Created by michael on 05.09.16.
@@ -70,7 +73,7 @@ public class ClientWrapper {
     public boolean sendNotesheet(Notesheet notesheet) throws IOException {
         OutputStream os;
         InputStream is;
-        byte[] buffer = new byte[4];
+        byte[] buffer;
         Flag answer;
 
         if(mSocket.isConnected() == false){
@@ -104,13 +107,15 @@ public class ClientWrapper {
 
         byte[] flag = Flag.toByteArray(Flag.META);
         byte[] jObjectArray = jObj.toString().getBytes();
+        ByteArrayInputStream bais = new ByteArrayInputStream(jObjectArray);
 
-        buffer = new byte[4 + jObjectArray.length];
+        buffer = new byte[BluetoothConstants.BUFFER_SIZE];
 
-        buffer = copyByteArrayToBuffer(flag, buffer, 0);
-        buffer = copyByteArrayToBuffer(jObjectArray, buffer, 4);
+        while(bais.read(buffer, 4, buffer.length-4) > -1){
+            buffer = copyByteArrayToBuffer(flag, buffer, 0);
+            os.write(buffer);
 
-        os.write(buffer);
+        }
 
         buffer = Flag.toByteArray(Flag.EOT);
         os.write(buffer);
