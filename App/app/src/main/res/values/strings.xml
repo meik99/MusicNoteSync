@@ -7,4 +7,7 @@
     <string name="select_format">Select Format</string>
     <string name="temp_bluetooth_btn">Temporary Bluetooth Button</string>
     <string name="bluetooth_connect">Connect to device</string>
+    <string name="bluetooth_no_support">Device does not support bluetooth</string>
+    <string name="bluetooth_enabled">Bluetooth enabled</string>
+    <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
 </resources>

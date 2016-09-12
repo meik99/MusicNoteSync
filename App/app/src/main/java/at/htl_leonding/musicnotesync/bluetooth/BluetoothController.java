@@ -1,210 +1,70 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.util.Log;
+import android.support.annotation.StringRes;
+import android.widget.Toast;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import at.htl_leonding.musicnotesync.bluetooth.client.BluetoothClient;
-import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
-import at.htl_leonding.musicnotesync.bluetooth.server.BluetoothServer;
+import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 /**
- * Created by michael on 17.08.16.
+ * Created by michael on 12.09.16.
  */
-public class BluetoothController{
-    public static final int ENABLE_BLT_REQUEST = 6;
+public class BluetoothController {
+    private final BluetoothActivity mBluetoothActivity;
 
-    private static final String TAG = BluetoothController.class.getSimpleName();
-
-    private List<BluetoothDevice> mDeviceBuffer = new LinkedList<>();
-    private List<BluetoothDeviceFoundListener> mDeviceFoundListeners = new LinkedList<>();
-    private List<BluetoothClient> mClients = new LinkedList<>();
-
-    private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothActivity mActivity;
-    private BluetoothDeviceReciever mBluetoothDeviceReciever;
-    private BluetoothServer mServer;
-
-    private boolean mPermissionsGranted = false;
-    private boolean mIsServer = true;
-
-    public BluetoothController(BluetoothActivity activity){
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-        if(adapter == null){
-            //TODO:
-            //Device doesn't support bluetooth
-            //Handle with error message
-        }
-        this.mBluetoothAdapter = adapter;
-        this.mActivity = activity;
-        this.mBluetoothDeviceReciever = new BluetoothDeviceReciever(this);
-        BluetoothCommunicator.init(this, null, null);
+    /**
+     * Creates an instance of BluetoothController.
+     * @param bluetoothActivity A BluetoothActivity-Instance the BluetoothController-Instance is
+     *                          assigned to.
+     */
+    public BluetoothController(BluetoothActivity bluetoothActivity){
+        mBluetoothActivity = bluetoothActivity;
     }
 
-    public void getPermissions(){
-        mPermissionsGranted = PermissionHelper.verifyPermissions(mActivity, new String[]{
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        });
-    }
-    public boolean discoverDevices(){
-        if(mPermissionsGranted == true && this.mBluetoothAdapter.isDiscovering() == false) {
-            if(mBluetoothAdapter.isEnabled() == false){
-                return false;
-            }
+    /**
+     * Checks if device has bluetooth functionality. If functionality is given,
+     * obtains a BluetoothAdapter and enables Bluetooth. <u><b>Does not</b></u> ask for
+     * permissions.
+     * @return true if Bluetooth has been enabled, else false
+     */
+    public boolean enableBluetooth(){
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-            Log.i(TAG, "discoverDevices: " + "starting discovery");
-
-            IntentFilter bltFoundDeviceFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            try{
-                mActivity.unregisterReceiver(this.mBluetoothDeviceReciever);
-            }catch(IllegalArgumentException e){
-                Log.i(TAG, "discoverDevices: receiver not yet registered");
-            }
-            try {
-                mActivity.registerReceiver(this.mBluetoothDeviceReciever, bltFoundDeviceFilter);
-            }catch(IllegalArgumentException e){
-                Log.i(TAG, "discoverDevices: receiver already registered");
-            }
-
-            Log.i(TAG, "discoverDevices: " + "register receiver");
-
-            this.mDeviceBuffer.clear();
-            this.mBluetoothAdapter.startDiscovery();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean isBluetoothEnabled(){
-        return mBluetoothAdapter.isEnabled();
-    }
-
-    public void cancelDiscovery(){
-        if(mPermissionsGranted == true) {
-            Log.i(TAG, "cancelDiscovery: Cancel discovery and unregister receiver");
-            this.mBluetoothAdapter.cancelDiscovery();
-        }
-    }
-
-    public void enableBluetooth(){
-        if(mPermissionsGranted == true) {
-            if (this.mBluetoothAdapter.isEnabled() == false) {
-                Intent enableBlt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                mActivity.startActivityForResult(enableBlt, ENABLE_BLT_REQUEST);
-            }
-        }
-    }
-
-    public void startServer(){
-        if(this.mServer == null) {
-            this.mServer = new BluetoothServer(this.mBluetoothAdapter);
-            this.mServer.start();
-            this.mIsServer = true;
-        }
-    }
-
-    public void stopServer() {
-        if(this.mServer != null && this.mServer.isAlive()){
-            this.mServer.cancel();
-            this.mServer = null;
-            this.mIsServer = false;
-        }
-    }
-
-    public boolean isServer() {
-        return mClients.size() > 0;
-    }
-
-    public void addDevice(BluetoothDevice device) {
-        if(device != null){
-            Log.i(TAG, "addDevice: Device found " + device.getName());
-            if(this.mDeviceBuffer.contains(device) == false &&
-                    this.deviceInBuffer(device) == false) {
-                this.mDeviceBuffer.add(device);
-            }
-
-            for(BluetoothDeviceFoundListener listener : mDeviceFoundListeners){
-                listener.deviceFound(device);
-            }
-        }
-    }
-
-    private boolean deviceInBuffer(BluetoothDevice device){
-        if(this.mDeviceBuffer == null || this.mDeviceBuffer.size() <= 0){
+        if(bluetoothAdapter == null){
+            showToast(R.string.bluetooth_no_support);
             return false;
         }
-        if(device == null){
+
+        if(bluetoothAdapter.isEnabled() == false){
+            if(bluetoothAdapter.enable() == true){
+                showToast(R.string.bluetooth_enabled);
+                return true;
+            }else{
+                showToast(R.string.bluetooth_not_enabled);
+                return false;
+            }
+        }else{
+            showToast(R.string.bluetooth_enabled);
             return true;
         }
-
-        for(BluetoothDevice tmpDevice : this.mDeviceBuffer){
-            if(tmpDevice.getAddress().equals(device.getAddress())){
-                return true;
-            }
-        }
-
-        return false;
     }
 
-    public void enableDiscoverability(){
-        if(mPermissionsGranted == true){
-            Intent discoverIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 600);
-            mActivity.startActivity(discoverIntent);
-        }
+    private void showToast(@StringRes int stringRes){
+        Toast.makeText(mBluetoothActivity, stringRes, Toast.LENGTH_LONG)
+                .show();
     }
 
-    public List<BluetoothDevice> getDevices(){
-        return mDeviceBuffer != null ? mDeviceBuffer : new LinkedList<BluetoothDevice>();
-    }
-
-    public List<BluetoothClient> getClients() {
-        return mClients;
-    }
-
-    public void setPermssionGranted(boolean permssionGranted) {
-        this.mPermissionsGranted = permssionGranted;
-    }
-
-    public boolean hasPermissions(){
-        return this.mPermissionsGranted;
-    }
-
-    public void registerDeviceFoundListener(BluetoothDeviceFoundListener listener){
-        if(listener != null){
-            this.mDeviceFoundListeners.add(listener);
-        }
-    }
-
-    public void unregisterDeviceFoundListener(BluetoothDeviceFoundListener listener){
-        if(listener != null){
-            this.mDeviceFoundListeners.remove(listener);
-        }
-    }
-
-    public boolean isDiscovering() {
-        return mBluetoothAdapter.isDiscovering();
-    }
-
-    public boolean hasServerStarted() {
-        return mServer != null && mServer.isAlive();
-    }
-
-    public boolean isDiscoverable() {
-        return mBluetoothAdapter.getScanMode() ==
-                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE;
+    /**
+     * Verifies permissions needed for bluetooth functionality.
+     * Requests them if it does not have them.
+     * Uses PermissionHelper.STANDARD_REQUEST_CODE for permission request.
+     * @return true if app has permissions, else false
+     */
+    public boolean getBluetoothPermissions(){
+        boolean hasPermission = PermissionHelper.verifyPermissions(
+                mBluetoothActivity,
+                BluetoothConstants.PERMISSIONS);
+        return hasPermission;
     }
 }

@@ -1,10 +1,10 @@
-package at.htl_leonding.musicnotesync.bluetooth.communication;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated.communication;
 
 import java.io.IOException;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
-import at.htl_leonding.musicnotesync.bluetooth.client.BluetoothClientController;
-import at.htl_leonding.musicnotesync.bluetooth.server.BluetoothServerController;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.BluetoothController;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.client.BluetoothClientController;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.server.BluetoothServerController;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 
 /**

@@ -16,6 +16,13 @@ public class PermissionHelper {
     public static final int STANDARD_PERMISSION_REQUEST_CODE = 2;
 
 
+    /**
+     * Checks if app has all given permissions.
+     * Requests them if it doesn't have them.
+     * @param activity Activity to ask for permissions from
+     * @param permissions Permissions to verify or ask
+     * @return True if app has permissions, else false
+     */
     public static boolean verifyPermissions(@NonNull Activity activity, String[] permissions){
         if(permissions == null)
             permissions = new String[0];

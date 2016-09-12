@@ -2,18 +2,16 @@ package at.htl_leonding.musicnotesync;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.bluetooth.communication.BluetoothCommunicator;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.communication.BluetoothCommunicator;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;

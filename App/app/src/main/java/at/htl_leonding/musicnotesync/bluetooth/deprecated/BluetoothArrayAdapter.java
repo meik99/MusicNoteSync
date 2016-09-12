@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.bluetooth;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -12,13 +12,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.bluetooth.client.BluetoothEntryClickListener;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.client.BluetoothEntryClickListener;
 
 /**
  * Created by michael on 22.08.16.
  */
 public class BluetoothArrayAdapter extends ArrayAdapter<BluetoothDevice>
-        implements BluetoothDeviceFoundListener{
+        implements BluetoothDeviceFoundListener {
     private List<BluetoothDevice> mDevice;
     private BluetoothController mController;
     private int mResource;

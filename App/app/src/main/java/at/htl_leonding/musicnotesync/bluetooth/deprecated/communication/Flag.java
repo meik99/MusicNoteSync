@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.bluetooth.communication;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated.communication;
 
 import java.nio.ByteBuffer;
 

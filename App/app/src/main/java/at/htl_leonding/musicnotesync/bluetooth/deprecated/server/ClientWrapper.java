@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.bluetooth.server;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated.server;
 
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
@@ -14,11 +14,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
-import at.htl_leonding.musicnotesync.bluetooth.communication.Flag;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.communication.Flag;
 import at.htl_leonding.musicnotesync.db.NotesheetContract;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
-import at.htl_leonding.musicnotesync.global.Constant;
 
 /**
  * Created by michael on 05.09.16.

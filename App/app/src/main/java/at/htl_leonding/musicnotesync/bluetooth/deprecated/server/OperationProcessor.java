@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.bluetooth.server;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated.server;
 
 /**
  * Created by michael on 05.09.16.

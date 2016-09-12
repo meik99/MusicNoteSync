@@ -1,9 +1,9 @@
-package at.htl_leonding.musicnotesync.bluetooth.client;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated.client;
 
 import android.bluetooth.BluetoothDevice;
 import android.view.View;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.BluetoothController;
 
 /**
  * Created by michael on 27.08.16.

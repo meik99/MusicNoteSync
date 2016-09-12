@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.bluetooth;
+package at.htl_leonding.musicnotesync.bluetooth.deprecated;
 
 import android.bluetooth.BluetoothDevice;
 
