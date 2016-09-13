@@ -20,6 +20,8 @@ public class BluetoothActivity extends AppCompatActivity{
         setContentView(R.layout.activity_bluetooth);
         getSupportActionBar().setTitle(getString(R.string.bluetooth_connect));
 
+        mDeviceList = (ListView) findViewById(R.id.lvBluetoothDevices);
+        mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
 
         if(mController.getBluetoothPermissions() == true){
@@ -77,6 +79,7 @@ public class BluetoothActivity extends AppCompatActivity{
     @Override
     protected void onStop() {
         super.onStop();
+        mController.stop();
     }
 
     private void activateBluetooth(){
