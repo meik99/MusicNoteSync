@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -24,7 +25,7 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
 
-        if(mController.getBluetoothPermissions() == true){
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
             mController.enableBluetooth();
         }
     }
@@ -32,13 +33,6 @@ public class BluetoothActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode ==
-                at.htl_leonding.musicnotesync.bluetooth.deprecated.BluetoothController
-                        .ENABLE_BLT_REQUEST){
-            if(resultCode == RESULT_OK){
-                activateBluetooth();
-            }
-        }
     }
 
     @Override
@@ -65,7 +59,6 @@ public class BluetoothActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
-        activateBluetooth();
         super.onResume();
     }
 
@@ -80,26 +73,5 @@ public class BluetoothActivity extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
         mController.stop();
-    }
-
-    private void activateBluetooth(){
-        /*if(controller.hasPermissions() == true) {
-            if(controller.isBluetoothEnabled() == false){
-                controller.enableBluetooth();
-            }else if(controller.isDiscovering() == false){
-                controller.discoverDevices();
-
-                if(controller.isDiscoverable() == false){
-                    controller.enableDiscoverability();
-                }
-
-                if(controller.hasServerStarted() == false) {
-                    controller.startServer();
-                }
-            }
-        }
-        else{
-            controller.getPermissions();
-        }*/
     }
 }

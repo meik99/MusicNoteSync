@@ -131,17 +131,4 @@ public class BluetoothController {
             Log.i(TAG, "stop: " + ex.getMessage());
         }
     }
-
-    /**
-     * Verifies permissions needed for bluetooth functionality.
-     * Requests them if it does not have them.
-     * Uses PermissionHelper.STANDARD_REQUEST_CODE for permission request.
-     * @return true if app has permissions, else false
-     */
-    public boolean getBluetoothPermissions(){
-        boolean hasPermission = PermissionHelper.verifyPermissions(
-                mBluetoothActivity,
-                BluetoothConstants.PERMISSIONS);
-        return hasPermission;
-    }
 }

@@ -10,4 +10,5 @@
     <string name="bluetooth_no_support">Device does not support bluetooth</string>
     <string name="bluetooth_enabled">Bluetooth enabled</string>
     <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
+    <string name="ask_for_bluetooth">Active Bluetooth to start server</string>
 </resources>

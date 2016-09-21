@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
+import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
         mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
 
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
+            mController.tryStartBluetoothServer();
+        }
     }
 
     @Override
