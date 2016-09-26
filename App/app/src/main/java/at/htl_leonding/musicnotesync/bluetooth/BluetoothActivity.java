@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
@@ -26,7 +27,13 @@ public class BluetoothActivity extends AppCompatActivity{
         mController = new BluetoothController(this);
 
         if(PermissionHelper.getBluetoothPermissions(this) == true){
-            mController.enableBluetooth();
+            boolean bluetoothActivated = mController.enableBluetooth();
+
+            if(bluetoothActivated == true){
+                if(Server.getInstance().isRunning() == false) {
+                    Server.getInstance().startServer();
+                }
+            }
         }
     }
 

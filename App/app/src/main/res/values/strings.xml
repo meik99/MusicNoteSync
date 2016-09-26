@@ -11,4 +11,7 @@
     <string name="bluetooth_enabled">Bluetooth enabled</string>
     <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
     <string name="ask_for_bluetooth">Active Bluetooth to start server</string>
+    <string name="bluetooth_successful_connect">Devices are connected</string>
+    <string name="bluetooth_connect_failure">No connection established</string>
+    <string name="bluetooth_device_is_server">Error: Device is connected to clients</string>
 </resources>

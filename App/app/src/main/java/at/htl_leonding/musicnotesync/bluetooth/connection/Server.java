@@ -22,7 +22,7 @@ public class Server extends Thread{
     private static Server instance;
 
     private BluetoothServerSocket serverSocket;
-    private boolean running = true;
+    private boolean running = false;
     private List<BluetoothSocket> clients;
     private PackageSender sender;
 
@@ -44,6 +44,7 @@ public class Server extends Thread{
 
             while(running == true) {
                 BluetoothSocket socket = serverSocket.accept();
+
                 clients.add(socket);
             }
         } catch (IOException e) {
@@ -86,5 +87,13 @@ public class Server extends Thread{
             instance = new Server();
         }
         return instance;
+    }
+
+    public boolean isConnected() {
+        return clients.size() > 0;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

@@ -109,7 +109,7 @@ public class MainController {
         storage.copyFileToInternalStorage(this.model.getPhotoFile(), directory, null);
 
         NotesheetFacade nf = new NotesheetFacade(this.model.getActivity());
-        nf.insertNotesheet(null, this.model.getPhotoFile().getName());
+        nf.insertNotesheet(null, directory + File.separator + this.model.getPhotoFile().getName());
     }
 
     public void dismissDialog(){
