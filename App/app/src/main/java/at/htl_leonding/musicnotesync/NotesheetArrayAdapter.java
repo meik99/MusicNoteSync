@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +41,17 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
 
     @Override
     public NotesheetViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView =
+        final View itemView =
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.notesheet_list_item, parent, false);
         itemView.setOnClickListener(new NotesheetClickListener(mController));
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
+                itemView.getContext().startActivity(intent);
+            }
+        });
 
         NotesheetViewHolder result = new NotesheetViewHolder(itemView);
 
