@@ -49,6 +49,8 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
+                intent.putExtra("pathName",
+                        ((TextView)itemView.findViewById(R.id.noteSheetNameView)).getText());
                 itemView.getContext().startActivity(intent);
             }
         });
