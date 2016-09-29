@@ -73,6 +73,10 @@ public class Client extends Thread {
                         Log.i(TAG, "run: Received Package:");
                         Log.i(TAG, "run: Flag:" + receivedPackage.getFlag().name());
                         Log.i(TAG, "run: Data:" + Arrays.toString(receivedPackage.getContent()));
+
+                        switch (receivedPackage.getFlag()){
+
+                        }
                     }
                 }
 
