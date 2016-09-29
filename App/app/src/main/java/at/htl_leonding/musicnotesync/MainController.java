@@ -15,10 +15,15 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+import at.htl_leonding.musicnotesync.bluetooth.connection.BluetoothPackage;
+import at.htl_leonding.musicnotesync.bluetooth.connection.Flag;
 import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.bluetooth.deprecated.communication.BluetoothCommunicator;
+import at.htl_leonding.musicnotesync.bluetooth.deprecated.server.BluetoothServer;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
@@ -126,12 +131,12 @@ public class MainController {
     }
 
     public void openNotesheet(Notesheet ns) {
-        if(BluetoothCommunicator.isInitialized() == true) {
-            try {
-                BluetoothCommunicator.getInstance().openNotesheet(ns);
-            } catch (IOException e) {
-                Log.i(TAG, "openNotesheet: " + e.getMessage());
-            }
+        if(Server.getInstance().isRunning() == true){
+            BluetoothPackage bluetoothPackage = new BluetoothPackage();
+            bluetoothPackage.setFlag(Flag.FILE);
+            bluetoothPackage.setContent(ns.getUUID().getBytes());
+
+            Server.getInstance().sendPackage(bluetoothPackage);
         }
     }
 
