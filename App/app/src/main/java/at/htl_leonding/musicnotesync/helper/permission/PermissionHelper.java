@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
 
+import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+
 /**
  * Created by michael on 07.07.16.
  */
@@ -61,5 +63,18 @@ public class PermissionHelper {
                         Manifest.permission.READ_EXTERNAL_STORAGE
                 }
         );
+    }
+
+    /**
+     * Verifies permissions needed for bluetooth functionality.
+     * Requests them if it does not have them.
+     * Uses PermissionHelper.STANDARD_REQUEST_CODE for permission request.
+     * @return true if app has permissions, else false
+     */
+    public static boolean getBluetoothPermissions(@NonNull Activity activity){
+        boolean hasPermission = PermissionHelper.verifyPermissions(
+                activity,
+                BluetoothConstants.PERMISSIONS);
+        return hasPermission;
     }
 }

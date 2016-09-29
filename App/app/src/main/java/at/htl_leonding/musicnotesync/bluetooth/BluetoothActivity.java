@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
@@ -24,21 +26,20 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
 
-        if(mController.getBluetoothPermissions() == true){
-            mController.enableBluetooth();
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
+            boolean bluetoothActivated = mController.enableBluetooth();
+
+            if(bluetoothActivated == true){
+                if(Server.getInstance().isRunning() == false) {
+                    Server.getInstance().startServer();
+                }
+            }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode ==
-                at.htl_leonding.musicnotesync.bluetooth.deprecated.BluetoothController
-                        .ENABLE_BLT_REQUEST){
-            if(resultCode == RESULT_OK){
-                activateBluetooth();
-            }
-        }
     }
 
     @Override
@@ -65,7 +66,6 @@ public class BluetoothActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
-        activateBluetooth();
         super.onResume();
     }
 
@@ -80,26 +80,5 @@ public class BluetoothActivity extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
         mController.stop();
-    }
-
-    private void activateBluetooth(){
-        /*if(controller.hasPermissions() == true) {
-            if(controller.isBluetoothEnabled() == false){
-                controller.enableBluetooth();
-            }else if(controller.isDiscovering() == false){
-                controller.discoverDevices();
-
-                if(controller.isDiscoverable() == false){
-                    controller.enableDiscoverability();
-                }
-
-                if(controller.hasServerStarted() == false) {
-                    controller.startServer();
-                }
-            }
-        }
-        else{
-            controller.getPermissions();
-        }*/
     }
 }

@@ -16,6 +16,8 @@ public class BluetoothConstants {
             UUID.fromString("42614F77-77E5-441A-90E3-5521182F4E6D");
     public static int BUFFER_CONTENT_SIZE = 1024;
     public static int BUFFER_FLAG_SIZE = 4;
+    public static int TRY_MAX = 10;
+
     /**
      * Has value of -1. Use BUFFER_CONTENT_SIZE and BUFFER_FLAG_SIZE instead
      */
