@@ -113,6 +113,7 @@ public class CustomImageView extends ImageView implements View.OnTouchListener {
 
 
     public void drag(MotionEvent event){
+        System.out.println("dragged -----------------");
         matrix.getValues(matrixValues);
 
         float left = matrixValues[2];
@@ -185,7 +186,6 @@ public class CustomImageView extends ImageView implements View.OnTouchListener {
         matrix.postScale(scale, scale, bitmapWidth > mViewWidth ? mMiddlePoint.x : midX, bimtapHeight > mViewHeight ? mMiddlePoint.y : midY);
 
         this.setImageMatrix(matrix);
-
 
     }
 
