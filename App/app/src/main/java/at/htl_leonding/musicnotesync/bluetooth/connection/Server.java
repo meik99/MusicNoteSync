@@ -33,8 +33,8 @@ public class Server extends Thread{
 
     @Override
     public void run() {
-        running = true;
         super.run();
+        running = true;
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         try {
@@ -70,7 +70,6 @@ public class Server extends Thread{
 
     public void startServer(){
         if(running == false){
-            running = true;
             if(this.isAlive() == false) {
                 this.start();
             }

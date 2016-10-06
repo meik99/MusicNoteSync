@@ -44,6 +44,11 @@ public class Client extends Thread {
                     device.
                         createRfcommSocketToServiceRecord(BluetoothConstants.CONNECTION_UUID);
             socket.connect();
+
+            while(this.isAlive() == true){
+                Thread.yield();
+            }
+
             this.start();
             return true;
         } catch (IOException e) {
@@ -68,6 +73,7 @@ public class Client extends Thread {
                     if(is != null) {
                         Log.i(TAG, "run: InputStream not null");
                         int length = is.read(buffer);
+                        byte[] received = ByteBuffer.wrap(buffer, 0, length).compact().array();
                         BluetoothPackage receivedPackage = BluetoothPackage.fromByteArray(buffer);
 
                         Log.i(TAG, "run: Received Package:");

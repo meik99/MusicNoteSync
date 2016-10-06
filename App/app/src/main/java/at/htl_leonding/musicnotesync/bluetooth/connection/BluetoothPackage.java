@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth.connection;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
@@ -36,10 +37,14 @@ public class BluetoothPackage {
     }
 
     public static BluetoothPackage fromByteArray(byte[] buffer){
-        int flagNumber = ByteBuffer.wrap(buffer, 0, 4).getInt();
+        int flagNumber = ByteBuffer.wrap(buffer, 0, BluetoothConstants.BUFFER_FLAG_SIZE).getInt();
         Flag resultFlag = Flag.fromInt(flagNumber);
         BluetoothPackage result = new BluetoothPackage();
-        byte[] resultBuffer = ByteBuffer.wrap(buffer, 4, buffer.length).array();
+        byte[] resultBuffer = new byte[buffer.length - BluetoothConstants.BUFFER_FLAG_SIZE];
+
+        for(int i = 0; i < resultBuffer.length; i++){
+            resultBuffer[i] = buffer[i + BluetoothConstants.BUFFER_FLAG_SIZE];
+        }
 
         if(resultFlag == null){
             throw new IllegalArgumentException("Buffer has illegal format");

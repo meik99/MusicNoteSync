@@ -24,7 +24,7 @@ public class PackageSender extends Thread {
 
     public PackageSender(){
         buffer = new LinkedList<>();
-        clients = new LinkedList<>();
+        clients = null;
     }
 
     public void addMessage(BluetoothPackage message) {
@@ -33,8 +33,8 @@ public class PackageSender extends Thread {
 
     @Override
     public void run() {
-        isRunning = true;
         super.run();
+        isRunning = true;
 
         while(buffer != null && buffer.size() > 0){
             BluetoothPackage pack = buffer.remove(0);
@@ -86,14 +86,23 @@ public class PackageSender extends Thread {
         }
 
         isRunning = false;
+        this.clients = null;
+        this.destroy();
     }
 
     public void send(List<BluetoothSocket> clients){
+        boolean firstStart = false;
+        if(this.clients == null){
+            firstStart = true;
+            this.clients = new LinkedList<>();
+        }
+
         if(clients != null){
             this.clients = clients;
         }
-        if(isRunning == false){
-            start();
+
+        if(firstStart == true){
+            this.start();
         }
     }
 }
