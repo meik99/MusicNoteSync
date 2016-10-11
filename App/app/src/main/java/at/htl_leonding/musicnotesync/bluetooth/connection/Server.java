@@ -22,13 +22,14 @@ public class Server extends Thread{
     private static Server instance;
 
     private BluetoothServerSocket serverSocket;
-    private boolean running = false;
+    private boolean running;
     private List<BluetoothSocket> clients;
     private PackageSender sender;
 
     public Server(){
         clients = new LinkedList<>();
-        sender = new PackageSender();
+        sender = PackageSender.getInstance();
+        running = false;
     }
 
     @Override
@@ -38,17 +39,20 @@ public class Server extends Thread{
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         try {
-            serverSocket =
-                    adapter.listenUsingRfcommWithServiceRecord(
-                            adapter.getName(), BluetoothConstants.CONNECTION_UUID);
+            if(adapter != null && adapter.isEnabled()) {
+                serverSocket =
+                        adapter.listenUsingRfcommWithServiceRecord(
+                                adapter.getName(), BluetoothConstants.CONNECTION_UUID);
 
-            while(running == true) {
-                BluetoothSocket socket = serverSocket.accept();
+                while (running == true) {
+                    BluetoothSocket socket = serverSocket.accept();
 
-                clients.add(socket);
+                    clients.add(socket);
+                }
             }
         } catch (IOException e) {
             Log.i(TAG, "run: " +e.getMessage());
+            running = false;
         }
 
         running = false;
@@ -70,15 +74,12 @@ public class Server extends Thread{
 
     public void startServer(){
         if(running == false){
-            if(this.isAlive() == false) {
-                this.start();
-            }
+            this.start();
         }
     }
 
     public void sendPackage(BluetoothPackage message){
         sender.addMessage(message);
-        sender.send(clients);
     }
 
     public static Server getInstance(){

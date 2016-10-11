@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 /**
@@ -130,5 +131,28 @@ public class BluetoothController {
         }catch (IllegalArgumentException ex){
             Log.i(TAG, "stop: " + ex.getMessage());
         }
+    }
+
+    public BroadcastReceiver startServer() {
+        BroadcastReceiver bluetoothEnabled = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
+                        == BluetoothAdapter.STATE_ON) {
+                    Server.getInstance().startServer();
+                }else{
+                    Server.getInstance().stopServer();
+                }
+            }
+        };
+        IntentFilter bltEnabledFilter =
+                new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mBluetoothActivity.registerReceiver(bluetoothEnabled, bltEnabledFilter);
+
+        if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
+            Server.getInstance().startServer();
+        }
+
+        return bluetoothEnabled;
     }
 }

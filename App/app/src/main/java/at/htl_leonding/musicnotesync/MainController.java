@@ -13,9 +13,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
@@ -132,11 +138,35 @@ public class MainController {
 
     public void openNotesheet(Notesheet ns) {
         if(Server.getInstance().isRunning() == true){
-            BluetoothPackage bluetoothPackage = new BluetoothPackage();
-            bluetoothPackage.setFlag(Flag.FILE);
-            bluetoothPackage.setContent(ns.getUUID().getBytes());
+            BluetoothPackage file = new BluetoothPackage();
+            ByteBuffer bb = ByteBuffer.allocate(BluetoothConstants.BUFFER_CONTENT_SIZE);
+            File noteFile = ns.getFile();
 
-            Server.getInstance().sendPackage(bluetoothPackage);
+            file.setFlag(Flag.FILE);
+            bb.put(ns.getUUID().getBytes());
+            bb.put(";".getBytes());
+            bb.put(ns.getName().getBytes());
+            file.setContent(bb.array());
+
+            Server.getInstance().sendPackage(file);
+
+            try {
+                if(noteFile != null) {
+                    BufferedInputStream br = new BufferedInputStream(new FileInputStream(noteFile));
+                    byte[] buffer = new byte[BluetoothConstants.BUFFER_CONTENT_SIZE];
+
+                    while (br.read(buffer) > -1) {
+                        BluetoothPackage data = new BluetoothPackage();
+                        data.setFlag(Flag.FILEDATA);
+                        data.setContent(buffer);
+                        Server.getInstance().sendPackage(data);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

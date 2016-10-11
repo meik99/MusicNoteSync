@@ -20,7 +20,7 @@ public class Client extends Thread {
     private static Client instance;
 
     private BluetoothSocket socket;
-    private boolean isRunning = false;
+    private boolean running = false;
 
     private Client(){
 
@@ -60,9 +60,10 @@ public class Client extends Thread {
     @Override
     public void run() {
         super.run();
-        isRunning = true;
+        running = true;
+        int disconnectCount = 0;
 
-        while(isRunning == true){
+        while(running == true){
             try {
                 byte[] buffer = new byte[BluetoothConstants.BUFFER_FLAG_SIZE
                         + BluetoothConstants.BUFFER_CONTENT_SIZE];
@@ -81,19 +82,29 @@ public class Client extends Thread {
                         Log.i(TAG, "run: Data:" + Arrays.toString(receivedPackage.getContent()));
 
                         switch (receivedPackage.getFlag()){
-
+                            case FILE:
+                                Log.i(TAG, "run: Got file metadata");
+                                Log.i(TAG, "run: " + new String(receivedPackage.getContent()));
+                            break;
+                            case FILEDATA:
+                                Log.i(TAG, "run: Got file data");
+                                Log.i(TAG, "run: " + new String(receivedPackage.getContent()));
+                                break;
                         }
                     }
                 }
 
             } catch (IOException e) {
                 Log.i(TAG, "run: " + e.getMessage());
+                if(disconnectCount++ > BluetoothConstants.TRY_MAX){
+                    running = false;
+                }
             }
         }
     }
 
     public void disconnect(){
-        isRunning = false;
+        running = false;
         if(socket != null){
             try {
                 socket.close();

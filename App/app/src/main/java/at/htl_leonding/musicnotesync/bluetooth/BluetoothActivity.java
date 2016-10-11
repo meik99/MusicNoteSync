@@ -1,19 +1,27 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
+import at.htl_leonding.musicnotesync.MainActivity;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
+    private static final String TAG = BluetoothActivity.class.getSimpleName();
     private BluetoothController mController;
+    private BroadcastReceiver mBluetoothStateChangeReceiver;
     private ListView mDeviceList;
 
     @Override
@@ -27,13 +35,10 @@ public class BluetoothActivity extends AppCompatActivity{
         mController = new BluetoothController(this);
 
         if(PermissionHelper.getBluetoothPermissions(this) == true){
-            boolean bluetoothActivated = mController.enableBluetooth();
 
-            if(bluetoothActivated == true){
-                if(Server.getInstance().isRunning() == false) {
-                    Server.getInstance().startServer();
-                }
-            }
+            mController.enableBluetooth();
+            mBluetoothStateChangeReceiver = mController.startServer();
+
         }
     }
 
@@ -80,5 +85,13 @@ public class BluetoothActivity extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
         mController.stop();
+        if(mBluetoothStateChangeReceiver != null){
+            try {
+                this.unregisterReceiver(mBluetoothStateChangeReceiver);
+            }catch (Exception e){
+                Log.i(TAG, "onStop: " + e.getMessage());
+            }
+        }
+
     }
 }

@@ -42,6 +42,6 @@ public class NotesheetImpl implements Notesheet{
 
     @Override
     public File getFile() {
-        return null;
+        return new File(this.name);
     }
 }
