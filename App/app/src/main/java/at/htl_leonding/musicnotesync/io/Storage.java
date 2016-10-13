@@ -113,32 +113,39 @@ public class Storage {
             return false;
         }
 
-        try {
-            this.copy(sourceFile, targetFile);
-        } catch (IOException e) {
-            Log.e(TAG, "copyFileToInternalStorage: " + e.getMessage());
-            return false;
-        }
+        this.copy(sourceFile, targetFile);
 
         return true;
     }
 
-    private void copy(File sourceFile, File targetFile) throws IOException {
+    private void copy(File sourceFile, File targetFile){
         //Create in and our streams
-        InputStream in = new FileInputStream(sourceFile);
-        OutputStream out = new FileOutputStream(targetFile);
+        try {
+            FileInputStream in = null;
+                in = new FileInputStream(sourceFile);
+            FileOutputStream out = new FileOutputStream(targetFile);
 
-        //Create buffer of one kilobyte
-        byte buffer[] = new byte[1024];
-        int len;
-        //While the length that was read from the input stream is bigger than zero...
-        while((len = in.read(buffer)) > 0){
-            //...write the buffer to the output stream
-            out.write(buffer, 0, len);
+            //Create buffer of one kilobyte
+            byte buffer[] = new byte[1024];
+            int len = in.read(buffer);
+
+            if(len > -1){
+                out.write(buffer);
+            }
+
+            //While the input stream is avaiable
+            while((len = in.read(buffer)) > -1){
+                //...write the buffer to the output stream
+                out.write(buffer);
+            }
+
+            in.close();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        in.close();
-        out.close();
     }
 
     public List<File> getDirectoryContent(File directory){

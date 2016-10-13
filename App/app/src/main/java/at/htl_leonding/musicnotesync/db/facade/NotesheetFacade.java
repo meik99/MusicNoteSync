@@ -46,7 +46,8 @@ public class NotesheetFacade {
         String[] columns = new String[]{
                 NotesheetContract.NotesheetEntry._ID,
                 NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME,
-                NotesheetContract.NotesheetEntry.COLUMN_UUID
+                NotesheetContract.NotesheetEntry.COLUMN_UUID,
+                NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH
         };
         String selection = NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID + "= ?";
         String[] selectionArgs = new String[]{
@@ -75,9 +76,15 @@ public class NotesheetFacade {
                     cursor.getString(
                         cursor.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME)
                 );
+                String filepath =
+                        cursor.getString(
+                                cursor.getColumnIndex(
+                                        NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH)
+                        );
 
                 note.setId(id);
                 note.setName(filename);
+                note.setPath(filepath);
                 result.add(note);
             }while(cursor.moveToNext() == true);
         }
@@ -101,6 +108,8 @@ public class NotesheetFacade {
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID, dir.getId());
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME, filename);
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_UUID, UUID.randomUUID().toString());
+        cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH,
+                context.getFilesDir().getPath() + File.separator + filename);
 
         long id = db.insert(NotesheetContract.TABLE, null, cv);
 

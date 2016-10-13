@@ -19,11 +19,11 @@ public class Client extends Thread {
     private static final String TAG = Client.class.getSimpleName();
     private static Client instance;
 
-    private BluetoothSocket socket;
+    private BluetoothSocket socket = null;
     private boolean running = false;
 
     private Client(){
-
+        this.start();
     }
 
     public static Client getInstance(){
@@ -45,11 +45,10 @@ public class Client extends Thread {
                         createRfcommSocketToServiceRecord(BluetoothConstants.CONNECTION_UUID);
             socket.connect();
 
-            while(this.isAlive() == true){
-                Thread.yield();
+            if(this.running == false){
+                this.start();
             }
 
-            this.start();
             return true;
         } catch (IOException e) {
             Log.i(TAG, "connect: " + e.getMessage());
@@ -92,6 +91,8 @@ public class Client extends Thread {
                                 break;
                         }
                     }
+                }else{
+                    Thread.yield();
                 }
 
             } catch (IOException e) {
@@ -101,10 +102,11 @@ public class Client extends Thread {
                 }
             }
         }
+
+        disconnect();
     }
 
     public void disconnect(){
-        running = false;
         if(socket != null){
             try {
                 socket.close();

@@ -145,17 +145,18 @@ public class MainController {
             file.setFlag(Flag.FILE);
             bb.put(ns.getUUID().getBytes());
             bb.put(";".getBytes());
-            bb.put(ns.getName().getBytes());
+            bb.put(ns.getPath().getBytes());
             file.setContent(bb.array());
 
             Server.getInstance().sendPackage(file);
 
             try {
                 if(noteFile != null) {
+
                     BufferedInputStream br = new BufferedInputStream(new FileInputStream(noteFile));
                     byte[] buffer = new byte[BluetoothConstants.BUFFER_CONTENT_SIZE];
 
-                    while (br.read(buffer) > -1) {
+                    while (br.read(buffer) > 0) {
                         BluetoothPackage data = new BluetoothPackage();
                         data.setFlag(Flag.FILEDATA);
                         data.setContent(buffer);

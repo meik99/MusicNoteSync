@@ -6,6 +6,7 @@ import java.io.File;
  * Created by michael on 11.08.16.
  */
 public interface Notesheet {
+    String getPath();
     String getName();
     String getUUID();
     long getId();

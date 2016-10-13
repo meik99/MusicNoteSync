@@ -24,11 +24,9 @@ public class Server extends Thread{
     private BluetoothServerSocket serverSocket;
     private boolean running;
     private List<BluetoothSocket> clients;
-    private PackageSender sender;
 
     public Server(){
         clients = new LinkedList<>();
-        sender = PackageSender.getInstance();
         running = false;
     }
 
@@ -48,6 +46,7 @@ public class Server extends Thread{
                     BluetoothSocket socket = serverSocket.accept();
 
                     clients.add(socket);
+                    PackageSender.getInstance().setClients(clients);
                 }
             }
         } catch (IOException e) {
@@ -79,7 +78,7 @@ public class Server extends Thread{
     }
 
     public void sendPackage(BluetoothPackage message){
-        sender.addMessage(message);
+        PackageSender.getInstance().addMessage(message);
     }
 
     public static Server getInstance(){

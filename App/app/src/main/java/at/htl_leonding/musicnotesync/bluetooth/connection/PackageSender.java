@@ -116,14 +116,18 @@ public class PackageSender extends Thread {
                 BluetoothDevice device = socket.getRemoteDevice();
 
                 if(device != null){
-                    String address = device.getAddress();
+                    if(this.clients.size() <= 0){
+                        this.clients.add(socket);
+                    }else {
+                        String address = device.getAddress();
 
-                    for(BluetoothSocket pSocket : this.clients){
-                        BluetoothDevice pDevice = pSocket.getRemoteDevice();
-                        String pAddress = pDevice.getAddress();
+                        for (BluetoothSocket pSocket : this.clients) {
+                            BluetoothDevice pDevice = pSocket.getRemoteDevice();
+                            String pAddress = pDevice.getAddress();
 
-                        if(pAddress.equals(address) == false){
-                            this.clients.add(socket);
+                            if (pAddress.equals(address) == false) {
+                                this.clients.add(socket);
+                            }
                         }
                     }
                 }
