@@ -44,16 +44,8 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
         final View itemView =
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.notesheet_list_item, parent, false);
+
         itemView.setOnClickListener(new NotesheetClickListener(mController));
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
-                intent.putExtra("pathName",
-                        ((TextView)itemView.findViewById(R.id.noteSheetNameView)).getText());
-                itemView.getContext().startActivity(intent);
-            }
-        });
 
         NotesheetViewHolder result = new NotesheetViewHolder(itemView);
 

@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth.connection;
 
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
@@ -16,15 +17,24 @@ import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
  */
 
 public class PackageSender extends Thread {
+    private static PackageSender instance = null;
 
     private static final String TAG = PackageSender.class.getSimpleName();
     private List<BluetoothPackage> buffer;
     private List<BluetoothSocket> clients;
     private boolean isRunning = false;
 
-    public PackageSender(){
+    private PackageSender(){
         buffer = new LinkedList<>();
         clients = new LinkedList<>();
+        this.start();
+    }
+
+    public static PackageSender getInstance(){
+        if(instance == null){
+            instance = new PackageSender();
+        }
+        return instance;
     }
 
     public void addMessage(BluetoothPackage message) {
@@ -33,67 +43,91 @@ public class PackageSender extends Thread {
 
     @Override
     public void run() {
-        isRunning = true;
         super.run();
+        isRunning = true;
 
-        while(buffer != null && buffer.size() > 0){
-            BluetoothPackage pack = buffer.remove(0);
-            List<BluetoothSocket> tmpClients = clients;
+        while(isRunning == true){
+            if(buffer != null && buffer.size() > 0){
+                BluetoothPackage pack = buffer.remove(0);
+                List<BluetoothSocket> tmpClients = clients;
 
-            for(BluetoothSocket client : tmpClients){
-                boolean dirty;
-                int tryCount = 0;
+                for(BluetoothSocket client : tmpClients){
+                    boolean dirty;
+                    int tryCount = 0;
 
-                do{
-                    dirty = false;
-                    try {
-                        OutputStream outputStream = client.getOutputStream();
-                        InputStream inputStream = client.getInputStream();
-                        List<Integer> byteBuffer = new LinkedList<>();
-                        int b;
-                        Byte[] received;
+                    do{
+                        dirty = false;
+                        try {
+                            OutputStream outputStream = client.getOutputStream();
+                            InputStream inputStream = client.getInputStream();
+                            List<Integer> byteBuffer = new LinkedList<>();
+                            int b;
+                            Byte[] received;
+                            int answerCount = 0;
 
-                        outputStream.write(pack.toByteArray());
+                            outputStream.write(pack.toByteArray());
 
-                        while(inputStream.read() == -1){
-                            try {
-                                Thread.sleep(10);
-                            } catch (InterruptedException e) {
-                                Log.i(TAG, "run: " + e.getMessage());
+                            while(inputStream.read() == -1 &&
+                                    answerCount++ < BluetoothConstants.TRY_MAX){
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
 
-                        while((b = inputStream.read()) != -1){
-                            byteBuffer.add(b);
-                        }
+                            while((b = inputStream.read()) != -1){
+                                byteBuffer.add(b);
+                            }
 
-                        received = new Byte[byteBuffer.size()];
-                        received = byteBuffer.toArray(received);
+                            received = new Byte[byteBuffer.size()];
+                            received = byteBuffer.toArray(received);
 
-                        BluetoothPackage answer = BluetoothPackage.fromByteArray(received);
-                        if(answer.getFlag() != Flag.POSITIVE){
+                            BluetoothPackage answer = BluetoothPackage.fromByteArray(received);
+                            if(answer.getFlag() != Flag.POSITIVE){
+                                dirty = true;
+                                Log.i(TAG, "run: answer not positive");
+                            }
+
+                        } catch (IOException e) {
                             dirty = true;
-                            Log.i(TAG, "run: answer not positive");
+                            Log.i(TAG, "run: " + e.getMessage());
                         }
-
-                    } catch (IOException e) {
-                        dirty = true;
-                        Log.i(TAG, "run: " + e.getMessage());
                     }
+                    while(dirty == true && tryCount++ < BluetoothConstants.TRY_MAX);
                 }
-                while(dirty == true && tryCount++ < BluetoothConstants.TRY_MAX);
+            }
+            else{
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         isRunning = false;
+        this.clients = null;
     }
 
-    public void send(List<BluetoothSocket> clients){
-        if(clients != null){
-            this.clients = clients;
-        }
-        if(isRunning == false){
-            start();
+    public void setClients(List<BluetoothSocket> clients) {
+        for(BluetoothSocket socket : clients){
+            if(socket != null){
+                BluetoothDevice device = socket.getRemoteDevice();
+
+                if(device != null){
+                    String address = device.getAddress();
+
+                    for(BluetoothSocket pSocket : this.clients){
+                        BluetoothDevice pDevice = pSocket.getRemoteDevice();
+                        String pAddress = pDevice.getAddress();
+
+                        if(pAddress.equals(address) == false){
+                            this.clients.add(socket);
+                        }
+                    }
+                }
+            }
         }
     }
 }
