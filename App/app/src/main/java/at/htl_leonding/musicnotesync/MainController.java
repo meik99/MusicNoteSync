@@ -136,39 +136,55 @@ public class MainController {
         return nf.getNotesheets(dir);
     }
 
-    public void openNotesheet(Notesheet ns) {
-        if(Server.getInstance().isRunning() == true){
-            BluetoothPackage file = new BluetoothPackage();
-            ByteBuffer bb = ByteBuffer.allocate(BluetoothConstants.BUFFER_CONTENT_SIZE);
-            File noteFile = ns.getFile();
+    public void openNotesheet(final Notesheet ns) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(Server.getInstance().isRunning() == true){
+                    BluetoothPackage file = new BluetoothPackage();
+                    ByteBuffer bb = ByteBuffer.allocate(BluetoothConstants.BUFFER_CONTENT_SIZE);
+                    File noteFile = ns.getFile();
 
-            file.setFlag(Flag.FILE);
-            bb.put(ns.getUUID().getBytes());
-            bb.put(";".getBytes());
-            bb.put(ns.getPath().getBytes());
-            file.setContent(bb.array());
+                    file.setFlag(Flag.FILE);
+                    bb.put(ns.getUUID().getBytes());
+                    bb.put(";".getBytes());
+                    bb.put(ns.getPath().getBytes());
+                    file.setContent(bb.array());
 
-            Server.getInstance().sendPackage(file);
+                    Server.getInstance().sendPackage(file);
 
-            try {
-                if(noteFile != null) {
+                    try {
+                        if(noteFile != null) {
 
-                    BufferedInputStream br = new BufferedInputStream(new FileInputStream(noteFile));
-                    byte[] buffer = new byte[BluetoothConstants.BUFFER_CONTENT_SIZE];
+                            BufferedInputStream br = new BufferedInputStream(new FileInputStream(noteFile));
+                            byte[] buffer = new byte[BluetoothConstants.BUFFER_CONTENT_SIZE];
 
-                    while (br.read(buffer) > 0) {
-                        BluetoothPackage data = new BluetoothPackage();
-                        data.setFlag(Flag.FILEDATA);
-                        data.setContent(buffer);
-                        Server.getInstance().sendPackage(data);
+                            int len = br.read(buffer);
+
+                            if(len > -1){
+                                sendFileData(buffer);
+                            }
+
+                            while (br.read(buffer) > 0) {
+                                sendFileData(buffer);
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
+        });
+        thread.start();
+    }
+
+    private void sendFileData(byte[] buffer){
+        BluetoothPackage data = new BluetoothPackage();
+        data.setFlag(Flag.FILEDATA);
+        data.setContent(buffer);
+        Server.getInstance().sendPackage(data);
     }
 
     public void tryStartBluetoothServer() {

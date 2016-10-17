@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -45,10 +46,6 @@ public class Client extends Thread {
                         createRfcommSocketToServiceRecord(BluetoothConstants.CONNECTION_UUID);
             socket.connect();
 
-            if(this.running == false){
-                this.start();
-            }
-
             return true;
         } catch (IOException e) {
             Log.i(TAG, "connect: " + e.getMessage());
@@ -74,21 +71,42 @@ public class Client extends Thread {
                         Log.i(TAG, "run: InputStream not null");
                         int length = is.read(buffer);
                         byte[] received = ByteBuffer.wrap(buffer, 0, length).compact().array();
-                        BluetoothPackage receivedPackage = BluetoothPackage.fromByteArray(buffer);
+                        BluetoothPackage receivedPackage = null;
+                        try {
+                            receivedPackage = BluetoothPackage.fromByteArray(buffer);
 
-                        Log.i(TAG, "run: Received Package:");
-                        Log.i(TAG, "run: Flag:" + receivedPackage.getFlag().name());
-                        Log.i(TAG, "run: Data:" + Arrays.toString(receivedPackage.getContent()));
 
-                        switch (receivedPackage.getFlag()){
-                            case FILE:
-                                Log.i(TAG, "run: Got file metadata");
-                                Log.i(TAG, "run: " + new String(receivedPackage.getContent()));
-                            break;
-                            case FILEDATA:
-                                Log.i(TAG, "run: Got file data");
-                                Log.i(TAG, "run: " + new String(receivedPackage.getContent()));
+                            Log.i(TAG, "run: Received Package:");
+                            Log.i(TAG, "run: Flag:" + receivedPackage.getFlag().name());
+                            Log.i(TAG, "run: Data:" + Arrays.toString(receivedPackage.getContent()));
+
+                            BluetoothPackage answer = new BluetoothPackage();
+                            answer.setFlag(Flag.POSITIVE);
+                            answer.setContent(new byte[0]);
+
+                            OutputStream os = socket.getOutputStream();
+                            os.write(answer.toByteArray());
+
+                            switch (receivedPackage.getFlag()){
+                                case FILE:
+                                    Log.i(TAG, "run: Got file metadata");
+                                    Log.i(TAG, "run: " + new String(receivedPackage.getContent()));
                                 break;
+                                case FILEDATA:
+                                    Log.i(TAG, "run: Got file data");
+                                    Log.i(TAG, "run: " + new String(receivedPackage.getContent()));
+                                    break;
+                            }
+                        }
+                        catch(IllegalArgumentException e){
+                            Log.i(TAG, "run: " + e.getMessage());
+
+                            BluetoothPackage answer = new BluetoothPackage();
+                            answer.setFlag(Flag.NEGATIVE);
+                            answer.setContent(new byte[0]);
+
+                            OutputStream os = socket.getOutputStream();
+                            os.write(answer.toByteArray());
                         }
                     }
                 }else{

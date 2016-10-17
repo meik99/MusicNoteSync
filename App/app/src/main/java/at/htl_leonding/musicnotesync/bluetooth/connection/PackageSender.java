@@ -60,33 +60,40 @@ public class PackageSender extends Thread {
                         try {
                             OutputStream outputStream = client.getOutputStream();
                             InputStream inputStream = client.getInputStream();
-                            List<Integer> byteBuffer = new LinkedList<>();
+//                            List<Integer> byteBuffer = new LinkedList<>();
                             int b;
-                            Byte[] received;
+                            byte[] answerStream = new byte[BluetoothConstants.BUFFER_MAX_SIZE];
                             int answerCount = 0;
 
                             outputStream.write(pack.toByteArray());
 
-                            while(inputStream.read() == -1 &&
-                                    answerCount++ < BluetoothConstants.TRY_MAX){
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+//                            while(inputStream.read() == -1 &&
+//                                    answerCount++ < BluetoothConstants.TRY_MAX){
+//                                try {
+//                                    Thread.sleep(100);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//
+//                            while((b = inputStream.read()) != -1){
+//                                byteBuffer.add(b);
+//                            }
+//
+//                            received = new Byte[byteBuffer.size()];
+//                            received = byteBuffer.toArray(received);
+
+                            b = inputStream.read(answerStream);
+
+                            if(b < 0){
+                                Log.i(TAG, "run: length was " + b);
+                            }
+                            else {
+                                BluetoothPackage answer = BluetoothPackage.fromByteArray(answerStream);
+                                if (answer.getFlag() != Flag.POSITIVE) {
+                                    dirty = true;
+                                    Log.i(TAG, "run: answer not positive");
                                 }
-                            }
-
-                            while((b = inputStream.read()) != -1){
-                                byteBuffer.add(b);
-                            }
-
-                            received = new Byte[byteBuffer.size()];
-                            received = byteBuffer.toArray(received);
-
-                            BluetoothPackage answer = BluetoothPackage.fromByteArray(received);
-                            if(answer.getFlag() != Flag.POSITIVE){
-                                dirty = true;
-                                Log.i(TAG, "run: answer not positive");
                             }
 
                         } catch (IOException e) {
