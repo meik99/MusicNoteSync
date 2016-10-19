@@ -13,23 +13,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.LinkedList;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 import at.htl_leonding.musicnotesync.bluetooth.connection.BluetoothPackage;
 import at.htl_leonding.musicnotesync.bluetooth.connection.Flag;
-import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
-import at.htl_leonding.musicnotesync.bluetooth.deprecated.communication.BluetoothCommunicator;
-import at.htl_leonding.musicnotesync.bluetooth.deprecated.server.BluetoothServer;
+import at.htl_leonding.musicnotesync.bluetooth.connection.server.Server;
+import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
@@ -136,56 +126,16 @@ public class MainController {
         return nf.getNotesheets(dir);
     }
 
-    public void openNotesheet(final Notesheet ns) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(Server.getInstance().isRunning() == true){
-                    BluetoothPackage file = new BluetoothPackage();
-                    ByteBuffer bb = ByteBuffer.allocate(BluetoothConstants.BUFFER_CONTENT_SIZE);
-                    File noteFile = ns.getFile();
-
-                    file.setFlag(Flag.FILE);
-                    bb.put(ns.getUUID().getBytes());
-                    bb.put(";".getBytes());
-                    bb.put(ns.getPath().getBytes());
-                    file.setContent(bb.array());
-
-                    Server.getInstance().sendPackage(file);
-
-                    try {
-                        if(noteFile != null) {
-
-                            BufferedInputStream br = new BufferedInputStream(new FileInputStream(noteFile));
-                            byte[] buffer = new byte[BluetoothConstants.BUFFER_CONTENT_SIZE];
-
-                            int len = br.read(buffer);
-
-                            if(len > -1){
-                                sendFileData(buffer);
-                            }
-
-                            while (br.read(buffer) > 0) {
-                                sendFileData(buffer);
-                            }
-                        }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        thread.start();
+    public void openNotesheet(Notesheet notesheet) {
+        ServerManager.getInstance().openNotesheet(notesheet);
     }
 
-    private void sendFileData(byte[] buffer){
-        BluetoothPackage data = new BluetoothPackage();
-        data.setFlag(Flag.FILEDATA);
-        data.setContent(buffer);
-        Server.getInstance().sendPackage(data);
-    }
+//    private void sendFileData(byte[] buffer){
+//        BluetoothPackage data = new BluetoothPackage();
+//        data.setFlag(Flag.FILEDATA);
+//        data.setContent(buffer);
+//        //Server.getInstance().sendPackage(data);
+//    }
 
     public void tryStartBluetoothServer() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -196,9 +146,9 @@ public class MainController {
                     public void onReceive(Context context, Intent intent) {
                         int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                         if(bltState == BluetoothAdapter.STATE_ON) {
-                            Server.getInstance().startServer();
+                            ServerManager.getInstance().startServer();
                         }else{
-                            Server.getInstance().stopServer();
+//                            Server.getInstance().stopServer();
                         }
                     }
                 };
@@ -211,7 +161,7 @@ public class MainController {
                     .makeText(model.getActivity(), R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
                     .show();
             }else{
-                Server.getInstance().startServer();
+                ServerManager.getInstance().startServer();
             }
         }
     }

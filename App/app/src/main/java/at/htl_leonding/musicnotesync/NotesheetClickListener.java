@@ -19,11 +19,11 @@ public class NotesheetClickListener implements View.OnClickListener {
     @Override
     public void onClick(View itemView) {
         if(itemView.getTag() != null) {
-            Notesheet ns = null;
-            ns = (Notesheet) itemView.getTag();
-            mController.openNotesheet(ns);
-
+            Notesheet notesheet = (Notesheet) itemView.getTag();
             Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
+
+            mController.openNotesheet(notesheet);
+
             intent.putExtra("pathName",
                     ((TextView)itemView.findViewById(R.id.noteSheetNameView)).getText());
             itemView.getContext().startActivity(intent);

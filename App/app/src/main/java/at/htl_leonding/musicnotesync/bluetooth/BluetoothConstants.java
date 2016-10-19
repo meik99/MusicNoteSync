@@ -17,6 +17,7 @@ public class BluetoothConstants {
     public static int BUFFER_CONTENT_SIZE = 1024;
     public static int BUFFER_FLAG_SIZE = 4;
     public static int BUFFER_MAX_SIZE = BUFFER_CONTENT_SIZE + BUFFER_FLAG_SIZE;
+    public static int BUFFER_FILE_BUFFER = 1024*1024; //1 MB of file buffer
     public static int TRY_MAX = 10;
 
     /**
