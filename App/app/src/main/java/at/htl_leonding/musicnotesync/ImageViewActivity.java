@@ -3,9 +3,12 @@ package at.htl_leonding.musicnotesync;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 
 import java.io.File;
 
@@ -20,7 +23,7 @@ public class ImageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
-        CustomImageView customImageView = (CustomImageView) findViewById(R.id.noteSheetView);
+        TouchImageView customImageView = (TouchImageView) findViewById(R.id.noteSheetView);
 
         String filename = this.getIntent().getStringExtra("pathName");
         Bitmap bb = BitmapFactory.decodeFile(
@@ -28,21 +31,23 @@ public class ImageViewActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: "
                 +  getApplicationContext().getFilesDir().getPath() + File.separator + filename);
         if(bb != null) {
-            int width = bb.getWidth();
-            int height = bb.getHeight();
+            long width = bb.getWidth();
+            long height = bb.getHeight();
             double scale = (double) width / height;
-            int newWidth = 4096;
-            int newHeight = (int) Math.round(newWidth / scale);
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            Matrix scaleMatrix = new Matrix();
-            scaleMatrix.setScale(newWidth / (float) width, newHeight / (float) height);
+            double newWidth = metrics.widthPixels;
+            System.out.println("Width: " + newWidth);
+            long newHeight = (int) Math.round(newWidth / scale);
 
-            Bitmap nb = Bitmap.createBitmap(bb, 0, 0, newWidth, newHeight, scaleMatrix, true);
-
-            customImageView.setImageBitmap(nb);
-        }else {
+            customImageView.setImageBitmap(Bitmap.createScaledBitmap(bb, (int)newWidth, (int)newHeight, false));
+        }
+        else {
             customImageView.setImageBitmap(bb);
         }
+
         customImageView.invalidate();
+
     }
 }
