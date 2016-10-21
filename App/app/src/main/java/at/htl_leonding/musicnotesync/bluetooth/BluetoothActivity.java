@@ -1,11 +1,7 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
-import at.htl_leonding.musicnotesync.MainActivity;
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{

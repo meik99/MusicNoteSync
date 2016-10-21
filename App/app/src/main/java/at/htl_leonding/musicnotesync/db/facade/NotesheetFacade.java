@@ -36,6 +36,8 @@ public class NotesheetFacade {
     public List<Notesheet> getNotesheets(@Nullable  Directory directory) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+
         List<Notesheet> result = new LinkedList<>();
 
         if(directory == null){
@@ -90,7 +92,6 @@ public class NotesheetFacade {
         }
 
         dbHelper.closeCursor(cursor);
-        db.close();
 
         return result;
     }
@@ -113,7 +114,6 @@ public class NotesheetFacade {
 
         long id = db.insert(NotesheetContract.TABLE, null, cv);
 
-        db.close();
         return id > -1;
     }
 }

@@ -12,8 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.bluetooth.connection.Server;
-import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
+import at.htl_leonding.musicnotesync.bluetooth.connection.server.Server;
+import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
 
 /**
  * Created by michael on 12.09.16.
@@ -139,9 +139,9 @@ public class BluetoothController {
             public void onReceive(Context context, Intent intent) {
                 if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
                         == BluetoothAdapter.STATE_ON) {
-                    Server.getInstance().startServer();
+                    ServerManager.getInstance().startServer();
                 }else{
-                    Server.getInstance().stopServer();
+//                    Server.getInstance().stopServer();
                 }
             }
         };
@@ -150,7 +150,7 @@ public class BluetoothController {
         mBluetoothActivity.registerReceiver(bluetoothEnabled, bltEnabledFilter);
 
         if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
-            Server.getInstance().startServer();
+            ServerManager.getInstance().startServer();
         }
 
         return bluetoothEnabled;
