@@ -107,6 +107,7 @@ public class DirectoryFacade {
                 + " = " + directory.getId();
 
         Cursor cursor = null;
+        List<Directory> result = new LinkedList<>();
         try {
 
             cursor = db.rawQuery(query, null);
@@ -114,6 +115,18 @@ public class DirectoryFacade {
 
             if (cursor != null && cursor.moveToFirst() == true) {
                 Log.d(TAG, "getChildren: Found " + cursor.getCount() + " entries");
+
+                do{
+                    DirectoryImpl dir = new DirectoryImpl();
+                    dir.setId(cursor.getInt(
+                            cursor.getColumnIndex(
+                                    DirectoryContract.DirectoryEntry._ID)));
+                    dir.setName(cursor.getString(
+                            cursor.getColumnIndex(
+                                    DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME)));
+                    dir.setParent(directory);
+                    result.add(dir);
+                }while (cursor.moveToNext());
             }
         }catch (SQLException ex){
             Log.e(TAG, "getChildren: " + ex.getMessage());
@@ -124,6 +137,6 @@ public class DirectoryFacade {
 
         db.close();
 
-        return new LinkedList<>();
+        return result;
     }
 }
