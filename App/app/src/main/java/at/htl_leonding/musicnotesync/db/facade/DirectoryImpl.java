@@ -1,8 +1,11 @@
 package at.htl_leonding.musicnotesync.db.facade;
 
+import android.database.Cursor;
+
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.db.DirectoryContract;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 
@@ -56,5 +59,23 @@ public class DirectoryImpl implements Directory{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void fromDirectory(Directory directory){
+        this.setParent(directory.getParent());
+        this.setName(directory.getName());
+        this.setId(directory.getId());
+    }
+
+    public void fromCursor(Cursor cur) {
+        if(cur != null){
+            setId(
+                    cur.getInt(cur.getColumnIndex(DirectoryContract.DirectoryEntry._ID))
+            );
+            setName(
+                    cur.getString(
+                            cur.getColumnIndex(DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME))
+            );
+        }
     }
 }
