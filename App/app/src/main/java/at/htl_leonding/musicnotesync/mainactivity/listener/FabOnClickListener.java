@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.mainactivity.listener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import java.io.File;
 import java.io.IOException;
 
+import at.htl_leonding.musicnotesync.MainActivity;
+import at.htl_leonding.musicnotesync.NameFolderActivity;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
@@ -23,6 +26,7 @@ import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
  */
 public class FabOnClickListener implements View.OnClickListener{
     public static final int SELECT_FILE_REQUEST_CODE = 4;
+    public static final int ADD_FOLDER_REQUEST_CODE = 5;
 
     private static final String TAG = FabOnClickListener.class.getSimpleName();
 
@@ -30,6 +34,8 @@ public class FabOnClickListener implements View.OnClickListener{
 
     private File mPhotoFile;
     private Dialog mSelectFormatDialog;
+
+
 
     public FabOnClickListener(Activity activity){
         this.activity = activity;
@@ -44,6 +50,8 @@ public class FabOnClickListener implements View.OnClickListener{
 
         Button btnTakePicture = (Button) dialogView.findViewById(R.id.btnTakePicture);
         Button btnSelectFile = (Button) dialogView.findViewById(R.id.btnSelectFile);
+        Button btnAddFolder = (Button) dialogView.findViewById(R.id.btnAddFolder);
+
 
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +73,24 @@ public class FabOnClickListener implements View.OnClickListener{
             }
         });
 
+        btnAddFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchAddFolderIntent(context);
+            }
+        });
+
         builder.setView(dialogView);
         builder.setTitle(context.getString(R.string.select_format));
 
 
         mSelectFormatDialog = builder.create();
         mSelectFormatDialog.show();
+    }
+
+    private void dispatchAddFolderIntent(Context context) {
+        Intent addFolderIntent = new Intent(context, NameFolderActivity.class);
+        activity.startActivityForResult(addFolderIntent, ADD_FOLDER_REQUEST_CODE);
     }
 
     private void dispatchSelectFileIntent() {

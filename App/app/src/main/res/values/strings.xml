@@ -14,4 +14,8 @@
     <string name="bluetooth_successful_connect">Devices are connected</string>
     <string name="bluetooth_connect_failure">No connection established</string>
     <string name="bluetooth_device_is_server">Error: Device is connected to clients</string>
+    <string name="add_folder">Add Folder</string>
+    <string name="move_file">Move</string>
+    <string name="rename_file">Rename File</string>
+    <string name="delete_file">Delete File</string>
 </resources>

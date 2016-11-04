@@ -7,14 +7,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
+import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
+import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetLongClickListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mNoteSheetRecyclerView;
     private NotesheetArrayAdapter mAdapter;
     private MainController mController;
+    private static MainController mStaticController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +37,20 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
         mController = new MainController(this);
-
+        mStaticController = mController;
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(mController.getFabListener());
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        mAdapter = new NotesheetArrayAdapter(mController);
+        mAdapter = new NotesheetArrayAdapter(mController, this);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
         mNoteSheetRecyclerView.setAdapter(mAdapter);
         mNoteSheetRecyclerView.setLayoutManager(llm);
+        //registerForContextMenu(mNoteSheetRecyclerView);
+
+
 
         mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
         mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
@@ -64,6 +72,20 @@ public class MainActivity extends AppCompatActivity {
                             data.getData().getPath());
                 }
                 break;
+            case FabOnClickListener.ADD_FOLDER_REQUEST_CODE:
+                String name = data.getStringExtra("FolderName");
+                mController.getDF().create(name);
+                mAdapter.setDirectory(mAdapter.getCurrDir());
+                mAdapter.notifyDataSetChanged();
+                break;
+            case 7:
+                Directory t = MoveFileActivity.getTargetDirectory();
+                Directory s = NotesheetLongClickListener.getSourceDir();
+
+                mController.getDF().move(s,t);
+                mAdapter.notifyDataSetChanged();
+                break;
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -93,9 +115,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        mAdapter.setSheets(mController.getNotesheets(null));
+        //mAdapter.setSheets(mController.getNotesheets(null));
         mController.dismissDialog();
         super.onResume();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mAdapter.getCurrDir().getParent() != null){
+            mAdapter.setDirectory(mAdapter.getCurrDir().getParent());
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    public static MainController getMainController(){
+        return mStaticController;
+    }
 }

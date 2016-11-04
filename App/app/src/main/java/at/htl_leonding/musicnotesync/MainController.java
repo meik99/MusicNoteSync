@@ -124,10 +124,15 @@ public class MainController {
         Directory dir = parent == null ? df.getRoot() : parent;
 
         return nf.getNotesheets(dir);
+        //return df.getChildren(dir);
     }
 
     public void openNotesheet(Notesheet notesheet) {
         ServerManager.getInstance().openNotesheet(notesheet);
+    }
+
+    public DirectoryFacade getDF(){
+        return new DirectoryFacade(model.getActivity());
     }
 
 //    private void sendFileData(byte[] buffer){

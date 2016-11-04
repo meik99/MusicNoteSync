@@ -11,6 +11,8 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
+import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetLongClickListener;
+import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
 
 /**
  * Created by hanne on 12.08.2016.
