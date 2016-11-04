@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
 
 /**
  * Created by hanne on 12.08.2016.
@@ -45,7 +46,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.notesheet_list_item, parent, false);
 
-        itemView.setOnClickListener(new NotesheetClickListener(mController));
+        itemView.setOnClickListener(new NotesheetClickListener(mController, this));
 
         NotesheetViewHolder result = new NotesheetViewHolder(itemView);
 

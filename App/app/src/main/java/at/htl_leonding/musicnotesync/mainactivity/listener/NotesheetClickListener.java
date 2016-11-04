@@ -31,7 +31,7 @@ public class NotesheetClickListener implements View.OnClickListener {
             Object notesheet = (Object) itemView.getTag();
             Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
 
-            DirectoryFacade df = mController.getDF();
+            DirectoryFacade df = new DirectoryFacade(itemView.getContext());
             if (notesheet instanceof Notesheet) {
                 mController.openNotesheet((Notesheet) notesheet);
 
