@@ -8,9 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-
-import java.io.File;
 
 import at.htl_leonding.musicnotesync.MainController;
 import at.htl_leonding.musicnotesync.MoveFileActivity;
@@ -24,7 +21,7 @@ import at.htl_leonding.musicnotesync.db.contract.Directory;
 public class NotesheetLongClickListener implements View.OnLongClickListener {
     private static final String TAG = NotesheetLongClickListener.class.getSimpleName();
 
-    public static final int GET_TARGET_FOR_MOVE = 7;
+    public static final int MOVE_DIRECTORY_REQUEST_CODE = 7;
 
     private MainController mController;
     private NotesheetArrayAdapter mAdapter;
@@ -64,8 +61,8 @@ public class NotesheetLongClickListener implements View.OnLongClickListener {
             public void onClick(View v) {
                 Object o = view.getTag();
                 if (o instanceof Directory)
-                    mController.getDF().delete((Directory)o);
-                mAdapter.setDirectory(mAdapter.getCurrDir());
+                    mController.getDirectoryFacade().delete((Directory)o);
+                mAdapter.setDirectory(mAdapter.getCurrentDirectory());
                 mAdapter.notifyDataSetChanged();
                 mSelectFormatDialog.dismiss();
             }
@@ -79,9 +76,9 @@ public class NotesheetLongClickListener implements View.OnLongClickListener {
                     sourceDir = (Directory)o;
 
                     Intent intent = new Intent(mActivity, MoveFileActivity.class);
-                    mActivity.startActivityForResult(intent, GET_TARGET_FOR_MOVE);
+                    mActivity.startActivityForResult(intent, MOVE_DIRECTORY_REQUEST_CODE);
 
-                    //mController.getDF().move((Directory) o, mController.getDF().getRoot());
+                    //mController.getDirectoryFacade().move((Directory) o, mController.getDirectoryFacade().getRoot());
 
                 }
                 mSelectFormatDialog.dismiss();

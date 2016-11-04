@@ -8,13 +8,12 @@ import android.view.View;
 import android.widget.Button;
 
 import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
 
 public class MoveFileActivity extends AppCompatActivity {
     RecyclerView mNoteSheetRecyclerView;
     NotesheetArrayAdapter mAdapter;
     MainController mController;
-    Button btnMoveOk;
+    Button btnMoveDirectory;
 
     static Directory dir;
 
@@ -32,13 +31,13 @@ public class MoveFileActivity extends AppCompatActivity {
         mNoteSheetRecyclerView.setAdapter(mAdapter);
         mNoteSheetRecyclerView.setLayoutManager(llm);
 
-        dir = mController.getDF().getRoot();
+        dir = mController.getDirectoryFacade().getRoot();
 
-        btnMoveOk = (Button) findViewById(R.id.btnMoveOk);
-        btnMoveOk.setOnClickListener(new View.OnClickListener() {
+        btnMoveDirectory = (Button) findViewById(R.id.btnMoveOk);
+        btnMoveDirectory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dir = mAdapter.getCurrDir();
+                dir = mAdapter.getCurrentDirectory();
                 finish();
             }
         });

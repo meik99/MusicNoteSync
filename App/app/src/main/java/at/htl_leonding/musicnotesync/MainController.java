@@ -16,9 +16,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.bluetooth.connection.BluetoothPackage;
-import at.htl_leonding.musicnotesync.bluetooth.connection.Flag;
-import at.htl_leonding.musicnotesync.bluetooth.connection.server.Server;
 import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
@@ -34,6 +31,18 @@ public class MainController {
     private static final String TAG = MainController.class.getSimpleName();
 
     private MainModel model;
+
+    private  BroadcastReceiver mBtStateChangedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+            if(bltState == BluetoothAdapter.STATE_ON) {
+                ServerManager.getInstance().startServer();
+            }else{
+//                            Server.getInstance().stopServer();
+            }
+        }
+    };
 
     public MainController(MainActivity activity){
         this.model = new MainModel();
@@ -131,7 +140,7 @@ public class MainController {
         ServerManager.getInstance().openNotesheet(notesheet);
     }
 
-    public DirectoryFacade getDF(){
+    public DirectoryFacade getDirectoryFacade(){
         return new DirectoryFacade(model.getActivity());
     }
 
@@ -146,21 +155,11 @@ public class MainController {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if(adapter != null){
             if(adapter.isEnabled() == false){
-                BroadcastReceiver btStateChanged = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
-                        if(bltState == BluetoothAdapter.STATE_ON) {
-                            ServerManager.getInstance().startServer();
-                        }else{
-//                            Server.getInstance().stopServer();
-                        }
-                    }
-                };
+
                 IntentFilter bsStateChangedFilter =
                         new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
                 model.getActivity()
-                        .registerReceiver(btStateChanged, bsStateChangedFilter);
+                        .registerReceiver(mBtStateChangedReceiver, bsStateChangedFilter);
 
                 Toast
                     .makeText(model.getActivity(), R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
@@ -168,6 +167,14 @@ public class MainController {
             }else{
                 ServerManager.getInstance().startServer();
             }
+        }
+    }
+
+    public void unregisterBluetoothFilter(){
+        try {
+            model.getActivity().unregisterReceiver(mBtStateChangedReceiver);
+        }catch(Exception e){
+            //No catch routine because exception is unnecessary
         }
     }
 }

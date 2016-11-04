@@ -144,8 +144,12 @@ public class DirectoryFacade {
 
     public Directory move(Directory source, Directory target){
         Directory root = getRoot();
+
         if(source.equals(root)){
             throw new IllegalArgumentException("Cannot move root directory");
+        }
+        if(source.getId() == target.getId()){
+
         }
 
         long childId = source.getId();

@@ -7,10 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import at.htl_leonding.musicnotesync.db.contract.Directory;
@@ -55,9 +53,13 @@ public class MainActivity extends AppCompatActivity {
         mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
         mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
 
-        if(PermissionHelper.getBluetoothPermissions(this) == true){
-            mController.tryStartBluetoothServer();
-        }
+    }
+
+    @Override
+    protected void onPause() {
+        mController.unregisterBluetoothFilter();
+
+        super.onPause();
     }
 
     @Override
@@ -73,16 +75,19 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case FabOnClickListener.ADD_FOLDER_REQUEST_CODE:
-                String name = data.getStringExtra("FolderName");
-                mController.getDF().create(name);
-                mAdapter.setDirectory(mAdapter.getCurrDir());
-                mAdapter.notifyDataSetChanged();
+                if(data != null) {
+                    String name = data.getStringExtra("FolderName");
+                    mController.getDirectoryFacade().create(name);
+                    mAdapter.setDirectory(mAdapter.getCurrentDirectory());
+                    mAdapter.notifyDataSetChanged();
+                }
                 break;
-            case 7:
-                Directory t = MoveFileActivity.getTargetDirectory();
-                Directory s = NotesheetLongClickListener.getSourceDir();
+            case NotesheetLongClickListener.MOVE_DIRECTORY_REQUEST_CODE:
+                Directory target = MoveFileActivity.getTargetDirectory();
+                Directory source = NotesheetLongClickListener.getSourceDir();
 
-                mController.getDF().move(s,t);
+                mController.getDirectoryFacade().move(source,target);
+                mAdapter.setDirectory(mAdapter.getCurrentDirectory());
                 mAdapter.notifyDataSetChanged();
                 break;
 
@@ -117,18 +122,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         //mAdapter.setSheets(mController.getNotesheets(null));
         mController.dismissDialog();
+
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
+            mController.tryStartBluetoothServer();
+        }
+
         super.onResume();
     }
 
     @Override
     public void onBackPressed() {
-        if (mAdapter.getCurrDir().getParent() != null){
-            mAdapter.setDirectory(mAdapter.getCurrDir().getParent());
+        if (mAdapter.getCurrentDirectory().getParent() != null){
+            mAdapter.setDirectory(mAdapter.getCurrentDirectory().getParent());
         }
         else {
             super.onBackPressed();
         }
     }
+
+
 
     public static MainController getMainController(){
         return mStaticController;
