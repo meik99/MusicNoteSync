@@ -187,4 +187,24 @@ public class NotesheetFacade {
                 new String[]{String.valueOf(notesheet.getId())}
         );
     }
+
+    public Notesheet update(@NonNull Notesheet notesheet){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH, notesheet.getPath());
+        contentValues.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME, notesheet.getName());
+        contentValues.put(
+                NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID,
+                notesheet.getParent().getId());
+
+        db.update(
+                NotesheetContract.TABLE,
+                contentValues,
+                NotesheetContract.NotesheetEntry._ID + "=?",
+                new String[]{String.valueOf(notesheet.getId())}
+        );
+        return findById(notesheet.getId());
+    }
 }

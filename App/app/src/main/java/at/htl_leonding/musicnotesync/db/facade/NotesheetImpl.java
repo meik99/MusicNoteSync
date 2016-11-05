@@ -17,11 +17,11 @@ public class NotesheetImpl implements Notesheet{
     String uuid;
     Directory parent;
     long id;
-    int size;
 
-    protected NotesheetImpl(String string){
+    public NotesheetImpl(String string){
         uuid = string;
     }
+    public NotesheetImpl(){}
 
     @Override
     public String getPath() {
@@ -67,5 +67,13 @@ public class NotesheetImpl implements Notesheet{
     @Override
     public File getFile() {
         return new File(this.path);
+    }
+
+    public void fromNotesheet(Notesheet notesheet){
+        this.parent = notesheet.getParent();
+        this.name = notesheet.getName();
+        this.path = notesheet.getPath();
+        this.id = notesheet.getId();
+        this.uuid = notesheet.getUUID();
     }
 }

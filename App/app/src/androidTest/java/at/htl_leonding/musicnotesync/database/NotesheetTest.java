@@ -9,7 +9,9 @@ import org.junit.runner.RunWith;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
+import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -85,4 +87,23 @@ public class NotesheetTest {
 
         assertNull(notesheet);
     }
+
+   @Test
+    public void updateNotesheet_notesheetUpdated(){
+       NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
+       long id = nf.insert(null, "Test.png");
+       Notesheet notesheet = nf.findById(id);
+
+       assertNotNull(notesheet);
+       assertEquals("Test.png", notesheet.getName());
+
+       NotesheetImpl updatedNotesheet = new NotesheetImpl(notesheet.getUUID());
+       updatedNotesheet.fromNotesheet(notesheet);
+       updatedNotesheet.setName("Tested.png");
+
+       notesheet = nf.update(updatedNotesheet);
+
+       assertNotNull(notesheet);
+       assertEquals("Tested.png", notesheet.getName());
+   }
 }

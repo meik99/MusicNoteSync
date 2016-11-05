@@ -5,12 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import at.htl_leonding.musicnotesync.db.DBHelper;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
+import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 
 import static org.junit.Assert.assertEquals;
@@ -102,5 +105,23 @@ public class DatabaseTest{
         assertNotNull(referenceDir);
 
         assertEquals(newDir.getParent().getId(), parentDir.getId());
+    }
+
+    @Test
+    public void updateDirectory_directoryNameChanged(){
+        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        Directory directory = df.create("Test Dir");
+
+        Assert.assertNotNull(directory);
+        Assert.assertEquals("Test Dir", directory.getName());
+
+        DirectoryImpl updatedDirectory = new DirectoryImpl();
+
+        updatedDirectory.fromDirectory(directory);
+        updatedDirectory.setName("Test Directory");
+        directory = df.rename(updatedDirectory);
+
+        Assert.assertNotNull(directory);
+        Assert.assertEquals("Test Directory", directory.getName());
     }
 }

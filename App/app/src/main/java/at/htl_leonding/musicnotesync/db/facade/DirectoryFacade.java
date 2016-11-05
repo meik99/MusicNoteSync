@@ -268,4 +268,20 @@ public class DirectoryFacade {
                 null
         );
     }
+
+    public Directory rename(Directory directory){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME, directory.getName());
+        db.update(
+                DirectoryContract.TABLE,
+                contentValues,
+                DirectoryContract.DirectoryEntry._ID + "=?",
+                new String[]{String.valueOf(directory.getId())}
+        );
+
+        return findById(directory.getId());
+    }
 }

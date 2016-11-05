@@ -19,7 +19,7 @@ public class DirectoryImpl implements Directory{
     private Directory parent;
     private long id;
 
-    protected DirectoryImpl(){
+    public DirectoryImpl(){
         children = new LinkedList<>();
         notesheets = new LinkedList<>();
     }
