@@ -1,11 +1,9 @@
-package at.htl_leonding.musicnotesync;
+package at.htl_leonding.musicnotesync.database;
 
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.AndroidTestCase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,26 +43,6 @@ public class DatabaseTest{
     }
 
     @Test
-    public void dropDatabase_DatabaseDropped(){
-        DBHelper dbHelper = new DBHelper(InstrumentationRegistry.getTargetContext());
-
-        try {
-        }catch(SQLException ex){
-            fail(ex.getMessage());
-        }
-
-        assertNotNull(dbHelper);
-
-        try{
-            dbHelper.dropDatabase();
-        }catch (SQLException ex){
-            fail(ex.getMessage());
-        }
-
-    }
-
-
-    @Test
     public void getRoot_RootDirectoryRetrieved(){
         DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
         Directory root = df.getRoot();
@@ -100,5 +78,29 @@ public class DatabaseTest{
         newDir = df.findById(newDir.getId());
 
         assertNull(newDir);
+    }
+
+    @Test
+    public void moveDirectory_DirectoryMoved(){
+        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        Directory newDir = df.create("Test Directory");
+        Directory referenceDir = null;
+        Directory parentDir = df.create("Parent Directory");
+        Directory root = df.getRoot();
+
+        assertNotNull(newDir);
+        assertNotNull(parentDir);
+        assertNotNull(root);
+
+        assertEquals(newDir.getParent().getId(), root.getId());
+        assertEquals(parentDir.getParent().getId(), root.getId());
+
+        newDir = df.move(newDir, parentDir);
+        referenceDir = df.findById(newDir.getId());
+
+        assertNotNull(newDir);
+        assertNotNull(referenceDir);
+
+        assertEquals(newDir.getParent().getId(), parentDir.getId());
     }
 }

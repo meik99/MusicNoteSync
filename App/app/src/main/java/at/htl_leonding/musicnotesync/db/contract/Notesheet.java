@@ -9,6 +9,7 @@ public interface Notesheet {
     String getPath();
     String getName();
     String getUUID();
+    Directory getParent();
     long getId();
     File getFile();
 }
