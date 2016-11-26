@@ -16,11 +16,9 @@ import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.helper.EmergencyStorage;
-import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
-import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetLongClickListener;
 import at.htl_leonding.musicnotesync.management.MoveActivity;
 import at.htl_leonding.musicnotesync.request.RequestCode;
 
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         long id = 0;
         switch (requestCode) {
-            case CameraIntentHelper.REQUEST_CODE:
+            case RequestCode.TAKE_PICTURE_REQUEST_CODE:
                 NotesheetFacade notesheetFacade = new NotesheetFacade(this);
                 Notesheet newNotesheet = mController.storeFileFromCameraIntent(resultCode);
                 notesheetFacade.move(newNotesheet, mAdapter.getCurrentDirectory());

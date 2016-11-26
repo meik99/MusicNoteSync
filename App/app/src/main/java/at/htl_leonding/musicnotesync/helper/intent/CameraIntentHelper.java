@@ -5,19 +5,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
 
 import at.htl_leonding.musicnotesync.io.Storage;
+import at.htl_leonding.musicnotesync.request.RequestCode;
 
 /**
  * Created by michael on 07.07.16.
  */
 public class CameraIntentHelper {
     private CameraIntentHelper(){}
-
-    public static final int REQUEST_CODE = 1;
 
     /**
      * Creates a camera-intent and dispatches it. The intent stores the picture taken into
@@ -35,11 +35,12 @@ public class CameraIntentHelper {
              if(storageFile != null){
                  //Creates a path pointing to the storage file.
                  //Used by intent
-                 Uri photoUri = Uri.fromFile(storageFile);
+                Uri photoUri =
+                        FileProvider.getUriForFile(rootActivity, "at.htl_leonding.fileprovider", storageFile);
                  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                  //Starts intent with result-code.
                  //Commented for later listener-implementation
-                 rootActivity.startActivityForResult(takePictureIntent, REQUEST_CODE);
+                 rootActivity.startActivityForResult(takePictureIntent, RequestCode.TAKE_PICTURE_REQUEST_CODE);
              }
         }
 
@@ -58,7 +59,7 @@ public class CameraIntentHelper {
         //Creates a storage file and calls dispatch-method
         return CameraIntentHelper.dispatchTakePictureIntent(
                     rootActivity,
-                    Storage.createTemporaryStorageFile(null, ".jpg"));
+                    Storage.createTemporaryStorageFile(rootActivity, null, ".jpg"));
     }
 
 

@@ -124,9 +124,10 @@ public class MainController {
         Notesheet result = null;
         DirectoryFacade df = new DirectoryFacade(this.model.getActivity());
         NotesheetFacade nf = new NotesheetFacade(this.model.getActivity());
-        List<Notesheet> rootNotesheets = nf.getNotesheets(df.getRoot());
 
         nf.insert(null, directory, this.model.getPhotoFile().getName());
+        List<Notesheet> rootNotesheets = nf.getNotesheets(df.getRoot());
+
         result = rootNotesheets.get(rootNotesheets.size()-1);
         return result;
     }
