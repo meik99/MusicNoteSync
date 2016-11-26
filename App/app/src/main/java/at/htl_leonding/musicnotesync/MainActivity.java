@@ -12,11 +12,17 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import at.htl_leonding.musicnotesync.db.contract.Directory;
+import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
+import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.helper.EmergencyStorage;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetLongClickListener;
+import at.htl_leonding.musicnotesync.management.MoveActivity;
+import at.htl_leonding.musicnotesync.request.RequestCode;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -39,14 +45,12 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(mController.getFabListener());
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-
         mAdapter = new NotesheetArrayAdapter(mController, this);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
         mNoteSheetRecyclerView.setAdapter(mAdapter);
-        mNoteSheetRecyclerView.setLayoutManager(llm);
-        //registerForContextMenu(mNoteSheetRecyclerView);
+        mNoteSheetRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
 
 
 
@@ -64,9 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        long id = 0;
         switch (requestCode) {
             case CameraIntentHelper.REQUEST_CODE:
-                mController.storeFileFromCameraIntent(resultCode);
+                NotesheetFacade notesheetFacade = new NotesheetFacade(this);
+                Notesheet newNotesheet = mController.storeFileFromCameraIntent(resultCode);
+                notesheetFacade.move(newNotesheet, mAdapter.getCurrentDirectory());
                 break;
             case FabOnClickListener.SELECT_FILE_REQUEST_CODE:
                 if (data != null && data.getData() != null && data.getData().getPath() != null) {
@@ -77,22 +84,38 @@ public class MainActivity extends AppCompatActivity {
             case FabOnClickListener.ADD_FOLDER_REQUEST_CODE:
                 if(data != null) {
                     String name = data.getStringExtra("FolderName");
-                    mController.getDirectoryFacade().create(name);
-                    mAdapter.setDirectory(mAdapter.getCurrentDirectory());
-                    mAdapter.notifyDataSetChanged();
+                    Directory newDirectory =
+                        mController.getDirectoryFacade().create(name);
+
+                    mController.getDirectoryFacade().move(
+                            newDirectory, mAdapter.getCurrentDirectory());
                 }
                 break;
-            case NotesheetLongClickListener.MOVE_DIRECTORY_REQUEST_CODE:
-                Directory target = MoveFileActivity.getTargetDirectory();
-                Directory source = NotesheetLongClickListener.getSourceDir();
+            case RequestCode.MOVE_DIRECTORY_REQUEST_CODE:
+                id = EmergencyStorage.id;
+                if (id != -1) {
+                    DirectoryFacade df = new DirectoryFacade(this);
+                    Directory source = df.findById(id);
+                    Directory target = MoveActivity.getTargetDirectory();
+                    mController.getDirectoryFacade().move(source, target);
+                }
+                break;
+            case RequestCode.MOVE_NOTESHEET_REQUEST_CODE:
 
-                mController.getDirectoryFacade().move(source,target);
-                mAdapter.setDirectory(mAdapter.getCurrentDirectory());
-                mAdapter.notifyDataSetChanged();
+                id = EmergencyStorage.id;
+                if (id != -1) {
+                    NotesheetFacade nf = new NotesheetFacade(this);
+                    Notesheet source = nf.findById(id);
+                    Directory target = MoveActivity.getTargetDirectory();
+
+                    nf.move(source, target);
+                }
+
                 break;
 
         }
 
+        mAdapter.refresh();
         super.onActivityResult(requestCode, resultCode, data);
     }
 

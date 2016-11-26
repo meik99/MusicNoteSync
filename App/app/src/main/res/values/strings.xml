@@ -18,4 +18,9 @@
     <string name="move_file">Move</string>
     <string name="rename_file">Rename File</string>
     <string name="delete_file">Delete File</string>
+    <string name="rename">Rename</string>
+    <string name="move">Move</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
 </resources>

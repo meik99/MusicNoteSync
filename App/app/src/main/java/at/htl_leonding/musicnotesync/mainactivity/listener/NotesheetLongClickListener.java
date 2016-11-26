@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import at.htl_leonding.musicnotesync.MainController;
-import at.htl_leonding.musicnotesync.MoveFileActivity;
+import at.htl_leonding.musicnotesync.management.MoveActivity;
 import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
@@ -75,7 +75,7 @@ public class NotesheetLongClickListener implements View.OnLongClickListener {
                 if (o instanceof Directory) {
                     sourceDir = (Directory)o;
 
-                    Intent intent = new Intent(mActivity, MoveFileActivity.class);
+                    Intent intent = new Intent(mActivity, MoveActivity.class);
                     mActivity.startActivityForResult(intent, MOVE_DIRECTORY_REQUEST_CODE);
 
                     //mController.getDirectoryFacade().move((Directory) o, mController.getDirectoryFacade().getRoot());

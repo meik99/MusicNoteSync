@@ -3,20 +3,17 @@ package at.htl_leonding.musicnotesync.mainactivity.listener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.widget.Button;
 
 import java.io.File;
 import java.io.IOException;
 
-import at.htl_leonding.musicnotesync.MainActivity;
-import at.htl_leonding.musicnotesync.NameFolderActivity;
+import at.htl_leonding.musicnotesync.management.NameFolderActivity;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;

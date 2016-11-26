@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync;
+package at.htl_leonding.musicnotesync.management;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,9 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import at.htl_leonding.musicnotesync.MainActivity;
+import at.htl_leonding.musicnotesync.MainController;
+import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
+import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 
-public class MoveFileActivity extends AppCompatActivity {
+public class MoveActivity extends AppCompatActivity {
     RecyclerView mNoteSheetRecyclerView;
     NotesheetArrayAdapter mAdapter;
     MainController mController;
@@ -22,14 +26,13 @@ public class MoveFileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_file);
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-
         mController = MainActivity.getMainController();
         mAdapter = new NotesheetArrayAdapter(mController, this);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.moveRecyclerView);
         mNoteSheetRecyclerView.setAdapter(mAdapter);
-        mNoteSheetRecyclerView.setLayoutManager(llm);
+        mNoteSheetRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        );
 
         dir = mController.getDirectoryFacade().getRoot();
 

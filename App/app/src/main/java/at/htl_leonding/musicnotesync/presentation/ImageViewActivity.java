@@ -1,18 +1,15 @@
-package at.htl_leonding.musicnotesync;
+package at.htl_leonding.musicnotesync.presentation;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 
 import java.io.File;
 
-import at.htl_leonding.musicnotesync.io.Storage;
+import at.htl_leonding.musicnotesync.R;
 
 public class ImageViewActivity extends AppCompatActivity {
 

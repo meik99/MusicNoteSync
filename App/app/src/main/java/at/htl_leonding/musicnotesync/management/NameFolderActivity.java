@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync;
+package at.htl_leonding.musicnotesync.management;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import at.htl_leonding.musicnotesync.R;
 
 public class NameFolderActivity extends AppCompatActivity {
     private EditText textFolderName;

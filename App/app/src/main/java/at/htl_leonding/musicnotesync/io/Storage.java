@@ -159,4 +159,8 @@ public class Storage {
 
         return result;
     }
+
+    public String getCameraDirectory() {
+        return INTERNAL_STORAGE.getPath() + File.separator + "camera" + File.separator;
+    }
 }

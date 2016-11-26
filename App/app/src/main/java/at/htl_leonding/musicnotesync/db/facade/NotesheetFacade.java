@@ -17,6 +17,7 @@ import at.htl_leonding.musicnotesync.db.DBHelper;
 import at.htl_leonding.musicnotesync.db.NotesheetContract;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.io.Storage;
 
 /**
  * Created by michael on 09.07.16.
@@ -97,6 +98,14 @@ public class NotesheetFacade {
     }
 
     public long insert(@Nullable Directory dir, @NonNull String filename){
+        Storage storage = new Storage(this.context);
+
+        return insert(dir, storage.getCameraDirectory(), filename);
+    }
+
+
+
+    public long insert(Directory dir, String directoryPath, String filename) {
         ContentValues cv = new ContentValues();
         DBHelper dbHelper = new DBHelper(this.context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -110,11 +119,11 @@ public class NotesheetFacade {
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME, filename);
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_UUID, UUID.randomUUID().toString());
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH,
-                context.getFilesDir().getPath() + File.separator + filename);
+                directoryPath + File.separator + filename);
 
-        long id = db.insert(NotesheetContract.TABLE, null, cv);
+        db.insert(NotesheetContract.TABLE, null, cv);
 
-        return id;
+        return dir.getId();
     }
 
     public Notesheet findById(long id){
@@ -191,13 +200,23 @@ public class NotesheetFacade {
     public Notesheet update(@NonNull Notesheet notesheet){
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        DirectoryFacade df = new DirectoryFacade(this.context);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH, notesheet.getPath());
         contentValues.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME, notesheet.getName());
-        contentValues.put(
-                NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID,
-                notesheet.getParent().getId());
+
+        if(notesheet.getParent() == null){
+            contentValues.put(
+                    NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID,
+                    df.getRoot().getId());
+        }
+        else{
+            contentValues.put(
+                    NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID,
+                    notesheet.getParent().getId());
+        }
+
 
         db.update(
                 NotesheetContract.TABLE,

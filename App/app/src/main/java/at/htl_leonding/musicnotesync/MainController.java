@@ -54,8 +54,9 @@ public class MainController {
         return this.model.getListener();
     }
 
-    public void storeFileFromCameraIntent(int resultCode) {
+    public Notesheet storeFileFromCameraIntent(int resultCode) {
         Log.d(TAG, "onActivityResult: Camera intent closed");
+        Notesheet result = null;
         this.model.setPhotoFile(
                 this.model.getListener().getPhotoFile()
         );
@@ -63,8 +64,10 @@ public class MainController {
         if(resultCode == Activity.RESULT_OK &&
                 this.model.getPhotoFile() != null &&
                 this.model.getPhotoFile().exists()){
-            storePhotoFile("camera");
+            result = storePhotoFile("camera");
         }
+
+        return result;
     }
 
     public void storeFileFromFileChooser(int resultCode, String path) {
@@ -113,13 +116,19 @@ public class MainController {
         }
     }
 
-    private void storePhotoFile(String directory){
+    private Notesheet storePhotoFile(String directory){
         Log.d(TAG, "storePhotoFile: Photo exists");
         Storage storage = new Storage(this.model.getActivity());
         storage.copyFileToInternalStorage(this.model.getPhotoFile(), directory, null);
 
+        Notesheet result = null;
+        DirectoryFacade df = new DirectoryFacade(this.model.getActivity());
         NotesheetFacade nf = new NotesheetFacade(this.model.getActivity());
-        nf.insert(null, directory + File.separator + this.model.getPhotoFile().getName());
+        List<Notesheet> rootNotesheets = nf.getNotesheets(df.getRoot());
+
+        nf.insert(null, directory, this.model.getPhotoFile().getName());
+        result = rootNotesheets.get(rootNotesheets.size()-1);
+        return result;
     }
 
     public void dismissDialog(){

@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".bluetooth.BluetoothActivity" />
-        <activity android:name=".ImageViewActivity" />
+        <activity android:name=".presentation.ImageViewActivity" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -40,8 +40,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".NameFolderActivity" />
-        <activity android:name=".MoveFileActivity"></activity>
+        <activity android:name=".management.NameFolderActivity" />
+        <activity android:name=".management.MoveActivity"></activity>
     </application>
 
 </manifest>
