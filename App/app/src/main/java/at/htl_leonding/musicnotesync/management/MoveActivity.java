@@ -15,38 +15,26 @@ import at.htl_leonding.musicnotesync.db.contract.Directory;
 
 public class MoveActivity extends AppCompatActivity {
     RecyclerView mNoteSheetRecyclerView;
-    NotesheetArrayAdapter mAdapter;
-    MainController mController;
     Button btnMoveDirectory;
-
-    static Directory dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_file);
 
-        mController = MainActivity.getMainController();
-        mAdapter = new NotesheetArrayAdapter(mController, this);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.moveRecyclerView);
-        mNoteSheetRecyclerView.setAdapter(mAdapter);
+        mNoteSheetRecyclerView.setAdapter(mainController.getNotesheetArrayAdapter());
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         );
-
-        dir = mController.getDirectoryFacade().getRoot();
 
         btnMoveDirectory = (Button) findViewById(R.id.btnMoveOk);
         btnMoveDirectory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dir = mAdapter.getCurrentDirectory();
+                mainController.moveObjectToDirectory();
                 finish();
             }
         });
-    }
-
-    public static Directory getTargetDirectory(){
-        return dir;
     }
 }

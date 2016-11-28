@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.db.contract.Directory;
@@ -24,11 +25,6 @@ import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
  */
 public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAdapter.NotesheetViewHolder>{
     private static final String TAG = NotesheetArrayAdapter.class.getSimpleName();
-
-    public void refresh() {
-        this.setDirectory(this.getCurrentDirectory());
-        this.notifyDataSetChanged();
-    }
 
     public class NotesheetViewHolder extends RecyclerView.ViewHolder{
         protected TextView nameView;
@@ -47,50 +43,17 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
         }
     }
 
-    private List<Object> listObjects;
-    private MainController mController;
-    private Activity mActivity;
-    private Directory currentDirectory;
+    private List<Object> mNotesheetObjects;
+    private MainController mMainController;
 
-    public void setDirectory(Directory dir) {
-        this.listObjects.clear();
-
-        Log.d(TAG, "setDirectory: " + dir.getName());
-        List<Directory> directories = mController.getDirectoryFacade().getChildren(dir);
-        List<Notesheet> notesheets = mController.getNotesheets(dir);
-        Directory rootDirectory = mController.getDirectoryFacade().getRoot();
-
-        if(dir.getParent() != null) {
-            DirectoryImpl parent = new DirectoryImpl();
-            parent.fromDirectory(dir.getParent());
-            parent.setName("...");
-
-            listObjects.add(parent);
-        }
-
-        for (Directory directory : directories){
-            if(directory.getId() != rootDirectory.getId()) {
-                listObjects.add(directory);
-            }
-        }
-
-        for (Notesheet notesheet : notesheets) {
-            listObjects.add(notesheet);
-        }
-        currentDirectory = dir;
+    public void setNotesheetObjects(List<Object> notesheetObjects) {
+        mNotesheetObjects = notesheetObjects;
         this.notifyDataSetChanged();
     }
 
-    public Directory getCurrentDirectory() {
-        return currentDirectory;
-    }
-
-    public NotesheetArrayAdapter(MainController controller, Activity activity) {
-        this.mController = controller;
-        this.listObjects = new ArrayList<>();
-        this.mActivity = activity;
-        this.currentDirectory = mController.getDirectoryFacade().getRoot();
-        this.setDirectory(this.currentDirectory);
+    public NotesheetArrayAdapter(MainController mainController) {
+        mNotesheetObjects = new LinkedList<>();
+        mMainController = mainController;
     }
 
     @Override
@@ -98,18 +61,18 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
         final View itemView =
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.notesheet_list_item, parent, false);
-        itemView.setOnClickListener(new NotesheetClickListener(mController, this));
+        itemView.setOnClickListener(mMainController.getNotesheetItemClickListener());
 
         NotesheetViewHolder result = new NotesheetViewHolder(itemView);
         result.managementOptions.setOnClickListener(
-                new ManagementOptionsClickListener(this, mActivity));
+                mMainController.getManagementOptionClickListener());
 
         return result;
     }
 
     @Override
     public void onBindViewHolder(NotesheetViewHolder holder, int position) {
-        Object object = listObjects.get(position);
+        Object object = mNotesheetObjects.get(position);
         if (object instanceof Notesheet) {
             holder.nameView.setText(((Notesheet) object).getName());
             holder.iconView.setImageResource(R.drawable.ic_audiotrack_black_24dp);
@@ -124,7 +87,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
 
     @Override
     public int getItemCount() {
-        return listObjects.size();
+        return mNotesheetObjects.size();
     }
 
 

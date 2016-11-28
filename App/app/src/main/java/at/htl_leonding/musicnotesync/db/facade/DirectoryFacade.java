@@ -284,4 +284,8 @@ public class DirectoryFacade {
 
         return findById(directory.getId());
     }
+
+    public Directory update(Directory directory){
+        return rename(directory);
+    }
 }

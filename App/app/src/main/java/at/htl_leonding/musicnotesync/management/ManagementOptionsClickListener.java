@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 
+import at.htl_leonding.musicnotesync.MainController;
 import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
@@ -26,12 +27,10 @@ import at.htl_leonding.musicnotesync.request.RequestCode;
  */
 public class ManagementOptionsClickListener implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     private View mActiveView = null;
-    private NotesheetArrayAdapter mAdapter = null;
-    private Activity mActivity = null;
+    private MainController mMainController;
 
-    public ManagementOptionsClickListener(NotesheetArrayAdapter adapter, Activity activity){
-        mAdapter = adapter;
-        mActivity = activity;
+    public ManagementOptionsClickListener(MainController mainController){
+        mMainController = mainController;
     }
 
     @Override
@@ -50,91 +49,17 @@ public class ManagementOptionsClickListener implements View.OnClickListener, Pop
 
         switch (item.getItemId()){
             case R.id.move_option:
-                Intent intent = new Intent(mActivity, MoveActivity.class);
-
-                if(object instanceof Directory){
-                    Directory directory = (Directory)object;
-
-                    EmergencyStorage.id = directory.getId();
-                    mActivity.startActivityForResult(
-                            intent, RequestCode.MOVE_DIRECTORY_REQUEST_CODE);
-                }
-                else if(object instanceof  Notesheet){
-                    Notesheet notesheet = (Notesheet) object;
-
-                    EmergencyStorage.id = notesheet.getId();
-                    mActivity.startActivityForResult(intent, RequestCode.MOVE_NOTESHEET_REQUEST_CODE);
-                }
-                break;
+                mMainController.startMoveObjectToDirectory(object);
+            break;
             case R.id.delete_option:
-                if(object instanceof Directory){
-                    DirectoryFacade df = new DirectoryFacade(mActiveView.getContext());
-                    df.delete((Directory) object);
-                }
-                else if(object instanceof Notesheet){
-                    NotesheetFacade nf = new NotesheetFacade(mActiveView.getContext());
-                    nf.delete((Notesheet)object);
-                }
-                break;
+                mMainController.deleteNotesheetObject(object);
+            break;
             case R.id.rename_option:
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActiveView.getContext());
-                final EditText txtRename = new EditText(mActiveView.getContext());
-
-                if(object instanceof Notesheet){
-                    txtRename.setText(((Notesheet) object).getName());
-                }
-                else if(object instanceof Directory){
-                    txtRename.setText(((Directory) object).getName());
-                }
-
-                builder
-                        .setTitle(R.string.rename)
-                        .setView(txtRename)
-                        .setNegativeButton(
-                                R.string.cancel,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }
-                        )
-                        .setPositiveButton(
-                                R.string.ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String newName = txtRename.getText().toString();
-                                        if(object instanceof Notesheet){
-                                            Notesheet notesheet = (Notesheet) object;
-                                            NotesheetImpl renamedNotesheet = new NotesheetImpl();
-                                            NotesheetFacade nf = new NotesheetFacade(
-                                                    mActiveView.getContext());
-
-                                            renamedNotesheet.fromNotesheet(notesheet);
-                                            renamedNotesheet.setName(newName);
-                                            nf.update(renamedNotesheet);
-                                        }
-                                        else if(object instanceof Directory){
-                                            DirectoryImpl renamedDirectory = new DirectoryImpl();
-                                            DirectoryFacade df =
-                                                    new DirectoryFacade(mActiveView.getContext());
-
-                                            renamedDirectory.fromDirectory(
-                                                    (Directory) object
-                                            );
-                                            renamedDirectory.setName(newName);
-                                            df.rename(renamedDirectory);
-                                        }
-                                        mAdapter.refresh();
-                                        dialog.dismiss();
-                                    }
-                                }
-                        ).show();
+                mMainController.startRenameNotesheetObject(object);
                 break;
-        }
 
-        mAdapter.refresh();
+        }
+        mMainController.refreshNotesheetArrayAdapter();
         return false;
     }
 }

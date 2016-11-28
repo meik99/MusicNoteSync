@@ -24,25 +24,25 @@ import at.htl_leonding.musicnotesync.io.Storage;
  */
 public class NotesheetFacade {
     private static final String TAG = NotesheetFacade.class.getSimpleName();
-    private Context context;
+    private Context mContext;
 
     public NotesheetFacade(Context context){
         if(context == null) {
-            throw new IllegalArgumentException("Argument 'context' must not be null!");
+            throw new IllegalArgumentException("Argument 'mContext' must not be null!");
         }
 
-        this.context = context;
+        this.mContext = context;
     }
 
     public List<Notesheet> getNotesheets(@Nullable  Directory directory) {
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
 
         List<Notesheet> result = new LinkedList<>();
 
         if(directory == null){
-            DirectoryFacade df = new DirectoryFacade(context);
+            DirectoryFacade df = new DirectoryFacade(mContext);
             directory = df.getRoot();
         }
 
@@ -97,21 +97,21 @@ public class NotesheetFacade {
         return result;
     }
 
-    public long insert(@Nullable Directory dir, @NonNull String filename){
-        Storage storage = new Storage(this.context);
+    public Notesheet insert(@Nullable Directory dir, @NonNull String filename){
+        Storage storage = new Storage(mContext);
 
         return insert(dir, storage.getCameraDirectory(), filename);
     }
 
 
 
-    public long insert(Directory dir, String directoryPath, String filename) {
+    public Notesheet insert(Directory dir, String directoryPath, String filename) {
         ContentValues cv = new ContentValues();
-        DBHelper dbHelper = new DBHelper(this.context);
+        DBHelper dbHelper = new DBHelper(this.mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(dir == null){
-            DirectoryFacade df = new DirectoryFacade(context);
+            DirectoryFacade df = new DirectoryFacade(mContext);
             dir = df.getRoot();
         }
 
@@ -121,13 +121,13 @@ public class NotesheetFacade {
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH,
                 directoryPath + File.separator + filename);
 
-        db.insert(NotesheetContract.TABLE, null, cv);
+        long id = db.insert(NotesheetContract.TABLE, null, cv);
 
-        return dir.getId();
+        return findById(id);
     }
 
     public Notesheet findById(long id){
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         NotesheetImpl imp = null;
         Cursor cur = db.query(
@@ -149,7 +149,7 @@ public class NotesheetFacade {
         );
 
         if(cur != null && cur.moveToFirst() == true){
-            DirectoryFacade df = new DirectoryFacade(context);
+            DirectoryFacade df = new DirectoryFacade(mContext);
             String uuid = cur.getString(
                     cur.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_UUID)
             );
@@ -179,7 +179,7 @@ public class NotesheetFacade {
                 "=" + target.getId() +
                 " Where " + NotesheetContract.NotesheetEntry._ID +
                 "=" + source.getId();
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL(query);
 
@@ -187,7 +187,7 @@ public class NotesheetFacade {
     }
 
     public void delete(@NonNull Notesheet notesheet){
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(
                 NotesheetContract.TABLE,
@@ -198,9 +198,9 @@ public class NotesheetFacade {
     }
 
     public Notesheet update(@NonNull Notesheet notesheet){
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        DirectoryFacade df = new DirectoryFacade(this.context);
+        DirectoryFacade df = new DirectoryFacade(this.mContext);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH, notesheet.getPath());
@@ -225,5 +225,56 @@ public class NotesheetFacade {
                 new String[]{String.valueOf(notesheet.getId())}
         );
         return findById(notesheet.getId());
+    }
+
+    public List<Notesheet> findByDirectory(Directory parent) {
+        List<Notesheet> result = new LinkedList<>();
+        DirectoryFacade directoryFacade = new DirectoryFacade(mContext);
+        DBHelper dbHelper = new DBHelper(mContext);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor;
+
+        parent = parent == null ? directoryFacade.getRoot() : parent;
+        cursor = db.rawQuery("SELECT * FROM " +
+                NotesheetContract.TABLE +
+                " WHERE " + NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID +
+                "= ?",
+                new String[]{
+                        String.valueOf(parent.getId())
+                });
+
+        if(cursor.moveToFirst()){
+            do{
+                result.add(createNotesheetFromCursor(cursor));
+            }while(cursor.moveToNext());
+        }
+
+        return result;
+    }
+
+    private Notesheet createNotesheetFromCursor(Cursor cursor){
+        NotesheetImpl notesheet;
+        DirectoryFacade directoryFacade = new DirectoryFacade(mContext);
+        String filenameColumn = NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME;
+        String filepathColumn = NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH;
+        String uuidColumn = NotesheetContract.NotesheetEntry.COLUMN_UUID;
+        String idColumn = NotesheetContract.NotesheetEntry._ID;
+        String parentIdColumn = NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID;
+
+        long id = cursor.getLong(cursor.getColumnIndex(idColumn));
+        long parentId = cursor.getLong(cursor.getColumnIndex(parentIdColumn));
+        String filename = cursor.getString(cursor.getColumnIndex(filenameColumn));
+        String filepath = cursor.getString(cursor.getColumnIndex(filepathColumn));
+        String uuid = cursor.getString(cursor.getColumnIndex(uuidColumn));
+        Directory parent = directoryFacade.findById(parentId);
+
+        notesheet = new NotesheetImpl(uuid);
+        notesheet.setId(id);
+        notesheet.setName(filename);
+        notesheet.setPath(filepath);
+        notesheet.setParent(parent);
+
+        return notesheet;
     }
 }

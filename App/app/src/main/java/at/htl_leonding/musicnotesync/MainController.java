@@ -14,23 +14,44 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
-import at.htl_leonding.musicnotesync.io.Storage;
+import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
+import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
+import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
+import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
+import at.htl_leonding.musicnotesync.management.MoveActivity;
+import at.htl_leonding.musicnotesync.management.RenameNotesheetObjectDialog;
+import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
+import at.htl_leonding.musicnotesync.request.RequestCode;
 
 /**
  * Created by michael on 11.08.16.
  */
-public class MainController {
+public class MainController implements Serializable{
     private static final String TAG = MainController.class.getSimpleName();
 
-    private MainModel model;
+    private MainModel mMainModel;
+
+    private MainActivity mMainActivity;
+    public MainController(MainActivity activity){
+        mMainActivity = activity;
+        mMainModel = new MainModel(activity, this);
+        mMainModel.setCurrentDirectory(
+                mMainModel.getDirectoryFacade().getRoot()
+        );
+        mMainModel.setFabOnClickListener(new FabOnClickListener(activity));
+        mMainModel.setNotesheetArrayAdapter(new NotesheetArrayAdapter(this));
+        mMainModel.setNotesheetItemClickListener(new NotesheetClickListener(this));
+        mMainModel.setManagementOptionsClickListener(new ManagementOptionsClickListener(this));
+        refreshNotesheetArrayAdapter();
+    }
 
     private  BroadcastReceiver mBtStateChangedReceiver = new BroadcastReceiver() {
         @Override
@@ -44,39 +65,31 @@ public class MainController {
         }
     };
 
-    public MainController(MainActivity activity){
-        this.model = new MainModel();
-        this.model.setActivity(activity);
-        this.model.setListener(new FabOnClickListener(this.model.getActivity()));
-    }
-
     public View.OnClickListener getFabListener() {
-        return this.model.getListener();
+        return this.mMainModel.getFabOnClickListener();
     }
 
-    public Notesheet storeFileFromCameraIntent(int resultCode) {
+    public Notesheet storeFileFromCameraIntent() {
         Log.d(TAG, "onActivityResult: Camera intent closed");
         Notesheet result = null;
-        this.model.setPhotoFile(
-                this.model.getListener().getPhotoFile()
+        this.mMainModel.setPhotoFile(
+                this.mMainModel.getFabOnClickListener().getPhotoFile()
         );
 
-        if(resultCode == Activity.RESULT_OK &&
-                this.model.getPhotoFile() != null &&
-                this.model.getPhotoFile().exists()){
+        if(this.mMainModel.getPhotoFile() != null &&
+                this.mMainModel.getPhotoFile().exists()){
             result = storePhotoFile("camera");
         }
 
         return result;
     }
 
-    public void storeFileFromFileChooser(int resultCode, String path) {
+    public void storeFileFromFileChooser(String path) {
         String id = null;
         Cursor fileCursor = null;
 
         if(path != null){
             String[] pathData = path.split(":");
-
             if(pathData.length >= 2){
                 id = pathData[1];
             }
@@ -90,7 +103,7 @@ public class MainController {
             String[] selectorAgrs = new String[]{
                     id
             };
-            fileCursor = this.model.getActivity().getContentResolver().query(
+            fileCursor = mMainActivity.getContentResolver().query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     selector,
@@ -105,12 +118,11 @@ public class MainController {
                     fileCursor.getString(
                             fileCursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
             File photoFile = new File(fullPath);
-            this.model.setPhotoFile(photoFile);
+            this.mMainModel.setPhotoFile(photoFile);
         }
 
-        if(resultCode == Activity.RESULT_OK &&
-                this.model.getPhotoFile() != null &&
-                this.model.getPhotoFile().exists()){
+        if(this.mMainModel.getPhotoFile() != null &&
+                this.mMainModel.getPhotoFile().exists()){
             Log.d(TAG, "storeFileFromFileChooser: Photo exists");
             storePhotoFile("file");
         }
@@ -118,48 +130,34 @@ public class MainController {
 
     private Notesheet storePhotoFile(String directory){
         Log.d(TAG, "storePhotoFile: Photo exists");
-        Storage storage = new Storage(this.model.getActivity());
-        storage.copyFileToInternalStorage(this.model.getPhotoFile(), directory, null);
+
+        mMainModel
+                .getStorage()
+                .copyFileToInternalStorage(this.mMainModel.getPhotoFile(), directory, null);
 
         Notesheet result = null;
-        DirectoryFacade df = new DirectoryFacade(this.model.getActivity());
-        NotesheetFacade nf = new NotesheetFacade(this.model.getActivity());
 
-        nf.insert(null, directory, this.model.getPhotoFile().getName());
-        List<Notesheet> rootNotesheets = nf.getNotesheets(df.getRoot());
+        return mMainModel
+                .getNotesheetFacade()
+                .insert(null, directory, this.mMainModel.getPhotoFile().getName());
 
-        result = rootNotesheets.get(rootNotesheets.size()-1);
-        return result;
     }
 
     public void dismissDialog(){
-        this.model.getListener().dismissDialog();
+        this.mMainModel.getFabOnClickListener().dismissDialog();
     }
 
     public List<Notesheet> getNotesheets(@Nullable Directory parent){
-        NotesheetFacade nf = new NotesheetFacade(model.getActivity());
-        DirectoryFacade df = new DirectoryFacade(model.getActivity());
-
-        Directory dir = parent == null ? df.getRoot() : parent;
-
-        return nf.getNotesheets(dir);
-        //return df.getChildren(dir);
+        return mMainModel.getNotesheetFacade().findByDirectory(parent);
     }
 
     public void openNotesheet(Notesheet notesheet) {
         ServerManager.getInstance().openNotesheet(notesheet);
-    }
+        Intent intent = new Intent(mMainActivity, ImageViewActivity.class);
 
-    public DirectoryFacade getDirectoryFacade(){
-        return new DirectoryFacade(model.getActivity());
+        intent.putExtra("pathName", notesheet.getPath());
+        mMainActivity.startActivity(intent);
     }
-
-//    private void sendFileData(byte[] buffer){
-//        BluetoothPackage data = new BluetoothPackage();
-//        data.setFlag(Flag.FILEDATA);
-//        data.setContent(buffer);
-//        //Server.getInstance().sendPackage(data);
-//    }
 
     public void tryStartBluetoothServer() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -168,11 +166,11 @@ public class MainController {
 
                 IntentFilter bsStateChangedFilter =
                         new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-                model.getActivity()
+                mMainActivity
                         .registerReceiver(mBtStateChangedReceiver, bsStateChangedFilter);
 
                 Toast
-                    .makeText(model.getActivity(), R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
+                    .makeText(mMainActivity, R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
                     .show();
             }else{
                 ServerManager.getInstance().startServer();
@@ -182,9 +180,136 @@ public class MainController {
 
     public void unregisterBluetoothFilter(){
         try {
-            model.getActivity().unregisterReceiver(mBtStateChangedReceiver);
+            mMainActivity.unregisterReceiver(mBtStateChangedReceiver);
         }catch(Exception e){
             //No catch routine because exception is unnecessary
         }
+    }
+
+    public NotesheetArrayAdapter getNotesheetArrayAdapter() {
+        return mMainModel.getNotesheetArrayAdapter();
+    }
+
+    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case RequestCode.TAKE_PICTURE_REQUEST_CODE:
+                    Notesheet notesheet = storeFileFromCameraIntent();
+                    if (notesheet != null) {
+                        mMainModel
+                                .getNotesheetFacade()
+                                .move(notesheet, mMainModel.getCurrentDirectory());
+                    }
+                break;
+                case RequestCode.SELECT_FILE_REQUEST_CODE:
+                    if(data != null){
+                        storeFileFromFileChooser(data.getData().getPath());
+                    }
+                break;
+                case RequestCode.ADD_FOLDER_REQUEST_CODE:
+                    if(data != null){
+                        DirectoryFacade directoryFacade = mMainModel.getDirectoryFacade();
+                        directoryFacade.move(
+                                directoryFacade.create(
+                                        data.getStringExtra("FolderName")
+                                ),
+                                mMainModel.getCurrentDirectory()
+                        );
+                    }
+                break;
+                case RequestCode.MOVE_ITEM_REQUEST_CODE:
+                    moveObjectToDirectory();
+                break;
+            }
+            refreshNotesheetArrayAdapter();
+        }
+    }
+
+    public void refreshNotesheetArrayAdapter() {
+        openDirectory(mMainModel.getCurrentDirectory());
+    }
+
+    public void moveObjectToDirectory() {
+        Object movedObject = mMainModel.getMovedObject();
+        Directory targetDirectory = mMainModel.getCurrentDirectory();
+
+        if(movedObject instanceof Notesheet){
+            Notesheet notesheet = (Notesheet)movedObject;
+            mMainModel.getNotesheetFacade().move(notesheet, targetDirectory);
+        }else if(movedObject instanceof Directory){
+            Directory directory = (Directory)movedObject;
+            mMainModel.getDirectoryFacade().move(directory, targetDirectory);
+        }
+        refreshNotesheetArrayAdapter();
+    }
+
+    public NotesheetClickListener getNotesheetItemClickListener() {
+        return mMainModel.getNotesheetItemClickListener();
+    }
+
+    public void openDirectory(Directory directory) {
+        mMainModel.setCurrentDirectory(directory);
+        mMainModel
+                .getNotesheetArrayAdapter()
+                .setNotesheetObjects(
+                        mMainModel.getDirectoryChildren(directory)
+                );
+    }
+
+    public ManagementOptionsClickListener getManagementOptionClickListener() {
+        return mMainModel.getManagementOptionClickListener();
+    }
+
+    public void startMoveObjectToDirectory(Object notesheetObject) {
+        Intent intent = new Intent(mMainActivity, MoveActivity.class);
+//        intent.putExtra("objectId", notesheetObject.getId());
+
+        mMainActivity.startActivityForResult(
+                intent, RequestCode.MOVE_ITEM_REQUEST_CODE);
+
+    }
+
+    public void deleteNotesheetObject(Object notesheetObject) {
+        if(notesheetObject instanceof Directory){
+            mMainModel.getDirectoryFacade().delete((Directory) notesheetObject);
+        }
+        else if(notesheetObject instanceof Notesheet){
+            mMainModel.getNotesheetFacade().delete((Notesheet)notesheetObject);
+        }
+    }
+
+    public void renameNotesheetObject(String newName) {
+        Object object = mMainModel.getObjectToRename();
+        if(object instanceof Notesheet){
+            NotesheetImpl notesheet = new NotesheetImpl();
+
+            notesheet.fromNotesheet((Notesheet)object);
+            notesheet.setName(newName);
+
+            mMainModel.getNotesheetFacade().update((notesheet));
+        }else if(object instanceof Directory){
+            DirectoryImpl directory = new DirectoryImpl();
+
+            directory.fromDirectory((Directory)object);
+            directory.setName(newName);
+            mMainModel.getDirectoryFacade().update(directory);
+        }
+        refreshNotesheetArrayAdapter();
+    }
+
+    public void startRenameNotesheetObject(Object notesheetObject) {
+        mMainModel.setObjectToRename(notesheetObject);
+        RenameNotesheetObjectDialog dialog = new RenameNotesheetObjectDialog(mMainActivity, this);
+        dialog.show();
+    }
+
+    public boolean goToDirectoryParent() {
+        if(mMainModel.getCurrentDirectory().getParent() != null){
+            openDirectory(
+                    mMainModel.getCurrentDirectory().getParent()
+            );
+            return true;
+        }
+        return false;
     }
 }
