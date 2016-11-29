@@ -101,7 +101,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
             holder.iconView.setImageResource(R.drawable.ic_audiotrack_black_24dp);
         } else {
             holder.nameView.setText(((Directory)object).getName());
-            holder.iconView.setImageResource(R.drawable.ic_select_file);
+            holder.iconView.setImageResource(R.drawable.ic_folder_black_24dp);
         }
 
         holder.itemView.setTag(object);

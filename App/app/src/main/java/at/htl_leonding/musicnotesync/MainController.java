@@ -39,8 +39,8 @@ public class MainController implements Serializable{
     private static final String TAG = MainController.class.getSimpleName();
 
     private MainModel mMainModel;
-
     private MainActivity mMainActivity;
+
     public MainController(MainActivity activity){
         mMainActivity = activity;
         mMainModel = new MainModel(activity, this);
