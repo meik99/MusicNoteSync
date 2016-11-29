@@ -51,7 +51,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".management.NameFolderActivity" />
-        <activity android:name=".management.MoveActivity"></activity>
+        <activity android:name=".management.move.MoveActivity"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
+import at.htl_leonding.musicnotesync.db.contract.Entity;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
@@ -26,7 +27,7 @@ import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
 import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
-import at.htl_leonding.musicnotesync.management.MoveActivity;
+import at.htl_leonding.musicnotesync.management.move.MoveActivity;
 import at.htl_leonding.musicnotesync.management.RenameNotesheetObjectDialog;
 import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
 import at.htl_leonding.musicnotesync.request.RequestCode;
@@ -47,9 +48,12 @@ public class MainController implements Serializable{
                 mMainModel.getDirectoryFacade().getRoot()
         );
         mMainModel.setFabOnClickListener(new FabOnClickListener(activity));
-        mMainModel.setNotesheetArrayAdapter(new NotesheetArrayAdapter(this));
         mMainModel.setNotesheetItemClickListener(new NotesheetClickListener(this));
         mMainModel.setManagementOptionsClickListener(new ManagementOptionsClickListener(this));
+        mMainModel.setNotesheetArrayAdapter(new NotesheetArrayAdapter(
+                mMainModel.getNotesheetItemClickListener(),
+                mMainModel.getManagementOptionClickListener()
+        ));
         refreshNotesheetArrayAdapter();
     }
 
@@ -218,7 +222,7 @@ public class MainController implements Serializable{
                     }
                 break;
                 case RequestCode.MOVE_ITEM_REQUEST_CODE:
-                    moveObjectToDirectory();
+                    refreshNotesheetArrayAdapter();
                 break;
             }
             refreshNotesheetArrayAdapter();
@@ -228,20 +232,20 @@ public class MainController implements Serializable{
     public void refreshNotesheetArrayAdapter() {
         openDirectory(mMainModel.getCurrentDirectory());
     }
-
-    public void moveObjectToDirectory() {
-        Object movedObject = mMainModel.getMovedObject();
-        Directory targetDirectory = mMainModel.getCurrentDirectory();
-
-        if(movedObject instanceof Notesheet){
-            Notesheet notesheet = (Notesheet)movedObject;
-            mMainModel.getNotesheetFacade().move(notesheet, targetDirectory);
-        }else if(movedObject instanceof Directory){
-            Directory directory = (Directory)movedObject;
-            mMainModel.getDirectoryFacade().move(directory, targetDirectory);
-        }
-        refreshNotesheetArrayAdapter();
-    }
+//
+//    public void moveObjectToDirectory() {
+//        Object movedObject = mMainModel.getMovedObject();
+//        Directory targetDirectory = mMainModel.getCurrentDirectory();
+//
+//        if(movedObject instanceof Notesheet){
+//            Notesheet notesheet = (Notesheet)movedObject;
+//            mMainModel.getNotesheetFacade().move(notesheet, targetDirectory);
+//        }else if(movedObject instanceof Directory){
+//            Directory directory = (Directory)movedObject;
+//            mMainModel.getDirectoryFacade().move(directory, targetDirectory);
+//        }
+//        refreshNotesheetArrayAdapter();
+//    }
 
     public NotesheetClickListener getNotesheetItemClickListener() {
         return mMainModel.getNotesheetItemClickListener();
@@ -262,7 +266,22 @@ public class MainController implements Serializable{
 
     public void startMoveObjectToDirectory(Object notesheetObject) {
         Intent intent = new Intent(mMainActivity, MoveActivity.class);
-//        intent.putExtra("objectId", notesheetObject.getId());
+        long id = -1;
+        String _class = new String();
+
+        if(notesheetObject instanceof Entity){
+            Entity entity = (Entity)notesheetObject;
+            id = entity.getId();
+
+            if(notesheetObject instanceof Notesheet){
+                _class = "Notesheet";
+            }else if(notesheetObject instanceof Directory){
+                _class = "Directory";
+            }
+        }
+
+        intent.putExtra("ObjectId", id);
+        intent.putExtra("ObjectClass", _class);
 
         mMainActivity.startActivityForResult(
                 intent, RequestCode.MOVE_ITEM_REQUEST_CODE);

@@ -44,16 +44,31 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
     }
 
     private List<Object> mNotesheetObjects;
-    private MainController mMainController;
+    private View.OnClickListener mNotesheetClickListener;
+    private View.OnClickListener mManagementOptionsClickListener;
 
     public void setNotesheetObjects(List<Object> notesheetObjects) {
-        mNotesheetObjects = notesheetObjects;
+        mNotesheetObjects = new LinkedList<>();
+
+        for(Object obj : notesheetObjects){
+            if(obj instanceof Directory){
+                Directory directory = (Directory)obj;
+                if(directory.getName().equals("ROOT") == false){
+                    mNotesheetObjects.add(obj);
+                }
+            }else{
+                mNotesheetObjects.add(obj);
+            }
+        }
+
         this.notifyDataSetChanged();
     }
 
-    public NotesheetArrayAdapter(MainController mainController) {
+    public NotesheetArrayAdapter(View.OnClickListener notesheetClickListener,
+                                 View.OnClickListener managementOptionsClickListener) {
         mNotesheetObjects = new LinkedList<>();
-        mMainController = mainController;
+        mNotesheetClickListener = notesheetClickListener;
+        mManagementOptionsClickListener = managementOptionsClickListener;
     }
 
     @Override
@@ -61,11 +76,19 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
         final View itemView =
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.notesheet_list_item, parent, false);
-        itemView.setOnClickListener(mMainController.getNotesheetItemClickListener());
+
+        if(mNotesheetClickListener != null) {
+            itemView.setOnClickListener(mNotesheetClickListener);
+        }
 
         NotesheetViewHolder result = new NotesheetViewHolder(itemView);
-        result.managementOptions.setOnClickListener(
-                mMainController.getManagementOptionClickListener());
+
+        if(mManagementOptionsClickListener != null) {
+            result.managementOptions.setOnClickListener(
+                    mManagementOptionsClickListener);
+        }else{
+            result.managementOptions.setEnabled(false);
+        }
 
         return result;
     }

@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="at.htl_leonding.musicnotesync.management.MoveActivity">
+    tools:context="at.htl_leonding.musicnotesync.management.move.MoveActivity">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

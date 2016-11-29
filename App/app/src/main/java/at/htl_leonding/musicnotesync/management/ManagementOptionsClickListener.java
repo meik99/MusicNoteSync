@@ -1,26 +1,11 @@
 package at.htl_leonding.musicnotesync.management;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.PopupMenu;
 
 import at.htl_leonding.musicnotesync.MainController;
-import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
-import at.htl_leonding.musicnotesync.helper.EmergencyStorage;
-import at.htl_leonding.musicnotesync.management.MoveActivity;
-import at.htl_leonding.musicnotesync.request.RequestCode;
 
 /**
  * Created by michael on 11/26/16.
