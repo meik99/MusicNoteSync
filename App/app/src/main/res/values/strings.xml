@@ -23,4 +23,5 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="bluetooth_connection_manager">Connection Manager</string>
 </resources>

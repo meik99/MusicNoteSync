@@ -11,16 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
-import at.htl_leonding.musicnotesync.helper.EmergencyStorage;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
-import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
-import at.htl_leonding.musicnotesync.management.MoveActivity;
-import at.htl_leonding.musicnotesync.request.RequestCode;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();

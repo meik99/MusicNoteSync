@@ -35,7 +35,6 @@ public class MainModel {
         notesheetFacade = new NotesheetFacade(context);
         directoryFacade = new DirectoryFacade(context);
         storage = new Storage(context);
-        notesheetArrayAdapter = new NotesheetArrayAdapter(mainController);
     }
 
     public File getPhotoFile() {

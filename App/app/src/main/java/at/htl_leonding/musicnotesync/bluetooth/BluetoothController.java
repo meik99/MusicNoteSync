@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -149,7 +150,11 @@ public class BluetoothController {
                 new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         mBluetoothActivity.registerReceiver(bluetoothEnabled, bltEnabledFilter);
 
-        if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
+        if(BluetoothAdapter.getDefaultAdapter() == null){
+            mBluetoothActivity.setResult(Activity.RESULT_CANCELED);
+            mBluetoothActivity.finish();
+        }
+        else if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
             ServerManager.getInstance().startServer();
         }
 

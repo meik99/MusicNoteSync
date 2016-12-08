@@ -15,7 +15,8 @@
         android:drawableLeft="@drawable/ic_sort_by_alpha_black_24dp"
         android:drawablePadding="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/btnTakePicture"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
 
     <Button
         android:layout_width="match_parent"
@@ -25,7 +26,8 @@
         android:drawableLeft="@drawable/ic_clear_black_24dp"
         android:drawablePadding="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/btnMoveFile"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        style="@style/Base.Widget.AppCompat.Button.Borderless" />
 
     <Button
         android:layout_width="match_parent"
@@ -35,6 +37,7 @@
         android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
         android:drawablePadding="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/btnRenameFile"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        style="@style/Base.Widget.AppCompat.Button.Borderless" />
 
 </RelativeLayout>
