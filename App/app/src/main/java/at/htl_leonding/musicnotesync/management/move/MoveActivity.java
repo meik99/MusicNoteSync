@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import at.htl_leonding.musicnotesync.MainActivity;
 import at.htl_leonding.musicnotesync.MainController;
@@ -16,6 +17,7 @@ import at.htl_leonding.musicnotesync.db.contract.Directory;
 public class MoveActivity extends AppCompatActivity {
     RecyclerView mNoteSheetRecyclerView;
     Button btnMoveDirectory;
+    TextView textFileToMove;
 
     private MoveController mMoveController;
 
@@ -30,6 +32,9 @@ public class MoveActivity extends AppCompatActivity {
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         );
+
+        textFileToMove = (TextView) findViewById(R.id.textFileToMove);
+        textFileToMove.setText("'" + mMoveController.getSelectedFileName() + "'");
 
         btnMoveDirectory = (Button) findViewById(R.id.btnMoveOk);
         btnMoveDirectory.setOnClickListener(new View.OnClickListener() {

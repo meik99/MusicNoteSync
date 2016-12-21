@@ -73,4 +73,15 @@ public class MoveController {
         );
         mMoveModel.setCurrentDirectory(directory);
     }
+
+    public String getSelectedFileName() {
+        String fileName = "n/a";
+        Object notesheetObject = this.mMoveModel.getSelectedObject();
+        if(notesheetObject instanceof Notesheet){
+            fileName = ((Notesheet)notesheetObject).getName();
+        }else if(notesheetObject instanceof Directory){
+            fileName = ((Directory)notesheetObject).getName();
+        }
+        return fileName;
+    }
 }
