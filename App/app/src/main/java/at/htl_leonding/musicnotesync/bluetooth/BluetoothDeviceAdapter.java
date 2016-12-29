@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,38 +57,49 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
         result.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(Server.getInstance().isConnected() == false) {
-        boolean connected = Client.getInstance().connect(getItem(position));
-        if (connected == true) {
-            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            if (adapter != null) {
-                adapter.cancelDiscovery();
-            }
-            Toast
-                    .makeText(
-                            v.getContext(),
-                            R.string.bluetooth_successful_connect,
-                            Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            Toast
-                    .makeText(
-                            v.getContext(),
-                            R.string.bluetooth_connect_failure,
-                            Toast.LENGTH_LONG)
-                    .show();
-        }
-//                }else{
-//                    Toast
-//                            .makeText(
-//                                    v.getContext(),
-//                                    R.string.bluetooth_device_is_server,
-//                                    Toast.LENGTH_LONG)
-//                            .show();
-//                }
+//                connectToDevice(v, position);
+                toggleCheckbox(v);
             }
         });
 
         return result;
     }
+
+    private void toggleCheckbox(View v) {
+        CheckBox checkBox = (CheckBox) v.findViewById(R.id.chkBluetoothDeviceSelect);
+        checkBox.toggle();
+    }
+
+//    private void connectToDevice(View v, int position){
+//        boolean connected = Client.getInstance().connect(getItem(position));
+//        if (connected == true) {
+//            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+//            if (adapter != null) {
+//                adapter.cancelDiscovery();
+//            }
+//            Toast
+//                    .makeText(
+//                            v.getContext(),
+//                            R.string.bluetooth_successful_connect,
+//                            Toast.LENGTH_LONG)
+//                    .show();
+//        } else {
+//            Toast
+//                    .makeText(
+//                            v.getContext(),
+//                            R.string.bluetooth_connect_failure,
+//                            Toast.LENGTH_LONG)
+//                    .show();
+//        }
+////                if(Server.getInstance().isConnected() == false) {
+//
+////                }else{
+////                    Toast
+////                            .makeText(
+////                                    v.getContext(),
+////                                    R.string.bluetooth_device_is_server,
+////                                    Toast.LENGTH_LONG)
+////                            .show();
+////                }
+//    }
 }
