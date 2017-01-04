@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -45,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
         mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
         mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
     }
 
     @Override

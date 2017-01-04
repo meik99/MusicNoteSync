@@ -27,7 +27,7 @@ public class NotesheetTest {
     public void createNotesheet_notesheetCreated(){
         NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
         DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
-        long inserted = -1;
+        Notesheet inserted = null;
 
         assertNotNull(nf);
         assertNotNull(df);
@@ -39,9 +39,9 @@ public class NotesheetTest {
 
         inserted = nf.insert(dir, "Test_File.jpg");
 
-        assertTrue(inserted > -1);
+        assertTrue(inserted != null);
 
-        nf.delete(nf.findById(inserted));
+        nf.delete(nf.findById(inserted.getId()));
     }
 
     @Test
@@ -57,9 +57,7 @@ public class NotesheetTest {
         assertEquals(dirName, dir.getName());
         assertEquals(root.getId(), dir.getParent().getId());
 
-        Notesheet notesheet = nf.findById(
-                nf.insert(root, fileName)
-        );
+        Notesheet notesheet = nf.insert(root, fileName);
 
         assertNotNull(notesheet);
         assertEquals(fileName, notesheet.getName());
@@ -75,8 +73,8 @@ public class NotesheetTest {
     @Test
     public void deleteNotesheet_notesheetDeleted(){
         NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
-        long id = nf.insert(null, "to delete");
-        Notesheet notesheet = nf.findById(id);
+        Notesheet notesheet =  nf.insert(null, "to delete");
+        long id = notesheet.getId();
 
         assertNotNull(notesheet);
         assertEquals(id, notesheet.getId());
@@ -91,7 +89,7 @@ public class NotesheetTest {
    @Test
     public void updateNotesheet_notesheetUpdated(){
        NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
-       long id = nf.insert(null, "Test.png");
+       long id = nf.insert(null, "Test.png").getId();
        Notesheet notesheet = nf.findById(id);
 
        assertNotNull(notesheet);
