@@ -24,4 +24,7 @@
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
     <string name="bluetooth_connection_manager">Connection Manager</string>
+    <string name="error_upload_notesheets_only">Error: Only upload Notesheets</string>
+    <string name="error_upload_notesheets">Error uploading notesheet</string>
+    <string name="upload_notesheet_successful">Notesheet uploaded successfully</string>
 </resources>

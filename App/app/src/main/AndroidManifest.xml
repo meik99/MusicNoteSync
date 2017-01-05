@@ -19,7 +19,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/main_notesheets"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="android.support.multidex.MultiDexApplication">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="at.htl_leonding.fileprovider"

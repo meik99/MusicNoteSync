@@ -7,6 +7,7 @@ import java.io.File;
 import at.htl_leonding.musicnotesync.db.NotesheetContract;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.io.Storage;
 
 /**
  * Created by michael on 12.08.16.

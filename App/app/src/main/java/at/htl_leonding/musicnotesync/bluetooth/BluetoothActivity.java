@@ -14,6 +14,9 @@ import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
     private static final String TAG = BluetoothActivity.class.getSimpleName();
+    public static final String OPERATION = "OPERATION";
+    public static final long SEND_NOTESHEET = 0;
+
     private BluetoothController mController;
     private BroadcastReceiver mBluetoothStateChangeReceiver;
     private ListView mDeviceList;
@@ -29,10 +32,8 @@ public class BluetoothActivity extends AppCompatActivity{
         mController = new BluetoothController(this);
 
         if(PermissionHelper.getBluetoothPermissions(this) == true){
-
             mController.enableBluetooth();
             mBluetoothStateChangeReceiver = mController.startServer();
-
         }
     }
 

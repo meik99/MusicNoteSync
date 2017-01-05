@@ -31,7 +31,13 @@
 
 
         <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/btn_small"
+            android:layout_height="match_parent"
+            android:id="@+id/btnShareNotesheetItem"
+            android:src="@drawable/ic_share_red_24dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+        <ImageButton
+            android:layout_width="@dimen/btn_small"
             android:layout_height="match_parent"
             android:id="@+id/btnManagementOptions"
             android:src="@drawable/ic_more_vert_black_24dp"

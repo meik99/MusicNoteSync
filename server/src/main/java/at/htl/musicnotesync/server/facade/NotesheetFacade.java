@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -52,10 +53,14 @@ public class NotesheetFacade {
         Notesheet notesheet = new Notesheet();
         notesheet.setFilepath(filename);
 
-        entityManager.createNativeQuery("SELECT * FROM NOTESHEET").getResultList();
-        entityManager.merge(notesheet);
-        entityManager.persist(notesheet);
+        List<Notesheet> notesheetList =
+                entityManager
+                        .createNativeQuery(
+                                "SELECT * FROM NOTESHEET",
+                                Notesheet.class)
+                        .getResultList();
+        Notesheet result = entityManager.merge(notesheet);
 
-        return notesheet.getId();
+        return 1;
     }
 }

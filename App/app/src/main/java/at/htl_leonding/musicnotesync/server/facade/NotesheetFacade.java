@@ -1,74 +1,116 @@
 package at.htl_leonding.musicnotesync.server.facade;
 
+import android.content.Context;
 import android.net.http.AndroidHttpClient;
-import android.util.Base64;
-import android.util.Base64InputStream;
+import android.os.AsyncTask;
+
+import com.android.internal.http.multipart.FilePart;
+import com.android.internal.http.multipart.MultipartEntity;
+import com.android.internal.http.multipart.Part;
+import com.android.internal.http.multipart.StringPart;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpPostHC4;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.request.RequestCode;
 
 /**
  * Created by michael on 12/30/16.
  */
 
 public class NotesheetFacade {
-    private static final String SERVER_URL = "http://localhost:8080/musicnotesync/api/notesheet";
+    private static final String SERVER_URL = "http://10.0.2.2:8080/musicnotesync/api/notesheet";
+    private static final String FILE_TAG = "file";
+    private static final String UUID_TAG = "uuid";
 
-    public NotesheetFacade(){
+    private final Context mContext;
 
+    public NotesheetFacade(Context context){
+        mContext = context;
     }
 
     public boolean sendNotesheet(Notesheet notesheet){
-        File file = notesheet.getFile();
-        String uuid = notesheet.getUUID();
+        File tmpFile = notesheet.getFile();
+        final String uuid = notesheet.getUUID();
 
-        if(file.exists() == false){
-            return false;
+        if(tmpFile.exists() == false){
+            tmpFile = new File(mContext.getFilesDir() + File.separator + notesheet.getFile());
+            if(tmpFile.exists() == false){
+                return false;
+            }
         }
+
+        final File file = tmpFile;
 
         //Inspired by
         //http://stackoverflow.com/questions/1378920/how-can-i-make-a-multipart-form-data-post-request-using-java
         //CloseableHttpClient httpClient;
 
-        HttpClient httpClient = AndroidHttpClient.newInstance("user");
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder
-                .addBinaryBody("file", file)
-                .addTextBody("uuid", uuid);
+        AsyncTask<Void, Void, Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
 
+            @Override
+            protected Boolean doInBackground(Void... param) {
 
-        HttpPost post = new HttpPost(SERVER_URL);
-        post.setEntity(builder.build());
-        HttpResponse response = null;
-        try {
-            response = httpClient.execute(post);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        HttpEntity result = response.getEntity();
+                AndroidHttpClient httpClient = AndroidHttpClient.newInstance("user");
+                Part filePart = null;
+                Part uuidPart = null;
+                try {
+                    filePart = new FilePart(FILE_TAG, file);
+                    uuidPart = new StringPart(UUID_TAG, uuid);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                MultipartEntity entity = new MultipartEntity(new Part[]{filePart, uuidPart});
+                HttpPostHC4 post = new HttpPostHC4(SERVER_URL);
+                post.setEntity(entity);
+                HttpResponse response = null;
+                try {
+                    response = httpClient.execute(post);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
 
-
-        byte[] buffer = new byte[(int) result.getContentLength()];
-        try {
-            if(result.getContent() != null) {
-                result.getContent().read(buffer);
-
-                String string = new String(buffer);
-                long l = Long.parseLong(string);
+                if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+                    return true;
+                }else{
+                    return false;
+                }
+//                HttpEntity result = response.getEntity();
+//
+//
+//                byte[] buffer = new byte[(int) result.getContentLength()];
+//                try {
+//                    if(result.getContent() != null) {
+//                        result.getContent().read(buffer);
+//
+//                        String string = new String(buffer);
+//                        long l = Long.parseLong(string);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    return false;
+//                }
+//
+//                return true;
             }
-        } catch (IOException e) {
+        };
+
+        try {
+            asyncTask.execute();
+            return asyncTask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
 

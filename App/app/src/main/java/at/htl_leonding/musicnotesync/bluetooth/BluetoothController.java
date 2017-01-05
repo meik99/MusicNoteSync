@@ -88,7 +88,9 @@ public class BluetoothController {
         }else{
             showToast(R.string.bluetooth_enabled);
             enableDiscoverable();
-            startDiscovery();
+            if(bluetoothAdapter.isDiscovering() == false){
+                startDiscovery();
+            }
             return true;
         }
     }

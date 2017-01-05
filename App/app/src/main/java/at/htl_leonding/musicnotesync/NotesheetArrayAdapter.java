@@ -30,6 +30,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
         protected TextView nameView;
         protected ImageView iconView;
         protected ImageButton managementOptions;
+        protected ImageButton share;
 
         public NotesheetViewHolder(View itemView) {
             super(itemView);
@@ -40,6 +41,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
                     (ImageView) itemView.findViewById(at.htl_leonding.musicnotesync.R.id.iconView);
             managementOptions =
                     (ImageButton) itemView.findViewById(R.id.btnManagementOptions);
+            share = (ImageButton) itemView.findViewById(R.id.btnShareNotesheetItem);
         }
     }
 
@@ -90,6 +92,8 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
             result.managementOptions.setEnabled(false);
         }
 
+        result.share.setOnClickListener(new ShareNotesheetClickListener());
+
         return result;
     }
 
@@ -106,6 +110,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
 
         holder.itemView.setTag(object);
         holder.managementOptions.setTag(object);
+        holder.share.setTag(object);
     }
 
     @Override

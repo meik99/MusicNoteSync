@@ -10,27 +10,15 @@ import java.io.Serializable;
  */
 @Entity
 public class Notesheet implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private long id;
-
     @Column
     @NotNull
+    @Id
     private String filepath;
 
     @Transient
     private File file;
 
     public Notesheet(){
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getFilepath() {

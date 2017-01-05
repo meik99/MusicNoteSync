@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -28,51 +29,76 @@ public class NotesheetEndpoint {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response upload(MultipartFormDataInput input){
-        long id = -1;
+        String uuid = null;
+        long resultCode = -1;
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
         List<InputPart> inputPartList = inputParts.get("file");
+        inputPartList.addAll(inputParts.get("uuid"));
 
-        if(inputPartList != null && inputPartList.size() > 0){
-            InputPart part = inputPartList.get(0);
-            MultivaluedMap<String, String> header = part.getHeaders();
+        if(inputPartList != null && inputPartList.size() > 1){
+            InputPart filePart = inputPartList.get(0);
+            InputPart uuidPart = inputPartList.get(1);
+            MultivaluedMap<String, String> header = filePart.getHeaders();
             String filename = header.get("Content-Disposition").get(0);
             InputStream inputStream = null;
 
             try {
-                 inputStream = part.getBody(InputStream.class, null);
+                 inputStream = filePart.getBody(InputStream.class, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            filename =
-                    filename
-                    .substring(filename.indexOf("filename"));
-            filename =
-                    filename.substring(filename.indexOf("\"")+1);
-            filename =
-                    filename.substring(0, filename.indexOf("\""));
-
-
-            id = notesheetFacade.save(filename, inputStream);
+//            filename =
+//                    filename
+//                    .substring(filename.indexOf("filename"));
+//            filename =
+//                    filename.substring(filename.indexOf("\"")+1);
+//            filename =
+//                    filename.substring(0, filename.indexOf("\""));
+            try {
+                uuid = uuidPart.getBody(String.class, null);
+                resultCode = notesheetFacade.save(uuid, inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         Response resultResponse = null;
 
-        if(id > 0) {
-            resultResponse = Response.status(Response.Status.OK).entity(id).build();
+        if(resultCode > 0) {
+            resultResponse = Response.status(Response.Status.OK).entity(uuid).build();
         }else{
-            if (id == -1){
+            if (resultCode == -1){
                 resultResponse = Response.status(Response.Status.EXPECTATION_FAILED).build();
             }
-            else if(id == -2){
+            else if(resultCode == -2){
                 resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
-            else if(id == -3){
+            else if(resultCode == -3){
                 resultResponse = Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            else{
+                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
         }
 
 
         return resultResponse;
+    }
+
+    @GET
+    @Path("{uuid}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response download(@PathParam("uuid") String uuid){
+        File file = new File(uuid);
+        Response result = null;
+
+        if(file.exists() == false){
+            result = Response.status(Response.Status.BAD_REQUEST).build();
+            return result;
+        }
+
+        result = Response.ok(file, MediaType.APPLICATION_OCTET_STREAM_TYPE).build();
+        return result;
     }
 
     @GET
