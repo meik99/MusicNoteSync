@@ -52,8 +52,6 @@ public class NotesheetFacade {
 
         //Inspired by
         //http://stackoverflow.com/questions/1378920/how-can-i-make-a-multipart-form-data-post-request-using-java
-        //CloseableHttpClient httpClient;
-
         AsyncTask<Void, Void, Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
 
             @Override
@@ -85,23 +83,6 @@ public class NotesheetFacade {
                 }else{
                     return false;
                 }
-//                HttpEntity result = response.getEntity();
-//
-//
-//                byte[] buffer = new byte[(int) result.getContentLength()];
-//                try {
-//                    if(result.getContent() != null) {
-//                        result.getContent().read(buffer);
-//
-//                        String string = new String(buffer);
-//                        long l = Long.parseLong(string);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-//
-//                return true;
             }
         };
 
