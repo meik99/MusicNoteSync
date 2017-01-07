@@ -21,6 +21,7 @@ public class ShareNotesheetClickListener implements View.OnClickListener {
             openBluetoothActivity.putExtra(
                     BluetoothActivity.OPERATION,
                     BluetoothActivity.SEND_NOTESHEET);
+            openBluetoothActivity.putExtra (BluetoothActivity.ENTITY_ID, ((Notesheet)item).getId());
             v.getContext().startActivity(openBluetoothActivity);
 //
 //            NotesheetFacade notesheetFacade = new NotesheetFacade(v.getContext());

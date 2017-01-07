@@ -1,6 +1,7 @@
 package at.htl_leonding.musicnotesync.db.contract;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by michael on 11.08.16.

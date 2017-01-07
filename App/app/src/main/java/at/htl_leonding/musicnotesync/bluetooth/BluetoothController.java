@@ -5,16 +5,19 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Entity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.StringRes;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.connection.server.Server;
 import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
+import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 
 /**
  * Created by michael on 12.09.16.
@@ -25,6 +28,7 @@ public class BluetoothController {
     private final BluetoothActivity mBluetoothActivity;
     private final BluetoothModel mModel;
     private final BluetoothDeviceAdapter mDeviceAdapter;
+
     private final BroadcastReceiver mDeviceFoundReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -41,7 +45,7 @@ public class BluetoothController {
      */
     public BluetoothController(BluetoothActivity bluetoothActivity){
         mBluetoothActivity = bluetoothActivity;
-        mModel = new BluetoothModel();
+        mModel = new BluetoothModel(mBluetoothActivity);
         mDeviceAdapter = new BluetoothDeviceAdapter(mBluetoothActivity);
         ((ListView)mBluetoothActivity.findViewById(R.id.lvBluetoothDevices))
                 .setAdapter(mDeviceAdapter);
@@ -161,5 +165,40 @@ public class BluetoothController {
         }
 
         return bluetoothEnabled;
+    }
+
+    public View.OnClickListener getOnClickListener() {
+        Intent activityIntent = mBluetoothActivity.getIntent();
+        long entityId = activityIntent.getLongExtra(BluetoothActivity.ENTITY_ID, -1);
+
+        if(activityIntent.hasExtra(BluetoothActivity.OPERATION) && entityId != -1){
+            long operationId = activityIntent.getLongExtra(BluetoothActivity.OPERATION, -1);
+
+            if(operationId == BluetoothActivity.SEND_NOTESHEET){
+
+                return new BluetoothSendNotesheetClickListener(
+                        mModel.getNotesheetFacade().findById(entityId));
+            }
+        }
+
+        Toast.makeText(mBluetoothActivity, R.string.error_creating_activity, Toast.LENGTH_SHORT)
+                .show();
+        mBluetoothActivity.finish();
+
+        return null;
+    }
+
+
+    public int getActionButtonText() {
+        Intent activityIntent = mBluetoothActivity.getIntent();
+
+        if(activityIntent.hasExtra(BluetoothActivity.OPERATION)){
+            long operationId = activityIntent.getLongExtra(BluetoothActivity.OPERATION, -1);
+
+            if(operationId == BluetoothActivity.SEND_NOTESHEET){
+                return R.string.send_notesheet;
+            }
+        }
+        return R.string.error_creating_activity;
     }
 }

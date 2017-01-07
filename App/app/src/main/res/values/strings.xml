@@ -27,4 +27,6 @@
     <string name="error_upload_notesheets_only">Error: Only upload Notesheets</string>
     <string name="error_upload_notesheets">Error uploading notesheet</string>
     <string name="upload_notesheet_successful">Notesheet uploaded successfully</string>
+    <string name="error_creating_activity">Error while creating activity</string>
+    <string name="send_notesheet">Send Notesheet</string>
 </resources>
