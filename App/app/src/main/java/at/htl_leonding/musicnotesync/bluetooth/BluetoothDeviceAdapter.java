@@ -15,18 +15,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.bluetooth.connection.client.Client;
 
 /**
  * Created by michael on 13.09.16.
  */
 public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
     private final List<BluetoothDevice> dataSet;
+    private final BluetoothController mBluetoothController;
 
-    public BluetoothDeviceAdapter(Context context) {
+    public BluetoothDeviceAdapter(Context context, BluetoothController bluetoothController) {
         super(context, android.R.layout.simple_list_item_1);
 
         dataSet = new LinkedList<>();
+        mBluetoothController = bluetoothController;
     }
 
     public void setDataSet(List<BluetoothDevice> newDataSet){
@@ -52,6 +53,7 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View result = layoutInflater.inflate(R.layout.bluetooth_device_list_item, parent, false);
         TextView txtDeviceName = (TextView) result.findViewById(R.id.txtDeviceName);
+        CheckBox chkDeviceSelect = (CheckBox) result.findViewById(R.id.chkBluetoothDeviceSelect);
 
         txtDeviceName.setText(getItem(position).getName());
         result.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +61,13 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
             public void onClick(View v) {
 //                connectToDevice(v, position);
                 toggleCheckbox(v);
+                toggleDeviceSelected(position);
+            }
+        });
+        chkDeviceSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleDeviceSelected(position);
             }
         });
 
@@ -68,6 +77,10 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
     private void toggleCheckbox(View v) {
         CheckBox checkBox = (CheckBox) v.findViewById(R.id.chkBluetoothDeviceSelect);
         checkBox.toggle();
+    }
+
+    private void toggleDeviceSelected(int position){
+        mBluetoothController.toggleDevice(dataSet.get(position));
     }
 
 //    private void connectToDevice(View v, int position){

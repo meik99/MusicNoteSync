@@ -11,9 +11,13 @@ import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
  */
 public class BluetoothSendNotesheetClickListener implements View.OnClickListener {
     private Notesheet mNotesheet;
+    private BluetoothController mBluetoothController;
 
-    public BluetoothSendNotesheetClickListener(Notesheet object) {
+    public BluetoothSendNotesheetClickListener(
+            BluetoothController bluetoothController,
+            Notesheet object) {
         mNotesheet = object;
+        mBluetoothController = bluetoothController;
     }
 
     @Override
@@ -21,10 +25,17 @@ public class BluetoothSendNotesheetClickListener implements View.OnClickListener
         NotesheetFacade notesheetFacade = new NotesheetFacade(v.getContext());
         boolean success = notesheetFacade.sendNotesheet(mNotesheet);
 
+        //remove later
+        success = true;
+
         if(success == true){
             Toast
                 .makeText(v.getContext(), R.string.upload_notesheet_successful, Toast.LENGTH_SHORT)
                 .show();
+
+            mBluetoothController.sendNotesheetMetadata(mNotesheet);
+
+
         }else{
             Toast
                 .makeText(v.getContext(), R.string.error_upload_notesheets, Toast.LENGTH_SHORT)

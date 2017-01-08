@@ -27,7 +27,7 @@ import at.htl_leonding.musicnotesync.request.RequestCode;
  */
 
 public class NotesheetFacade {
-    private static final String SERVER_URL = "http://10.0.2.2:8080/musicnotesync/api/notesheet";
+    private static final String SERVER_URL = "http://vm91.htl-leonding.ac.at:8080/musicnotesync/api/notesheet";
     private static final String FILE_TAG = "file";
     private static final String UUID_TAG = "uuid";
 

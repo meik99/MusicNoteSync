@@ -17,7 +17,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
+import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
+import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Entity;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
@@ -55,6 +56,8 @@ public class MainController implements Serializable{
                 mMainModel.getManagementOptionClickListener()
         ));
         refreshNotesheetArrayAdapter();
+
+        //BluetoothController.enableDiscoverable(mMainActivity);
     }
 
     private  BroadcastReceiver mBtStateChangedReceiver = new BroadcastReceiver() {
@@ -62,9 +65,9 @@ public class MainController implements Serializable{
         public void onReceive(Context context, Intent intent) {
             int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
             if(bltState == BluetoothAdapter.STATE_ON) {
-                ServerManager.getInstance().startServer();
+              //  Server.getInstance().startServer();
             }else{
-//                            Server.getInstance().stopServer();
+              //  Server.getInstance().stopServer();
             }
         }
     };
@@ -156,7 +159,7 @@ public class MainController implements Serializable{
     }
 
     public void openNotesheet(Notesheet notesheet) {
-        ServerManager.getInstance().openNotesheet(notesheet);
+        //ServerManager.getInstance().openNotesheet(notesheet);
         Intent intent = new Intent(mMainActivity, ImageViewActivity.class);
 
         intent.putExtra("pathName", notesheet.getPath());
@@ -177,7 +180,7 @@ public class MainController implements Serializable{
                     .makeText(mMainActivity, R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
                     .show();
             }else{
-                ServerManager.getInstance().startServer();
+//                Server.getInstance().startServer();
             }
         }
     }

@@ -48,7 +48,6 @@ public class Connection implements Runnable{
                     ));
                     StringBuilder message = new StringBuilder();
                     String line = null;
-                    is.read();
 
                     while ((line = reader.readLine()) != null) {
                         Log.d(TAG, "run: Received line: \n\t" + line);

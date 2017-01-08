@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Entity;
@@ -14,15 +15,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.bluetooth.connection.server.Server;
-import at.htl_leonding.musicnotesync.bluetooth.connection.server.ServerManager;
+import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
+import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 
 /**
  * Created by michael on 12.09.16.
  */
-public class BluetoothController {
+public class BluetoothController implements Server.ServerListener, Client.ClientListener {
     private final static String TAG = BluetoothController.class.getSimpleName();
 
     private final BluetoothActivity mBluetoothActivity;
@@ -33,8 +36,23 @@ public class BluetoothController {
         @Override
         public void onReceive(Context context, Intent intent) {
             BluetoothDevice foundDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
             mDeviceAdapter.setDataSet(
                     mModel.addBluetoothDevice(foundDevice));
+        }
+    };
+
+    private final BroadcastReceiver bluetoothEnabled = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
+                    == BluetoothAdapter.STATE_ON) {
+                Server.getInstance().startServer();
+                Server.getInstance().addListener(BluetoothController.this);
+            }else{
+                Server.getInstance().stopServer();
+                Server.getInstance().removeListener(BluetoothController.this);
+            }
         }
     };
 
@@ -46,7 +64,7 @@ public class BluetoothController {
     public BluetoothController(BluetoothActivity bluetoothActivity){
         mBluetoothActivity = bluetoothActivity;
         mModel = new BluetoothModel(mBluetoothActivity);
-        mDeviceAdapter = new BluetoothDeviceAdapter(mBluetoothActivity);
+        mDeviceAdapter = new BluetoothDeviceAdapter(mBluetoothActivity, this);
         ((ListView)mBluetoothActivity.findViewById(R.id.lvBluetoothDevices))
                 .setAdapter(mDeviceAdapter);
     }
@@ -74,7 +92,7 @@ public class BluetoothController {
                         if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) ==
                                 BluetoothAdapter.STATE_ON) {
                             context.unregisterReceiver(this);
-                            enableDiscoverable();
+                            enableDiscoverable(mBluetoothActivity);
                             startDiscovery();
                         }
                     }
@@ -91,7 +109,7 @@ public class BluetoothController {
             }
         }else{
             showToast(R.string.bluetooth_enabled);
-            enableDiscoverable();
+            enableDiscoverable(mBluetoothActivity);
             if(bluetoothAdapter.isDiscovering() == false){
                 startDiscovery();
             }
@@ -99,12 +117,12 @@ public class BluetoothController {
         }
     }
 
-    private void enableDiscoverable(){
+    public static void enableDiscoverable(Context context){
         Intent discoverableIntent = new
                 Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(
                 BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 600);
-        mBluetoothActivity.startActivity(discoverableIntent);
+        context.startActivity(discoverableIntent);
     }
 
     private void startDiscovery(){
@@ -141,19 +159,14 @@ public class BluetoothController {
     }
 
     public BroadcastReceiver startServer() {
-        BroadcastReceiver bluetoothEnabled = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
-                        == BluetoothAdapter.STATE_ON) {
-                    ServerManager.getInstance().startServer();
-                }else{
-//                    Server.getInstance().stopServer();
-                }
-            }
-        };
         IntentFilter bltEnabledFilter =
                 new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+
+        try{
+            mBluetoothActivity.unregisterReceiver(bluetoothEnabled);
+        }catch(Exception e) {
+            //Ignore; just testing if register is already registered
+        }
         mBluetoothActivity.registerReceiver(bluetoothEnabled, bltEnabledFilter);
 
         if(BluetoothAdapter.getDefaultAdapter() == null){
@@ -161,7 +174,8 @@ public class BluetoothController {
             mBluetoothActivity.finish();
         }
         else if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
-            ServerManager.getInstance().startServer();
+            Server.getInstance().startServer();
+            Server.getInstance().addListener(this);
         }
 
         return bluetoothEnabled;
@@ -177,6 +191,7 @@ public class BluetoothController {
             if(operationId == BluetoothActivity.SEND_NOTESHEET){
 
                 return new BluetoothSendNotesheetClickListener(
+                        this,
                         mModel.getNotesheetFacade().findById(entityId));
             }
         }
@@ -200,5 +215,84 @@ public class BluetoothController {
             }
         }
         return R.string.error_creating_activity;
+    }
+
+    public void toggleDevice(BluetoothDevice bluetoothDevice) {
+        if(mModel.selectedDeviceListContainsDevice(bluetoothDevice)){
+            mModel.removeSelectedBluetoothDevice(bluetoothDevice);
+        }else{
+            mModel.addSelectedBluetoothDevice(bluetoothDevice);
+        }
+    }
+
+    public void sendNotesheetMetadata(Notesheet notesheet) {
+        List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
+        Client client = new Client();
+        client.addListener(this);
+        for (BluetoothDevice bluetoothDevice : devices){
+            client.connect(bluetoothDevice);
+            client.sendMessage("Test");
+            //client.disconnect();
+        }
+    }
+
+    @Override
+    public void onServerDeviceConnected(BluetoothSocket socket) {
+        Toast
+                .makeText(mBluetoothActivity,
+                        "Server connected to " + socket.getRemoteDevice().getName(),
+                        Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @Override
+    public void onServerMessageReceived(BluetoothSocket socket, String message) {
+        Toast
+                .makeText(mBluetoothActivity,
+                        "Server received message " +
+                                message +
+                                "from" +
+                                socket.getRemoteDevice().getName(),
+                        Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @Override
+    public void onClientConnected(BluetoothSocket socket) {
+        Toast
+                .makeText(mBluetoothActivity,
+                        "Client connected to " + socket.getRemoteDevice().getName(),
+                        Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @Override
+    public void onClientMessageReceived(BluetoothSocket socket, String message) {
+        Toast
+                .makeText(mBluetoothActivity,
+                        "Client received message " +
+                                message +
+                                "from" +
+                                socket.getRemoteDevice().getName(),
+                        Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @Override
+    public void onClientDisconnected(BluetoothSocket socket) {
+        Toast
+                .makeText(mBluetoothActivity,
+                        "Client disconnected to " + socket.getRemoteDevice().getName(),
+                        Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @Override
+    public void onServerDeviceDisconnected(BluetoothSocket socket) {
+        Toast
+                .makeText(mBluetoothActivity,
+                        "Server disconnected from " + socket.getRemoteDevice().getName(),
+                        Toast.LENGTH_SHORT)
+                .show();
     }
 }

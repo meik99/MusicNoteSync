@@ -40,11 +40,8 @@ public class MainActivity extends AppCompatActivity {
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-
-
-
-        mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
-        mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
+//        mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
+//        mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
 
     }
 
