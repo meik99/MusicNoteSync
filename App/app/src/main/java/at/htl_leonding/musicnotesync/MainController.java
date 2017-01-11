@@ -65,9 +65,9 @@ public class MainController implements Serializable{
         public void onReceive(Context context, Intent intent) {
             int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
             if(bltState == BluetoothAdapter.STATE_ON) {
-              //  Server.getInstance().startServer();
+                Server.getInstance().startServer();
             }else{
-              //  Server.getInstance().stopServer();
+                Server.getInstance().stopServer();
             }
         }
     };
@@ -180,7 +180,7 @@ public class MainController implements Serializable{
                     .makeText(mMainActivity, R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
                     .show();
             }else{
-//                Server.getInstance().startServer();
+               Server.getInstance().startServer();
             }
         }
     }

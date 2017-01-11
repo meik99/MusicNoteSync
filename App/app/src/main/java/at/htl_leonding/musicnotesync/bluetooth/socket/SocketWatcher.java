@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.bluetooth.socket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Base64;
 import android.util.Base64InputStream;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.List;
  */
 
 public class SocketWatcher implements Runnable{
+    private static final String TAG = SocketWatcher.class.getSimpleName();
+
     public void addListener(SocketWatcherListener socketWatcherListener) {
         this.mListeners.add(socketWatcherListener);
     }
@@ -52,18 +55,26 @@ public class SocketWatcher implements Runnable{
             if(inputStream == null){
                 disconnected = true;
             }else{
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(
+                Base64InputStream base64InputStream =
                                 new Base64InputStream(
                                         inputStream, Base64.DEFAULT
-                                )
-                        )
-                );
+                                );
                 try {
-                    String line = reader.readLine();
-                    if(line != null){
-                        notifyOnMessageReceived(line);
+                    byte[] buffer = new byte[64];
+                    int read = -1;
+                    StringBuilder builder = new StringBuilder();
+
+                    read = base64InputStream.read(buffer);
+
+                    if(read > -1){
+                        builder.append(new String(buffer, 0, read));
                     }
+
+                    while(read >= buffer.length && (read = base64InputStream.read(buffer)) > -1){
+                        builder.append(new String(buffer));
+                    }
+
+                    Log.i(TAG, "run: " + builder.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                     disconnected = true;
