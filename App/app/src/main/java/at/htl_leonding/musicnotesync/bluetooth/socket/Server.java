@@ -53,7 +53,7 @@ public class Server implements Runnable, SocketWatcher.SocketWatcherListener {
     private Server() {
         this.mServerListener = new LinkedList<>();
         mClients = new LinkedList<>();
-        mExecutor = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
+        mExecutor = BluetoothExecutor.BLUETOOTH_EXECUTOR;
     }
 
     @Override
@@ -74,6 +74,7 @@ public class Server implements Runnable, SocketWatcher.SocketWatcherListener {
                         SocketWatcher watcher = new SocketWatcher(clientSocket);
                         watcher.addListener(this);
                         mExecutor.execute(watcher);
+
                         notifyOnConnected(clientSocket);
                     }
                 }

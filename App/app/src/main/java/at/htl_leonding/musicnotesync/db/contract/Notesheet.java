@@ -12,4 +12,5 @@ public interface Notesheet extends Entity{
     String getUUID();
     Directory getParent();
     File getFile();
+    String getMetadata();
 }

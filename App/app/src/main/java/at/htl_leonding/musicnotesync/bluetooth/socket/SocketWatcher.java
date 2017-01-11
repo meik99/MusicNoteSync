@@ -76,7 +76,7 @@ public class SocketWatcher implements Runnable{
 
                     Log.i(TAG, "run: " + builder.toString());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.i(TAG, "run: Device disconnected");
                     disconnected = true;
                 }
             }

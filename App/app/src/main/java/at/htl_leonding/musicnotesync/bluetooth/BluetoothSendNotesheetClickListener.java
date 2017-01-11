@@ -23,7 +23,7 @@ public class BluetoothSendNotesheetClickListener implements View.OnClickListener
     @Override
     public void onClick(View v) {
         NotesheetFacade notesheetFacade = new NotesheetFacade(v.getContext());
-        boolean success = notesheetFacade.sendNotesheet(mNotesheet);
+        boolean success = true; //notesheetFacade.sendNotesheet(mNotesheet);
 
         //remove later
         success = true;

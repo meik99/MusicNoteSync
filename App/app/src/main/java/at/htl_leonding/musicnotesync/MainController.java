@@ -180,7 +180,7 @@ public class MainController implements Serializable{
                     .makeText(mMainActivity, R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
                     .show();
             }else{
-               Server.getInstance().startServer();
+                Server.getInstance().startServer();
             }
         }
     }

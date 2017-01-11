@@ -11,7 +11,6 @@ import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
 
@@ -33,7 +32,7 @@ public class Client implements SocketWatcher.SocketWatcherListener {
 
     public Client(){
         mListener = new LinkedList<>();
-        mExecutor = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
+        mExecutor = BluetoothExecutor.BLUETOOTH_EXECUTOR;
     }
 
     public void connect(BluetoothDevice device){
@@ -66,14 +65,13 @@ public class Client implements SocketWatcher.SocketWatcherListener {
     public void sendMessage(String message){
         try {
             if(mSocket != null && mSocket.getOutputStream() != null) {
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(
+                Base64OutputStream base64OutputStream =
                                 new Base64OutputStream(
                                         mSocket.getOutputStream(), Base64.DEFAULT
-                                )
-                        )
-                );
-                writer.write(message);
+                                );
+
+                base64OutputStream.write(message.getBytes());
+                base64OutputStream.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();

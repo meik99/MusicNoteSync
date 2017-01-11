@@ -70,6 +70,16 @@ public class NotesheetImpl implements Notesheet{
         return new File(this.path);
     }
 
+    @Override
+    public String getMetadata() {
+        StringBuilder builder = new StringBuilder();
+        builder
+                .append(getUUID())
+                .append(";")
+                .append(getName());
+        return builder.toString();
+    }
+
     public void fromNotesheet(Notesheet notesheet){
         this.parent = notesheet.getParent();
         this.name = notesheet.getName();
@@ -77,4 +87,6 @@ public class NotesheetImpl implements Notesheet{
         this.id = notesheet.getId();
         this.uuid = notesheet.getUUID();
     }
+
+
 }

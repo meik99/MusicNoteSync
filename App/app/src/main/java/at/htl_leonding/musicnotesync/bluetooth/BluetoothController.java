@@ -231,8 +231,8 @@ public class BluetoothController implements Server.ServerListener, Client.Client
         client.addListener(this);
         for (BluetoothDevice bluetoothDevice : devices){
             client.connect(bluetoothDevice);
-            client.sendMessage("Test");
-            //client.disconnect();
+            client.sendMessage(notesheet.getMetadata());
+            client.disconnect();
         }
     }
 
