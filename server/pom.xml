@@ -9,7 +9,7 @@
     <version>1.0</version>
     <packaging>war</packaging>
     <build>
-        <finalName>musicnotesync</finalName>
+        <finalName>musicnotesyncserver</finalName>
     </build>
     <properties>
         <maven.build.target>1.8</maven.build.target>
