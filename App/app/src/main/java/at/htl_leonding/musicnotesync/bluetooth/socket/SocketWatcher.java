@@ -1,6 +1,7 @@
 package at.htl_leonding.musicnotesync.bluetooth.socket;
 
 import android.bluetooth.BluetoothSocket;
+import android.support.design.widget.Snackbar;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Log;
@@ -78,6 +79,8 @@ public class SocketWatcher implements Runnable{
                 } catch (IOException e) {
                     Log.i(TAG, "run: Device disconnected");
                     disconnected = true;
+
+
                 }
             }
         }

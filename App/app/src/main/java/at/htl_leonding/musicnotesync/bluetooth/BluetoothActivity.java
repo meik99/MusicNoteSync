@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
@@ -24,6 +26,7 @@ public class BluetoothActivity extends AppCompatActivity{
     private BroadcastReceiver mBluetoothStateChangeReceiver;
     private ListView mDeviceList;
     private Button mBtnAction;
+    private RelativeLayout mLoadingPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,9 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList = (ListView) findViewById(R.id.lvBluetoothDevices);
         mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
+
+        mLoadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        mLoadingPanel.setVisibility(View.GONE);
 
         mBtnAction = (Button) findViewById(R.id.btnBluetoothAction);
         mBtnAction.setOnClickListener(mController.getOnClickListener());

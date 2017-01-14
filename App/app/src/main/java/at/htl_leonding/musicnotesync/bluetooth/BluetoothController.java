@@ -10,6 +10,7 @@ import android.content.Entity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -225,13 +226,22 @@ public class BluetoothController implements Server.ServerListener, Client.Client
         }
     }
 
-    public void sendNotesheetMetadata(Notesheet notesheet) {
+    public void sendNotesheetMetadata(Notesheet notesheet, View v) {
         List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
         Client client = new Client();
+        String successMsg = "erfolgreich!";
+        boolean success = false;
         client.addListener(this);
         for (BluetoothDevice bluetoothDevice : devices){
             client.connect(bluetoothDevice);
-            client.sendMessage(notesheet.getMetadata());
+            //TODO: add success Response
+            /*success = */client.sendMessage(notesheet.getMetadata());
+            if (success)
+                successMsg = "nicht erfolgreich!";
+            Snackbar snackbar = Snackbar
+                    .make(v, "Senden " + successMsg, Snackbar.LENGTH_SHORT);
+
+            snackbar.show();
             client.disconnect();
         }
     }

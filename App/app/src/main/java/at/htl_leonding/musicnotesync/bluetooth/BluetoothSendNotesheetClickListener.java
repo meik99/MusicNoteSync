@@ -1,6 +1,7 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import at.htl_leonding.musicnotesync.R;
@@ -24,7 +25,11 @@ public class BluetoothSendNotesheetClickListener implements View.OnClickListener
     public void onClick(View v) {
         NotesheetFacade notesheetFacade = new NotesheetFacade(v.getContext());
         boolean success = true; //notesheetFacade.sendNotesheet(mNotesheet);
-
+        //TODO add LoadingAnimation
+        RelativeLayout loadingPanel = (RelativeLayout) v.findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.VISIBLE);
+        //boolean success = notesheetFacade.sendNotesheet(mNotesheet);
+        loadingPanel.setVisibility(View.GONE);
         //remove later
         success = true;
 
@@ -33,7 +38,7 @@ public class BluetoothSendNotesheetClickListener implements View.OnClickListener
                 .makeText(v.getContext(), R.string.upload_notesheet_successful, Toast.LENGTH_SHORT)
                 .show();
 
-            mBluetoothController.sendNotesheetMetadata(mNotesheet);
+            mBluetoothController.sendNotesheetMetadata(mNotesheet, v);
 
 
         }else{
