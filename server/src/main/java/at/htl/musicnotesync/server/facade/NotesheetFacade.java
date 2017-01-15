@@ -50,16 +50,11 @@ public class NotesheetFacade {
             return -3;
         }
 
-        Notesheet notesheet = new Notesheet();
-        notesheet.setFilepath(filename);
-
-        List<Notesheet> notesheetList =
-                entityManager
-                        .createNativeQuery(
-                                "SELECT * FROM NOTESHEET",
-                                Notesheet.class)
-                        .getResultList();
-        Notesheet result = entityManager.merge(notesheet);
+//        Notesheet notesheet = new Notesheet();
+//        notesheet.setFilepath(filename);
+//
+//
+//        Notesheet result = entityManager.merge(notesheet);
 
         return 1;
     }
