@@ -1,15 +1,13 @@
 package at.htl_leonding.musicnotesync.bluetooth.socket;
 
 import android.bluetooth.BluetoothSocket;
-import android.support.design.widget.Snackbar;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,26 +59,30 @@ public class SocketWatcher implements Runnable{
                                         inputStream, Base64.DEFAULT
                                 );
                 try {
-                    byte[] buffer = new byte[64];
+                    byte[] buffer = new byte[256];
                     int read = -1;
                     StringBuilder builder = new StringBuilder();
 
                     read = base64InputStream.read(buffer);
 
                     if(read > -1){
-                        builder.append(new String(buffer, 0, read));
+                        builder.append(new String(buffer, 0, read, Charset.forName("UTF-8")));
                     }
 
-                    while(read >= buffer.length && (read = base64InputStream.read(buffer)) > -1){
-                        builder.append(new String(buffer));
+                    while(base64InputStream.available() > 0){
+                        read = base64InputStream.read(buffer);
+                        builder.append(new String(buffer, 0, read, Charset.forName("UTF-8")));
                     }
+
+                    mSocket.close();
+                    disconnected = true;
+
+                    notifyOnMessageReceived(builder.toString());
 
                     Log.i(TAG, "run: " + builder.toString());
                 } catch (IOException e) {
                     Log.i(TAG, "run: Device disconnected");
                     disconnected = true;
-
-
                 }
             }
         }

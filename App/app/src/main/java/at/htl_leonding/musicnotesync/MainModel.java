@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
@@ -30,6 +31,7 @@ public class MainModel {
     private NotesheetClickListener notesheetItemClickListener;
     private Object objectToRename;
     private ManagementOptionsClickListener managementOptionsClickListener;
+    private ServerListenerImpl serverListener;
 
     public MainModel(Context context, MainController mainController){
         notesheetFacade = new NotesheetFacade(context);
@@ -130,5 +132,13 @@ public class MainModel {
 
     public ManagementOptionsClickListener getManagementOptionClickListener() {
         return managementOptionsClickListener;
+    }
+
+    public void setServerListener(ServerListenerImpl serverListener) {
+        this.serverListener = serverListener;
+    }
+
+    public ServerListenerImpl getServerListener() {
+        return serverListener;
     }
 }

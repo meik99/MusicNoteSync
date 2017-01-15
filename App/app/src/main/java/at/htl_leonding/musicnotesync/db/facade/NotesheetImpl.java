@@ -13,6 +13,8 @@ import at.htl_leonding.musicnotesync.io.Storage;
  * Created by michael on 12.08.16.
  */
 public class NotesheetImpl implements Notesheet{
+    private static final long serialVersionUID = 1L;
+
     String name;
     String path;
     String uuid;
@@ -74,6 +76,8 @@ public class NotesheetImpl implements Notesheet{
     public String getMetadata() {
         StringBuilder builder = new StringBuilder();
         builder
+                .append(Notesheet.class.getSimpleName())
+                .append(";")
                 .append(getUUID())
                 .append(";")
                 .append(getName());

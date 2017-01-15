@@ -4,11 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +27,24 @@ import at.htl_leonding.musicnotesync.io.Storage;
  * Created by michael on 09.07.16.
  */
 public class NotesheetFacade {
+    public interface NotesheetDbListener{
+        void onNotesheetInserted(Notesheet notesheet);
+    }
+
     private static final String TAG = NotesheetFacade.class.getSimpleName();
+
     private Context mContext;
+    private List<NotesheetDbListener> mListeners;
+
+    public void addListener(NotesheetDbListener listener){
+        if(listener != null)
+            mListeners.add(listener);
+    }
+
+    public void removeListener(NotesheetDbListener listener){
+        if(listener != null)
+            mListeners.remove(listener);
+    }
 
     public NotesheetFacade(Context context){
         if(context == null) {
@@ -32,6 +52,7 @@ public class NotesheetFacade {
         }
 
         this.mContext = context;
+        mListeners = new LinkedList<>();
     }
 
     public List<Notesheet> getNotesheets(@Nullable  Directory directory) {
@@ -97,15 +118,73 @@ public class NotesheetFacade {
         return result;
     }
 
+    public AsyncTask<Void, Void, Notesheet> insertFromInputStream(final InputStream inputStream,
+                                           final String directory,
+                                           final String filename){
+        AsyncTask<Void, Void, Notesheet> asyncTask =
+                new AsyncTask<Void, Void, Notesheet>() {
+            @Override
+            protected Notesheet doInBackground(Void... params) {
+                Storage storage = new Storage(mContext);
+                File bluetoothDirector =
+                        new File(mContext.getFilesDir()
+                                + File.separator
+                                + directory
+                                + File.separator);
+
+                if(bluetoothDirector.exists() == false)
+                    bluetoothDirector.mkdir();
+
+                String path =
+                        bluetoothDirector
+                        + File.separator
+                        + filename;
+                try {
+                    FileOutputStream fileOutputStream
+                            = new FileOutputStream(path, false);
+
+                    StringBuilder builder = new StringBuilder();
+                    byte[] buffer = new byte[1024];
+                    int read = inputStream.read(buffer);
+
+                    if(read > -1){
+                        fileOutputStream.write(buffer, 0, read);
+                    }
+
+                    while ((read = inputStream.read(buffer)) > -1){
+                        fileOutputStream.write(buffer, 0, read);
+                    }
+
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                DirectoryFacade directoryFacade = new DirectoryFacade(mContext);
+                Notesheet inserted =
+                        NotesheetFacade.this
+                                .insert(directoryFacade.getRoot(),
+                                        "bluetooth",
+                                        filename);
+                Log.i(TAG, "downloadFinished: " + inserted.getMetadata());
+                return inserted;
+            }
+        };
+        asyncTask.execute();
+        return asyncTask;
+    }
+
     public Notesheet insert(@Nullable Directory dir, @NonNull String filename){
         Storage storage = new Storage(mContext);
 
         return insert(dir, storage.getCameraDirectory(), filename);
     }
 
+    public Notesheet insert(Directory dir, String directoryPath, String filename){
+        return insert(dir, directoryPath, filename, UUID.randomUUID().toString());
+    }
 
-
-    public Notesheet insert(Directory dir, String directoryPath, String filename) {
+    public Notesheet insert(Directory dir, String directoryPath, String filename, String uuid) {
         ContentValues cv = new ContentValues();
         DBHelper dbHelper = new DBHelper(this.mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -117,13 +196,18 @@ public class NotesheetFacade {
 
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID, dir.getId());
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME, filename);
-        cv.put(NotesheetContract.NotesheetEntry.COLUMN_UUID, UUID.randomUUID().toString());
+        cv.put(NotesheetContract.NotesheetEntry.COLUMN_UUID, uuid);
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH,
                 directoryPath + File.separator + filename);
 
         long id = db.insert(NotesheetContract.TABLE, null, cv);
+        Notesheet inserted = findById(id);
 
-        return findById(id);
+        for (NotesheetDbListener listener :
+                mListeners) {
+            listener.onNotesheetInserted(inserted);
+        }
+        return inserted;
     }
 
     public Notesheet findById(long id){

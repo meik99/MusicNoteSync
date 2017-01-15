@@ -4,10 +4,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Base64;
 import android.util.Base64OutputStream;
+import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -19,6 +21,8 @@ import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
  */
 
 public class Client implements SocketWatcher.SocketWatcherListener {
+
+    private static final String TAG = Client.class.getSimpleName();
 
     public interface ClientListener{
         void onClientConnected(BluetoothSocket socket);
@@ -62,7 +66,7 @@ public class Client implements SocketWatcher.SocketWatcherListener {
         onDisconnected(mSocket);
     }
 
-    public void sendMessage(String message){
+    public boolean sendMessage(String message){
         try {
             if(mSocket != null && mSocket.getOutputStream() != null) {
                 Base64OutputStream base64OutputStream =
@@ -70,13 +74,19 @@ public class Client implements SocketWatcher.SocketWatcherListener {
                                         mSocket.getOutputStream(), Base64.DEFAULT
                                 );
 
-                base64OutputStream.write(message.getBytes());
+                message+= "\n\r";
+                Log.i(TAG, "sendMessage: " + message);
+
+                byte[] buffer = message.getBytes(Charset.forName("UTF-8"));
+                base64OutputStream.write(buffer);
                 base64OutputStream.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
 
+        return true;
     }
 
     private void notifyOnConnected(BluetoothSocket socket){

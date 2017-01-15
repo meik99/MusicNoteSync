@@ -2,6 +2,7 @@ package at.htl_leonding.musicnotesync;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -17,7 +19,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
+import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
 import at.htl_leonding.musicnotesync.db.contract.Entity;
@@ -28,8 +30,8 @@ import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
 import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
-import at.htl_leonding.musicnotesync.management.move.MoveActivity;
 import at.htl_leonding.musicnotesync.management.RenameNotesheetObjectDialog;
+import at.htl_leonding.musicnotesync.management.move.MoveActivity;
 import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
 import at.htl_leonding.musicnotesync.request.RequestCode;
 
@@ -55,9 +57,8 @@ public class MainController implements Serializable{
                 mMainModel.getNotesheetItemClickListener(),
                 mMainModel.getManagementOptionClickListener()
         ));
+        mMainModel.setServerListener(new ServerListenerImpl(mMainActivity));
         refreshNotesheetArrayAdapter();
-
-        //BluetoothController.enableDiscoverable(mMainActivity);
     }
 
     private  BroadcastReceiver mBtStateChangedReceiver = new BroadcastReceiver() {
@@ -65,12 +66,22 @@ public class MainController implements Serializable{
         public void onReceive(Context context, Intent intent) {
             int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
             if(bltState == BluetoothAdapter.STATE_ON) {
-                Server.getInstance().startServer();
+                startBluetoothServer();
             }else{
-                Server.getInstance().stopServer();
+                stopBluetoothServer();
             }
         }
     };
+
+    private void startBluetoothServer(){
+        Server.getInstance().startServer();
+        Server.getInstance().addListener(mMainModel.getServerListener());
+    }
+
+    private void stopBluetoothServer(){
+        Server.getInstance().stopServer();
+        Server.getInstance().removeListener(mMainModel.getServerListener());
+    }
 
     public View.OnClickListener getFabListener() {
         return this.mMainModel.getFabOnClickListener();
@@ -159,7 +170,6 @@ public class MainController implements Serializable{
     }
 
     public void openNotesheet(Notesheet notesheet) {
-        //ServerManager.getInstance().openNotesheet(notesheet);
         Intent intent = new Intent(mMainActivity, ImageViewActivity.class);
 
         intent.putExtra("pathName", notesheet.getPath());
@@ -180,7 +190,7 @@ public class MainController implements Serializable{
                     .makeText(mMainActivity, R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
                     .show();
             }else{
-                Server.getInstance().startServer();
+                startBluetoothServer();
             }
         }
     }

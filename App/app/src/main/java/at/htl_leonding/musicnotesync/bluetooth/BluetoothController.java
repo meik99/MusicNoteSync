@@ -1,12 +1,11 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Entity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.StringRes;
@@ -19,19 +18,24 @@ import android.widget.Toast;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothSendNotesheetClickListener;
+import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
+import at.htl_leonding.musicnotesync.bluetooth.listener.NotesheetUploadListener;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
 
 /**
  * Created by michael on 12.09.16.
  */
-public class BluetoothController implements Server.ServerListener, Client.ClientListener {
+public class BluetoothController{
     private final static String TAG = BluetoothController.class.getSimpleName();
 
     private final BluetoothActivity mBluetoothActivity;
     private final BluetoothModel mModel;
     private final BluetoothDeviceAdapter mDeviceAdapter;
+    private ProgressDialog loadingDialog;
 
     private final BroadcastReceiver mDeviceFoundReceiver = new BroadcastReceiver() {
         @Override
@@ -48,14 +52,22 @@ public class BluetoothController implements Server.ServerListener, Client.Client
         public void onReceive(Context context, Intent intent) {
             if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
                     == BluetoothAdapter.STATE_ON) {
-                Server.getInstance().startServer();
-                Server.getInstance().addListener(BluetoothController.this);
+                startBluetoothServer();
             }else{
-                Server.getInstance().stopServer();
-                Server.getInstance().removeListener(BluetoothController.this);
+                stopBluetoothServer();
             }
         }
     };
+
+    private void startBluetoothServer(){
+        Server.getInstance().startServer();
+        Server.getInstance().addListener(mModel.getServerListener());
+    }
+
+    private void stopBluetoothServer(){
+        Server.getInstance().stopServer();
+        Server.getInstance().removeListener(mModel.getServerListener());
+    }
 
     /**
      * Creates an instance of BluetoothController.
@@ -66,6 +78,7 @@ public class BluetoothController implements Server.ServerListener, Client.Client
         mBluetoothActivity = bluetoothActivity;
         mModel = new BluetoothModel(mBluetoothActivity);
         mDeviceAdapter = new BluetoothDeviceAdapter(mBluetoothActivity, this);
+        mModel.setServerListener(new ServerListenerImpl(bluetoothActivity));
         ((ListView)mBluetoothActivity.findViewById(R.id.lvBluetoothDevices))
                 .setAdapter(mDeviceAdapter);
     }
@@ -136,7 +149,7 @@ public class BluetoothController implements Server.ServerListener, Client.Client
         }
     }
 
-    private void showToast(@StringRes int stringRes){
+    public void showToast(@StringRes int stringRes){
         Toast.makeText(mBluetoothActivity, stringRes, Toast.LENGTH_LONG)
                 .show();
     }
@@ -175,8 +188,7 @@ public class BluetoothController implements Server.ServerListener, Client.Client
             mBluetoothActivity.finish();
         }
         else if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
-            Server.getInstance().startServer();
-            Server.getInstance().addListener(this);
+            startBluetoothServer();
         }
 
         return bluetoothEnabled;
@@ -226,83 +238,46 @@ public class BluetoothController implements Server.ServerListener, Client.Client
         }
     }
 
-    public void sendNotesheetMetadata(Notesheet notesheet, View v) {
+    public void sendNotesheetMetadata(Notesheet notesheet) {
         List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
         Client client = new Client();
         String successMsg = "erfolgreich!";
-        boolean success = false;
-        client.addListener(this);
+
         for (BluetoothDevice bluetoothDevice : devices){
             client.connect(bluetoothDevice);
             //TODO: add success Response
-            /*success = */client.sendMessage(notesheet.getMetadata());
-            if (success)
+            if (client.sendMessage(notesheet.getMetadata()) == false)
                 successMsg = "nicht erfolgreich!";
+
             Snackbar snackbar = Snackbar
-                    .make(v, "Senden " + successMsg, Snackbar.LENGTH_SHORT);
+                    .make(
+                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+                            "Senden " + successMsg,
+                            Snackbar.LENGTH_SHORT);
 
             snackbar.show();
-            client.disconnect();
         }
     }
 
-    @Override
-    public void onServerDeviceConnected(BluetoothSocket socket) {
-        Toast
-                .makeText(mBluetoothActivity,
-                        "Server connected to " + socket.getRemoteDevice().getName(),
-                        Toast.LENGTH_SHORT)
-                .show();
+    public void showLoadingAnimation() {
+        loadingDialog = new ProgressDialog(mBluetoothActivity);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingDialog.setMessage(mBluetoothActivity.getString(R.string.uploading_Notesheet));
+        loadingDialog.show();
     }
 
-    @Override
-    public void onServerMessageReceived(BluetoothSocket socket, String message) {
-        Toast
-                .makeText(mBluetoothActivity,
-                        "Server received message " +
-                                message +
-                                "from" +
-                                socket.getRemoteDevice().getName(),
-                        Toast.LENGTH_SHORT)
-                .show();
+    public void stopLoadingAnimation() {
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
+        }
     }
 
-    @Override
-    public void onClientConnected(BluetoothSocket socket) {
-        Toast
-                .makeText(mBluetoothActivity,
-                        "Client connected to " + socket.getRemoteDevice().getName(),
-                        Toast.LENGTH_SHORT)
-                .show();
-    }
+    public void sendNotesheet(Notesheet notesheet){
+        NotesheetUploadListener notesheetUploadListener =
+                new NotesheetUploadListener(this);
+        NotesheetFacade notesheetFacade = new NotesheetFacade();
 
-    @Override
-    public void onClientMessageReceived(BluetoothSocket socket, String message) {
-        Toast
-                .makeText(mBluetoothActivity,
-                        "Client received message " +
-                                message +
-                                "from" +
-                                socket.getRemoteDevice().getName(),
-                        Toast.LENGTH_SHORT)
-                .show();
-    }
-
-    @Override
-    public void onClientDisconnected(BluetoothSocket socket) {
-        Toast
-                .makeText(mBluetoothActivity,
-                        "Client disconnected to " + socket.getRemoteDevice().getName(),
-                        Toast.LENGTH_SHORT)
-                .show();
-    }
-
-    @Override
-    public void onServerDeviceDisconnected(BluetoothSocket socket) {
-        Toast
-                .makeText(mBluetoothActivity,
-                        "Server disconnected from " + socket.getRemoteDevice().getName(),
-                        Toast.LENGTH_SHORT)
-                .show();
+        notesheetFacade.sendNotesheet(mBluetoothActivity, notesheet, notesheetUploadListener);
     }
 }

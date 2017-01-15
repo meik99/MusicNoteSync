@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 
@@ -18,6 +19,7 @@ public class BluetoothModel{
     private NotesheetFacade notesheetFacade;
     private DirectoryFacade directoryFacade;
     private Context mContext;
+    private ServerListenerImpl serverListener;
 
     public BluetoothModel(BluetoothActivity bluetoothActivity){
         mDevices = new LinkedList<>();
@@ -99,5 +101,13 @@ public class BluetoothModel{
             directoryFacade = new DirectoryFacade(mContext);
         }
         return directoryFacade;
+    }
+
+    public void setServerListener(ServerListenerImpl serverListener) {
+        this.serverListener = serverListener;
+    }
+
+    public ServerListenerImpl getServerListener() {
+        return serverListener;
     }
 }

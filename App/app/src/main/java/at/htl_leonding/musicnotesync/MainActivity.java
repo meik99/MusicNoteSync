@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,14 +41,12 @@ public class MainActivity extends AppCompatActivity {
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-//        mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
-//        mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
-
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
+        MultiDex.install(this);
     }
 
     @Override
@@ -93,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         if(PermissionHelper.getBluetoothPermissions(this) == true){
             mController.tryStartBluetoothServer();
         }
+        mController.refreshNotesheetArrayAdapter();
 
         super.onResume();
     }

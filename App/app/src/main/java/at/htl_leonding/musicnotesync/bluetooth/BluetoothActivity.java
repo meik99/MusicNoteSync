@@ -38,9 +38,6 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
 
-        mLoadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        mLoadingPanel.setVisibility(View.GONE);
-
         mBtnAction = (Button) findViewById(R.id.btnBluetoothAction);
         mBtnAction.setOnClickListener(mController.getOnClickListener());
         mBtnAction.setText(mController.getActionButtonText());

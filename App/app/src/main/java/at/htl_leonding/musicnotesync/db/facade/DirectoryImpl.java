@@ -15,7 +15,7 @@ import at.htl_leonding.musicnotesync.db.contract.Notesheet;
  * Created by michael on 11.08.16.
  */
 public class DirectoryImpl implements Directory{
-
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private List<Directory> children;
