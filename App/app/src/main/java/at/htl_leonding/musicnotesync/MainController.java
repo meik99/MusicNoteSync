@@ -26,6 +26,7 @@ import at.htl_leonding.musicnotesync.db.contract.Entity;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
+import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
@@ -38,7 +39,7 @@ import at.htl_leonding.musicnotesync.request.RequestCode;
 /**
  * Created by michael on 11.08.16.
  */
-public class MainController implements Serializable{
+public class MainController implements Serializable, NotesheetFacade.NotesheetDbListener {
     private static final String TAG = MainController.class.getSimpleName();
 
     private MainModel mMainModel;
@@ -58,6 +59,7 @@ public class MainController implements Serializable{
                 mMainModel.getManagementOptionClickListener()
         ));
         mMainModel.setServerListener(new ServerListenerImpl(mMainActivity));
+        mMainModel.getServerListener().addNotesheetDbListener(this);
         refreshNotesheetArrayAdapter();
     }
 
@@ -343,5 +345,33 @@ public class MainController implements Serializable{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onNotesheetInserted(final Notesheet notesheet) {
+        mMainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshNotesheetArrayAdapter();
+
+                if(notesheet != null && notesheet.getId() > 0) {
+                    Snackbar.make(
+                            mMainActivity.findViewById(
+                                    R.id.mainLayout),
+                            R.string.transfer_successful,
+                            Snackbar.LENGTH_LONG
+                    )
+                            .show();
+                }else{
+                    Snackbar.make(
+                            mMainActivity.findViewById(
+                                    R.id.mainLayout),
+                            R.string.transfer_unsuccessful,
+                            Snackbar.LENGTH_LONG
+                    )
+                            .show();
+                }
+            }
+        });
     }
 }

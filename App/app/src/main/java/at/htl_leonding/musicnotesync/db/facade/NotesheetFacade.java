@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import at.htl_leonding.musicnotesync.bluetooth.listener.DownloadNotesheetListener;
 import at.htl_leonding.musicnotesync.db.DBHelper;
 import at.htl_leonding.musicnotesync.db.NotesheetContract;
 import at.htl_leonding.musicnotesync.db.contract.Directory;
@@ -118,9 +119,16 @@ public class NotesheetFacade {
         return result;
     }
 
-    public AsyncTask<Void, Void, Notesheet> insertFromInputStream(final InputStream inputStream,
-                                           final String directory,
-                                           final String filename){
+    private void notifyInserted(Notesheet inserted){
+        for (NotesheetDbListener listener :
+                mListeners) {
+            listener.onNotesheetInserted(inserted);
+        }
+    }
+
+    public void insertFromInputStream(final InputStream inputStream,
+                                                                  final String directory,
+                                                                  final String filename){
         AsyncTask<Void, Void, Notesheet> asyncTask =
                 new AsyncTask<Void, Void, Notesheet>() {
             @Override
@@ -167,11 +175,11 @@ public class NotesheetFacade {
                                         "bluetooth",
                                         filename);
                 Log.i(TAG, "downloadFinished: " + inserted.getMetadata());
+                notifyInserted(inserted);
                 return inserted;
             }
         };
         asyncTask.execute();
-        return asyncTask;
     }
 
     public Notesheet insert(@Nullable Directory dir, @NonNull String filename){
@@ -203,10 +211,7 @@ public class NotesheetFacade {
         long id = db.insert(NotesheetContract.TABLE, null, cv);
         Notesheet inserted = findById(id);
 
-        for (NotesheetDbListener listener :
-                mListeners) {
-            listener.onNotesheetInserted(inserted);
-        }
+        notifyInserted(inserted);
         return inserted;
     }
 

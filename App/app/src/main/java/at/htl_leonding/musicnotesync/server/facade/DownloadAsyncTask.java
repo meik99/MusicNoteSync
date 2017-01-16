@@ -37,15 +37,17 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, Boolean> {
     protected Boolean doInBackground(Void... params) {
         AndroidHttpClient client = AndroidHttpClient.newInstance("user");
         HttpGetHC4 getNotesheetRequest = new HttpGetHC4(mServerUrl + "/" + mUuid);
+        boolean success = false;
         try {
             HttpResponse response = client.execute(getNotesheetRequest);
             loadedEntity = response.getEntity();
 
-            return true;
+            success = true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
+        client.close();
+        return success;
     }
 
     @Override

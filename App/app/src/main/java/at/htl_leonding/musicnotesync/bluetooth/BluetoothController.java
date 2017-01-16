@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -238,25 +239,51 @@ public class BluetoothController{
         }
     }
 
-    public void sendNotesheetMetadata(Notesheet notesheet) {
-        List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
+    public void sendNotesheetMetadata(final Notesheet notesheet) {
+        final List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
         Client client = new Client();
-        String successMsg = "erfolgreich!";
+        boolean success = false;
 
-        for (BluetoothDevice bluetoothDevice : devices){
-            client.connect(bluetoothDevice);
-            //TODO: add success Response
-            if (client.sendMessage(notesheet.getMetadata()) == false)
-                successMsg = "nicht erfolgreich!";
+        for (final BluetoothDevice bluetoothDevice : devices){
+            AsyncTask asyncTask = new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object[] params) {
+                    sendMetadataToDevice(notesheet, bluetoothDevice);
+                    return null;
+                }
+            };
+            asyncTask.execute();
+        }
+    }
 
-            Snackbar snackbar = Snackbar
+    private void sendMetadataToDevice(Notesheet notesheet, BluetoothDevice device){
+        Client client = new Client();
+        client.connect(device);
+        //TODO: add success Response
+        boolean success = client.sendMessage(notesheet.getMetadata());
+
+
+        Snackbar snackbar = null;
+        if(success == true) {
+            snackbar = Snackbar
                     .make(
                             mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-                            "Senden " + successMsg,
+                            R.string.transfer_successful,
                             Snackbar.LENGTH_SHORT);
-
-            snackbar.show();
+        }else{
+            snackbar = Snackbar
+                    .make(
+                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+                            R.string.transfer_unsuccessful,
+                            Snackbar.LENGTH_SHORT);
         }
+        final Snackbar finalSackbar = snackbar;
+        mBluetoothActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                finalSackbar.show();
+            }
+        });
     }
 
     public void showLoadingAnimation() {
@@ -279,5 +306,15 @@ public class BluetoothController{
         NotesheetFacade notesheetFacade = new NotesheetFacade();
 
         notesheetFacade.sendNotesheet(mBluetoothActivity, notesheet, notesheetUploadListener);
+    }
+
+    public void showSnackbar(@StringRes int stringRes) {
+        Snackbar snackbar = Snackbar
+                .make(
+                        mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+                        stringRes,
+                        Snackbar.LENGTH_SHORT);
+
+        snackbar.show();
     }
 }

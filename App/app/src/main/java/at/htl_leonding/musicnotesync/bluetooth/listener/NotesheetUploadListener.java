@@ -24,10 +24,10 @@ public class NotesheetUploadListener implements UploadListener{
     @Override
     public void onUploadFinished(boolean success, Notesheet notesheet) {
         if(success == true){
-            mBluetoothController.showToast(R.string.upload_notesheet_successful);
+//            mBluetoothController.showToast(R.string.upload_notesheet_successful);
             mBluetoothController.sendNotesheetMetadata(notesheet);
         }else{
-            mBluetoothController.showToast(R.string.error_upload_notesheets);
+            mBluetoothController.showSnackbar(R.string.error_upload_notesheets);
         }
         mBluetoothController.stopLoadingAnimation();
     }
