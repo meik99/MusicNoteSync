@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 360 360" style="enable-background:new 0 0 360 360;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#XMLID_11_);}
+	.st1{fill:#8B191C;}
+	.st2{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+</style>
+<g id="XMLID_1_">
+	<radialGradient id="XMLID_11_" cx="194.3293" cy="182.4512" r="80.1829" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#D1D3D4"/>
+		<stop  offset="0.148" style="stop-color:#CDCED0"/>
+		<stop  offset="0.3372" style="stop-color:#BFC1C3"/>
+		<stop  offset="0.5488" style="stop-color:#AAACAE"/>
+		<stop  offset="0.775" style="stop-color:#8E9092"/>
+		<stop  offset="1" style="stop-color:#6D6E71"/>
+	</radialGradient>
+	<path id="XMLID_12_" class="st0" d="M274.5,226.6c0,19.8-16.2,36-36,36h-88.4c-19.8,0-36-16.2-36-36v-88.4c0-19.8,16.2-36,36-36
+		h88.4c19.8,0,36,16.2,36,36V226.6z"/>
+</g>
+<rect id="XMLID_4_" x="171.4" y="169" class="st1" width="32.5" height="7.8"/>
+<polygon id="XMLID_8_" class="st1" points="203.9,165.9 210,169.4 216.1,172.9 210,176.4 203.9,180 203.9,172.9 "/>
+<rect id="XMLID_5_" x="183.6" y="188.1" class="st1" width="32.5" height="7.8"/>
+<polygon id="XMLID_9_" class="st1" points="171.4,192 177.5,188.5 183.6,185 183.6,192 183.6,199.1 177.5,195.6 "/>
+<path id="XMLID_18_" class="st2" d="M274.5,226.6c0,19.8-16.2,36-36,36h-88.4c-19.8,0-36-16.2-36-36v-88.4c0-19.8,16.2-36,36-36
+	h88.4c19.8,0,36,16.2,36,36V226.6z"/>
+<path id="XMLID_19_" class="st2" d="M274.5,226.6v-88.4c0-19.8-16.2-36-36-36h-88.4c-19.8,0-36,16.2-36,36v88.4
+	c0,19.8,16.2,36,36,36h88.4C258.3,262.6,274.5,246.4,274.5,226.6z"/>
+<g id="XMLID_6_">
+	
+		<ellipse id="XMLID_2_" transform="matrix(-0.8763 0.4817 -0.4817 -0.8763 340.4056 320.9931)" cx="129" cy="204.2" rx="12.7" ry="7.5"/>
+	<rect id="XMLID_3_" x="137.4" y="144.4" width="2.7" height="53.7"/>
+	<path id="XMLID_14_" d="M140.2,145.7c1.1,0,0.4,5.4,4.7,12.1c2.6,4.1,4.4,4.7,6.7,7.9c2.7,3.8,5.2,11.4,3.4,16l-5,13.5
+		c4.7-17.2,2.5-24.1-1-26.9c-2.9-2.4-6.1-1.5-8.9-4.7C134.9,157.6,138.6,145.7,140.2,145.7z"/>
+	<path id="XMLID_13_" d="M141.3,153.8"/>
+</g>
+<g id="XMLID_15_">
+	
+		<ellipse id="XMLID_21_" transform="matrix(-0.8763 0.4817 -0.4817 -0.8763 547.5994 267.8021)" cx="239.4" cy="204.2" rx="12.7" ry="7.5"/>
+	<rect id="XMLID_20_" x="247.8" y="144.4" width="2.7" height="53.7"/>
+	<path id="XMLID_17_" d="M250.6,145.7c1.1,0,0.4,5.4,4.7,12.1c2.6,4.1,4.4,4.7,6.7,7.9c2.7,3.8,5.2,11.4,3.4,16l-5,13.5
+		c4.7-17.2,2.5-24.1-1-26.9c-2.9-2.4-6.1-1.5-8.9-4.7C245.3,157.6,249,145.7,250.6,145.7z"/>
+	<path id="XMLID_16_" d="M251.8,153.8"/>
+</g>
+</svg>
