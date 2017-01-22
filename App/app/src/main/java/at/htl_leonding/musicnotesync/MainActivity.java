@@ -1,8 +1,10 @@
 package at.htl_leonding.musicnotesync;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,17 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
-import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Button mBtnTempBluetooth;
     private RecyclerView mNoteSheetRecyclerView;
-    private NotesheetArrayAdapter mAdapter;
     private MainController mController;
 
     @Override
@@ -31,41 +30,35 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
-        mController = new MainController(this);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
+        mController = new MainController(this);
         fab.setOnClickListener(mController.getFabListener());
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-
-        mAdapter = new NotesheetArrayAdapter(mController);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
-        mNoteSheetRecyclerView.setAdapter(mAdapter);
-        mNoteSheetRecyclerView.setLayoutManager(llm);
+        mNoteSheetRecyclerView.setAdapter(mController.getNotesheetArrayAdapter());
+        mNoteSheetRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        mBtnTempBluetooth = (Button) findViewById(R.id.btnTempBluetooth);
-        mBtnTempBluetooth.setOnClickListener(new BluetoothBtnClickListener());
+    }
 
-        if(PermissionHelper.getBluetoothPermissions(this) == true){
-            mController.tryStartBluetoothServer();
-        }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
+
+    @Override
+    protected void onPause() {
+        mController.unregisterBluetoothFilter();
+
+        super.onPause();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case CameraIntentHelper.REQUEST_CODE:
-                mController.storeFileFromCameraIntent(resultCode);
-                break;
-            case FabOnClickListener.SELECT_FILE_REQUEST_CODE:
-                if (data != null && data.getData() != null && data.getData().getPath() != null) {
-                    mController.storeFileFromFileChooser(resultCode,
-                            data.getData().getPath());
-                }
-                break;
-        }
-
+        mController.handleActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -93,9 +86,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        mAdapter.setSheets(mController.getNotesheets(null));
+        //mAdapter.setSheets(mController.getNotesheets(null));
         mController.dismissDialog();
+
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
+            mController.tryStartBluetoothServer();
+        }
+        mController.refreshNotesheetArrayAdapter();
+
         super.onResume();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mController.goToDirectoryParent() == false){
+            super.onBackPressed();
+        }
+    }
 }

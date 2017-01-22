@@ -14,4 +14,22 @@
     <string name="bluetooth_successful_connect">Devices are connected</string>
     <string name="bluetooth_connect_failure">No connection established</string>
     <string name="bluetooth_device_is_server">Error: Device is connected to clients</string>
+    <string name="add_folder">Add Folder</string>
+    <string name="move_file">Move</string>
+    <string name="rename_file">Rename File</string>
+    <string name="delete_file">Delete File</string>
+    <string name="rename">Rename</string>
+    <string name="move">Move</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="bluetooth_connection_manager">Connection Manager</string>
+    <string name="error_upload_notesheets_only">Error: Only upload Notesheets</string>
+    <string name="error_upload_notesheets">Error uploading notesheet</string>
+    <string name="upload_notesheet_successful">Notesheet uploaded successfully</string>
+    <string name="error_creating_activity">Error while creating activity</string>
+    <string name="send_notesheet">Send Notesheet</string>
+    <string name="uploading_Notesheet">Uploading Notesheet...</string>
+    <string name="transfer_successful">Transfer sucessfull</string>
+    <string name="transfer_unsuccessful">Error receiving notesheet</string>
 </resources>

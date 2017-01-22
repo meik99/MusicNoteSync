@@ -17,9 +17,10 @@
         android:id="@+id/noteSheetRecyclerView"
         android:layout_weight="1"/>
 
-    <Button
-        android:id="@+id/btnTempBluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/temp_bluetooth_btn"></Button>
+    <!--<Button-->
+        <!--android:id="@+id/btnTempBluetooth"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/bluetooth_connection_manager"-->
+        <!--style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"></Button>-->
 </LinearLayout>

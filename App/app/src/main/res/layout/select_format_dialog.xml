@@ -12,16 +12,28 @@
         android:layout_height="wrap_content"
         android:text="@string/take_photo"
         android:id="@+id/btnTakePicture"
-        android:drawableLeft="@drawable/ic_take_picture"
-        android:drawablePadding="@dimen/activity_horizontal_margin"/>
+        android:drawableLeft="@drawable/ic_camera_alt_black_24dp"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/select_file"
         android:id="@+id/btnSelectFile"
-        android:drawableLeft="@drawable/ic_select_file"
+        android:drawableLeft="@drawable/ic_description_black_24dp"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:layout_below="@id/btnTakePicture"/>
+        android:layout_below="@id/btnTakePicture"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_folder"
+        android:id="@+id/btnAddFolder"
+        android:drawableLeft="@drawable/ic_folder_black_24dp"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:layout_below="@id/btnSelectFile"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
 
 </RelativeLayout>

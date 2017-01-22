@@ -1,9 +1,13 @@
 package at.htl_leonding.musicnotesync.io;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import java.io.File;
@@ -46,12 +50,18 @@ public class Storage {
      * @return Returns created file
      * @throws IOException Throws if File cannot be created for whatever reason
      */
-    public static File createTemporaryStorageFile(@Nullable String filename, @Nullable String extension) throws IOException {
+    public static File createTemporaryStorageFile(
+            Context context,
+            @Nullable String filename,
+            @Nullable String extension) throws IOException {
         filename = filename == null ? "tmp_file" : filename;
         extension = extension == null ? "" : extension;
+        File image = null;
+        Uri uri = null;
 
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+        File storageDir =
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        image = File.createTempFile(
                 filename,
                 extension,
                 storageDir
@@ -158,5 +168,9 @@ public class Storage {
         }
 
         return result;
+    }
+
+    public String getCameraDirectory() {
+        return INTERNAL_STORAGE.getPath() + File.separator + "camera" + File.separator;
     }
 }

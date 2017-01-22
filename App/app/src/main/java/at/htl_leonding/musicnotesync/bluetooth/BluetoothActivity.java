@@ -7,16 +7,26 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
     private static final String TAG = BluetoothActivity.class.getSimpleName();
+
+    public static final String OPERATION = "OPERATION";
+    public static final long SEND_NOTESHEET = 0;
+    public static final String ENTITY_ID = "ENTITY_ID";
+
     private BluetoothController mController;
     private BroadcastReceiver mBluetoothStateChangeReceiver;
     private ListView mDeviceList;
+    private Button mBtnAction;
+    private RelativeLayout mLoadingPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +38,13 @@ public class BluetoothActivity extends AppCompatActivity{
         mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
 
-        if(PermissionHelper.getBluetoothPermissions(this) == true){
+        mBtnAction = (Button) findViewById(R.id.btnBluetoothAction);
+        mBtnAction.setOnClickListener(mController.getOnClickListener());
+        mBtnAction.setText(mController.getActionButtonText());
 
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
             mController.enableBluetooth();
             mBluetoothStateChangeReceiver = mController.startServer();
-
         }
     }
 

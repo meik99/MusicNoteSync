@@ -8,21 +8,21 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.widget.Button;
 
 import java.io.File;
 import java.io.IOException;
 
+import at.htl_leonding.musicnotesync.management.NameFolderActivity;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
+import at.htl_leonding.musicnotesync.request.RequestCode;
 
 /**
  * Created by michael on 10.08.16.
  */
 public class FabOnClickListener implements View.OnClickListener{
-    public static final int SELECT_FILE_REQUEST_CODE = 4;
 
     private static final String TAG = FabOnClickListener.class.getSimpleName();
 
@@ -30,6 +30,8 @@ public class FabOnClickListener implements View.OnClickListener{
 
     private File mPhotoFile;
     private Dialog mSelectFormatDialog;
+
+
 
     public FabOnClickListener(Activity activity){
         this.activity = activity;
@@ -44,6 +46,8 @@ public class FabOnClickListener implements View.OnClickListener{
 
         Button btnTakePicture = (Button) dialogView.findViewById(R.id.btnTakePicture);
         Button btnSelectFile = (Button) dialogView.findViewById(R.id.btnSelectFile);
+        Button btnAddFolder = (Button) dialogView.findViewById(R.id.btnAddFolder);
+
 
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +69,13 @@ public class FabOnClickListener implements View.OnClickListener{
             }
         });
 
+        btnAddFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchAddFolderIntent(context);
+            }
+        });
+
         builder.setView(dialogView);
         builder.setTitle(context.getString(R.string.select_format));
 
@@ -73,12 +84,17 @@ public class FabOnClickListener implements View.OnClickListener{
         mSelectFormatDialog.show();
     }
 
+    private void dispatchAddFolderIntent(Context context) {
+        Intent addFolderIntent = new Intent(context, NameFolderActivity.class);
+        activity.startActivityForResult(addFolderIntent, RequestCode.ADD_FOLDER_REQUEST_CODE);
+    }
+
     private void dispatchSelectFileIntent() {
         String[] mimeTypes = new String[]{"image/*"};
         Intent selectFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
         selectFileIntent.setType("*/*");
         selectFileIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        activity.startActivityForResult(selectFileIntent, SELECT_FILE_REQUEST_CODE);
+        activity.startActivityForResult(selectFileIntent, RequestCode.SELECT_FILE_REQUEST_CODE);
     }
 
 
