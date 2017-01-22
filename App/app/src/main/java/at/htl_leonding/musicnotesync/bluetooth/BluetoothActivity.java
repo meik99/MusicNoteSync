@@ -20,6 +20,7 @@ public class BluetoothActivity extends AppCompatActivity{
 
     public static final String OPERATION = "OPERATION";
     public static final long SEND_NOTESHEET = 0;
+    public static final long OPEN_NOTESHEET = 1;
     public static final String ENTITY_ID = "ENTITY_ID";
 
     private BluetoothController mController;

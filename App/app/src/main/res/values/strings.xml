@@ -32,4 +32,5 @@
     <string name="uploading_Notesheet">Uploading Notesheet...</string>
     <string name="transfer_successful">Transfer sucessfull</string>
     <string name="transfer_unsuccessful">Error receiving notesheet</string>
+    <string name="open_notesheet">Open Notesheet</string>
 </resources>

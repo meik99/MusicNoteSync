@@ -227,6 +227,9 @@ public class BluetoothController{
             if(operationId == BluetoothActivity.SEND_NOTESHEET){
                 return R.string.send_notesheet;
             }
+            else if(operationId == BluetoothActivity.OPEN_NOTESHEET){
+                return R.string.open_notesheet;
+            }
         }
         return R.string.error_creating_activity;
     }
