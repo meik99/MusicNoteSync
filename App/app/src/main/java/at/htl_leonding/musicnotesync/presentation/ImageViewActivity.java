@@ -20,7 +20,7 @@ public class ImageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
-        TouchImageView customImageView = (TouchImageView) findViewById(R.id.noteSheetView);
+        final TouchImageView customImageView = (TouchImageView) findViewById(R.id.noteSheetView);
 
         String filename = this.getIntent().getStringExtra("pathName");
         Bitmap bb = BitmapFactory.decodeFile(
@@ -43,6 +43,14 @@ public class ImageViewActivity extends AppCompatActivity {
         else {
             customImageView.setImageBitmap(bb);
         }
+        TouchImageViewListener touchImageViewListener = new TouchImageViewListener(customImageView);
+        customImageView.setOnTouchImageViewListener(new TouchImageView.OnTouchImageViewListener() {
+            @Override
+            public void onMove() {
+                System.out.println();
+            }
+        });
+
 
         customImageView.invalidate();
 

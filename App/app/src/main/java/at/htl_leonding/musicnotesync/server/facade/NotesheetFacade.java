@@ -18,7 +18,7 @@ public class NotesheetFacade {
 //    private static final String SERVER_URL =
 //            "http://vm91.htl-leonding.ac.at:8080/musicnotesyncserver/api/notesheet";
     private static final String SERVER_URL =
-            "http://10.0.0.5:8080/musicnotesyncserver/api/notesheet";
+            "http://192.168.1.101:8080/musicnotesyncserver/api/notesheet";
 
 
     public NotesheetFacade(){
