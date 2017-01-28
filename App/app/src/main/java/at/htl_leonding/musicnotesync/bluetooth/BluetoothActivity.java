@@ -24,7 +24,7 @@ public class BluetoothActivity extends AppCompatActivity{
     public static final String ENTITY_ID = "ENTITY_ID";
 
     private BluetoothController mController;
-    private BroadcastReceiver mBluetoothStateChangeReceiver;
+
     private ListView mDeviceList;
     private Button mBtnAction;
     private RelativeLayout mLoadingPanel;
@@ -35,18 +35,14 @@ public class BluetoothActivity extends AppCompatActivity{
         setContentView(R.layout.activity_bluetooth);
         getSupportActionBar().setTitle(getString(R.string.bluetooth_connect));
 
-        mDeviceList = (ListView) findViewById(R.id.lvBluetoothDevices);
-        mDeviceList.setAdapter(null);
         mController = new BluetoothController(this);
-
+        mDeviceList = (ListView) findViewById(R.id.lvBluetoothDevices);
         mBtnAction = (Button) findViewById(R.id.btnBluetoothAction);
+
+        mDeviceList.setAdapter(mController.getDeviceAdapter());
         mBtnAction.setOnClickListener(mController.getOnClickListener());
         mBtnAction.setText(mController.getActionButtonText());
 
-        if(PermissionHelper.getBluetoothPermissions(this) == true){
-            mController.enableBluetooth();
-            mBluetoothStateChangeReceiver = mController.startServer();
-        }
     }
 
     @Override
@@ -79,26 +75,22 @@ public class BluetoothActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(PermissionHelper.getBluetoothPermissions(this) == true){
+            mController.enableBluetooth();
+        }
     }
 
     @Override
     protected void onPause() {
         //controller.cancelDiscovery();
         //controller.stopServer();
+        mController.stop();
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mController.stop();
-        if(mBluetoothStateChangeReceiver != null){
-            try {
-                this.unregisterReceiver(mBluetoothStateChangeReceiver);
-            }catch (Exception e){
-                Log.i(TAG, "onStop: " + e.getMessage());
-            }
-        }
-
     }
 }

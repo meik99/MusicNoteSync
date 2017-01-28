@@ -14,6 +14,7 @@ import at.htl_leonding.musicnotesync.R;
 public class ImageViewActivity extends AppCompatActivity {
 
     private static final String TAG = ImageViewActivity.class.getSimpleName();
+    public static final String EXTRA_PATH_NAME = "pathName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
         TouchImageView customImageView = (TouchImageView) findViewById(R.id.noteSheetView);
 
-        String filename = this.getIntent().getStringExtra("pathName");
+        String filename = this.getIntent().getStringExtra(EXTRA_PATH_NAME);
         Bitmap bb = BitmapFactory.decodeFile(
                 getApplicationContext().getFilesDir().getPath() + File.separator + filename);
         Log.i(TAG, "onCreate: "

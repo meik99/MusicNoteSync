@@ -28,6 +28,7 @@ import at.htl_leonding.musicnotesync.io.Storage;
  * Created by michael on 09.07.16.
  */
 public class NotesheetFacade {
+
     public interface NotesheetDbListener{
         void onNotesheetInserted(Notesheet notesheet);
     }
@@ -54,6 +55,29 @@ public class NotesheetFacade {
 
         this.mContext = context;
         mListeners = new LinkedList<>();
+    }
+
+
+    public Notesheet findByUUID(String uuid) {
+        DBHelper dbHelper = new DBHelper(mContext);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        NotesheetImpl result = null;
+
+        Cursor cursor = db.rawQuery(
+                "select * from " + NotesheetContract.TABLE +
+                        " where " + NotesheetContract.NotesheetEntry.COLUMN_UUID +
+                        " equals ?",
+                new String[]{
+                        uuid
+                }
+        );
+
+        if(cursor.moveToFirst()){
+            result = new NotesheetImpl();
+            result.fromCursor(cursor);
+        }
+
+        return result;
     }
 
     public List<Notesheet> getNotesheets(@Nullable  Directory directory) {
@@ -91,25 +115,8 @@ public class NotesheetFacade {
             Log.d(TAG, "getNotesheets: found " + cursor.getCount() + " entries");
 
             do{
-                NotesheetImpl note = new NotesheetImpl(cursor.getString(
-                        cursor.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_UUID)
-                ));
-                long id = cursor.getInt(
-                        cursor.getColumnIndex(NotesheetContract.NotesheetEntry._ID)
-                );
-                String filename =
-                    cursor.getString(
-                        cursor.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME)
-                );
-                String filepath =
-                        cursor.getString(
-                                cursor.getColumnIndex(
-                                        NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH)
-                        );
-
-                note.setId(id);
-                note.setName(filename);
-                note.setPath(filepath);
+                NotesheetImpl note = new NotesheetImpl();
+                note.fromCursor(cursor);
                 result.add(note);
             }while(cursor.moveToNext() == true);
         }

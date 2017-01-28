@@ -13,18 +13,20 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothOpenNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothSendNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 import at.htl_leonding.musicnotesync.bluetooth.listener.NotesheetUploadListener;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
+import at.htl_leonding.musicnotesync.presentation.TouchImageView;
 import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
 
 /**
@@ -33,9 +35,10 @@ import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
 public class BluetoothController{
     private final static String TAG = BluetoothController.class.getSimpleName();
 
+    public static final int SET_DISCOVERABLE_REQUEST_CODE = 100;
+
     private final BluetoothActivity mBluetoothActivity;
     private final BluetoothModel mModel;
-    private final BluetoothDeviceAdapter mDeviceAdapter;
     private ProgressDialog loadingDialog;
 
     private final BroadcastReceiver mDeviceFoundReceiver = new BroadcastReceiver() {
@@ -43,12 +46,12 @@ public class BluetoothController{
         public void onReceive(Context context, Intent intent) {
             BluetoothDevice foundDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-            mDeviceAdapter.setDataSet(
+            mModel.getDeviceAdapter().setDataSet(
                     mModel.addBluetoothDevice(foundDevice));
         }
     };
 
-    private final BroadcastReceiver bluetoothEnabled = new BroadcastReceiver() {
+    private final BroadcastReceiver mBluetoothStateChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
@@ -59,6 +62,7 @@ public class BluetoothController{
             }
         }
     };
+
 
     private void startBluetoothServer(){
         Server.getInstance().startServer();
@@ -78,10 +82,13 @@ public class BluetoothController{
     public BluetoothController(BluetoothActivity bluetoothActivity){
         mBluetoothActivity = bluetoothActivity;
         mModel = new BluetoothModel(mBluetoothActivity);
-        mDeviceAdapter = new BluetoothDeviceAdapter(mBluetoothActivity, this);
+
+        mModel.setDeviceAdapter(new BluetoothDeviceAdapter(mBluetoothActivity, this));
         mModel.setServerListener(new ServerListenerImpl(bluetoothActivity));
-        ((ListView)mBluetoothActivity.findViewById(R.id.lvBluetoothDevices))
-                .setAdapter(mDeviceAdapter);
+    }
+
+    public BluetoothDeviceAdapter getDeviceAdapter(){
+        return mModel.getDeviceAdapter();
     }
 
     /**
@@ -124,20 +131,21 @@ public class BluetoothController{
             }
         }else{
             showToast(R.string.bluetooth_enabled);
-            enableDiscoverable(mBluetoothActivity);
-            if(bluetoothAdapter.isDiscovering() == false){
-                startDiscovery();
+            if(bluetoothAdapter.getScanMode() !=
+                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
+                enableDiscoverable(mBluetoothActivity);
             }
+            startDiscovery();
             return true;
         }
     }
 
-    public static void enableDiscoverable(Context context){
+    public static void enableDiscoverable(Activity activity){
         Intent discoverableIntent = new
                 Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(
                 BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 600);
-        context.startActivity(discoverableIntent);
+        activity.startActivityForResult(discoverableIntent, SET_DISCOVERABLE_REQUEST_CODE);
     }
 
     private void startDiscovery(){
@@ -145,7 +153,14 @@ public class BluetoothController{
                 BluetoothAdapter.getDefaultAdapter();
         if(bluetoothAdapter != null){
             IntentFilter deviceFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            mBluetoothActivity.registerReceiver(mDeviceFoundReceiver, deviceFoundFilter);
+
+            try{
+                mBluetoothActivity.unregisterReceiver(mDeviceFoundReceiver);
+            }catch (Exception e){}
+            try{
+                mBluetoothActivity.registerReceiver(mDeviceFoundReceiver, deviceFoundFilter);
+            }catch (Exception e){}
+
             bluetoothAdapter.startDiscovery();
         }
     }
@@ -171,18 +186,27 @@ public class BluetoothController{
         }catch (IllegalArgumentException ex){
             Log.i(TAG, "stop: " + ex.getMessage());
         }
+        try {
+            mBluetoothActivity.unregisterReceiver(mBluetoothStateChangeReceiver);
+        }catch (IllegalArgumentException ex){
+            Log.i(TAG, "stop: " + ex.getMessage());
+        }
     }
 
-    public BroadcastReceiver startServer() {
+    public void startServer() {
         IntentFilter bltEnabledFilter =
                 new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
 
         try{
-            mBluetoothActivity.unregisterReceiver(bluetoothEnabled);
+            mBluetoothActivity.unregisterReceiver(mBluetoothStateChangeReceiver);
         }catch(Exception e) {
-            //Ignore; just testing if register is already registered
+            //e.printStackTrace();
         }
-        mBluetoothActivity.registerReceiver(bluetoothEnabled, bltEnabledFilter);
+        try {
+            mBluetoothActivity.registerReceiver(mBluetoothStateChangeReceiver, bltEnabledFilter);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         if(BluetoothAdapter.getDefaultAdapter() == null){
             mBluetoothActivity.setResult(Activity.RESULT_CANCELED);
@@ -191,8 +215,6 @@ public class BluetoothController{
         else if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
             startBluetoothServer();
         }
-
-        return bluetoothEnabled;
     }
 
     public View.OnClickListener getOnClickListener() {
@@ -207,6 +229,11 @@ public class BluetoothController{
                 return new BluetoothSendNotesheetClickListener(
                         this,
                         mModel.getNotesheetFacade().findById(entityId));
+            }else if(operationId == BluetoothActivity.OPEN_NOTESHEET){
+                return new BluetoothOpenNotesheetClickListener(
+                        this,
+                        mModel.getNotesheetFacade().findById(entityId)
+                );
             }
         }
 
@@ -319,5 +346,26 @@ public class BluetoothController{
                         Snackbar.LENGTH_SHORT);
 
         snackbar.show();
+    }
+
+    public void openNotesheet(Notesheet notesheet) {
+        StringBuilder builder = new StringBuilder();
+        Client client = new Client();
+
+        for(BluetoothDevice clientDevice : mModel.getSelectedBluetoothDevices()){
+            builder.append(Notesheet.class.getSimpleName())
+                    .append(";")
+                    .append(notesheet.getUUID());
+
+            client.connect(clientDevice);
+            client.sendMessage(builder.toString());
+            client.disconnect();
+
+            builder = new StringBuilder();
+        }
+
+        Intent notesheetView = new Intent(mBluetoothActivity, ImageViewActivity.class);
+        notesheetView.putExtra(ImageViewActivity.EXTRA_PATH_NAME, notesheet.getPath());
+        mBluetoothActivity.startActivity(notesheetView);
     }
 }

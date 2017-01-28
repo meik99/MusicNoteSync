@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
+import at.htl_leonding.musicnotesync.bluetooth.BluetoothActivity;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.server.listener.DownloadListener;
 import at.htl_leonding.musicnotesync.server.listener.UploadListener;
@@ -56,4 +57,5 @@ public class NotesheetFacade {
                 new DownloadAsyncTask(SERVER_URL, uuid, filename, downloadListeners);
         downloadTask.execute();
     }
+
 }

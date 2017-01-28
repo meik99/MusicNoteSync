@@ -92,5 +92,28 @@ public class NotesheetImpl implements Notesheet{
         this.uuid = notesheet.getUUID();
     }
 
+    public void fromCursor(Cursor cursor){
+        String uuid = cursor.getString(
+                cursor.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_UUID)
+        );
+        long id = cursor.getInt(
+                cursor.getColumnIndex(NotesheetContract.NotesheetEntry._ID)
+        );
+        String filename =
+                cursor.getString(
+                        cursor.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME)
+                );
+        String filepath =
+                cursor.getString(
+                        cursor.getColumnIndex(
+                                NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH)
+                );
+
+        this.setId(id);
+        this.setName(filename);
+        this.setPath(filepath);
+        this.uuid = uuid;
+    }
+
 
 }

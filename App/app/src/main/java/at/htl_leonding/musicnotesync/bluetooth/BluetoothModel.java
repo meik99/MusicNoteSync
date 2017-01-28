@@ -20,6 +20,7 @@ public class BluetoothModel{
     private DirectoryFacade directoryFacade;
     private Context mContext;
     private ServerListenerImpl serverListener;
+    private BluetoothDeviceAdapter mDeviceAdapter;
 
     public BluetoothModel(BluetoothActivity bluetoothActivity){
         mDevices = new LinkedList<>();
@@ -109,5 +110,21 @@ public class BluetoothModel{
 
     public ServerListenerImpl getServerListener() {
         return serverListener;
+    }
+
+    public void setDeviceAdapter(BluetoothDeviceAdapter deviceAdapter) {
+        this.mDeviceAdapter = deviceAdapter;
+    }
+
+    public BluetoothDeviceAdapter getmDeviceAdapter() {
+        return mDeviceAdapter;
+    }
+
+    public void setmDeviceAdapter(BluetoothDeviceAdapter mDeviceAdapter) {
+        this.mDeviceAdapter = mDeviceAdapter;
+    }
+
+    public BluetoothDeviceAdapter getDeviceAdapter() {
+        return mDeviceAdapter;
     }
 }

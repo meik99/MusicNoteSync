@@ -9,6 +9,7 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.presentation.BluetoothNotesheetOpener;
 import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
 
 /**
@@ -53,7 +54,7 @@ public class ServerListenerImpl implements Server.ServerListener{
 
         if(data.length > 0){
             if(data[0].equals(Notesheet.class.getSimpleName())){
-                if(data.length >= 3){
+                if(data.length == 3){
                     String uuid = data[1];
                     String name = data[2];
                     NotesheetFacade facade = new NotesheetFacade();
@@ -61,6 +62,10 @@ public class ServerListenerImpl implements Server.ServerListener{
                             new DownloadNotesheetListener(mContext);
                     downloadNotesheetListener.addAllNotesheetDbListener(mListener);
                     facade.downloadNotesheet(uuid, name, downloadNotesheetListener);
+                }else if(data.length == 2){
+                    String uuid = data[1];
+                    BluetoothNotesheetOpener opener = new BluetoothNotesheetOpener(mContext);
+                    opener.openNotesheet(uuid);
                 }
             }
         }
