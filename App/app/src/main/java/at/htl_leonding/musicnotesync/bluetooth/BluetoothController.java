@@ -359,7 +359,6 @@ public class BluetoothController{
 
             client.connect(clientDevice);
             client.sendMessage(builder.toString());
-            client.disconnect();
 
             builder = new StringBuilder();
         }

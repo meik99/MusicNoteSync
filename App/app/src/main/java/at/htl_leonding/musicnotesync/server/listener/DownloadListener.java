@@ -1,5 +1,7 @@
 package at.htl_leonding.musicnotesync.server.listener;
 
+import android.net.http.AndroidHttpClient;
+
 import org.apache.http.HttpEntity;
 
 /**
@@ -8,5 +10,9 @@ import org.apache.http.HttpEntity;
 
 public interface DownloadListener {
     void downloadBegin();
-    void downloadFinished(boolean success, HttpEntity entity, String filename);
+    void downloadFinished(boolean success,
+                          HttpEntity entity,
+                          String filename,
+                          String uuid,
+                          AndroidHttpClient client);
 }

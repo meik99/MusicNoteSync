@@ -34,5 +34,5 @@
     <string name="transfer_unsuccessful">Error receiving notesheet</string>
     <string name="open_notesheet">Open Notesheet</string>
     <string name="notesheet_not_found">Notesheet not found</string>
-    <string name="notesheet_not_found_message">This notesheet has not been shared yet</string>
+    <string name="notesheet_not_found_message">This notesheet has not been shared yet!</string>
 </resources>

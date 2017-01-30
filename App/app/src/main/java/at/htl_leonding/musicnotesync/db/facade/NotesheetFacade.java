@@ -66,7 +66,7 @@ public class NotesheetFacade {
         Cursor cursor = db.rawQuery(
                 "select * from " + NotesheetContract.TABLE +
                         " where " + NotesheetContract.NotesheetEntry.COLUMN_UUID +
-                        " equals ?",
+                        " = ?",
                 new String[]{
                         uuid
                 }
@@ -134,8 +134,9 @@ public class NotesheetFacade {
     }
 
     public void insertFromInputStream(final InputStream inputStream,
-                                                                  final String directory,
-                                                                  final String filename){
+                                        final String directory,
+                                        final String filename,
+                                        final String uuid){
         AsyncTask<Void, Void, Notesheet> asyncTask =
                 new AsyncTask<Void, Void, Notesheet>() {
             @Override
@@ -180,7 +181,8 @@ public class NotesheetFacade {
                         NotesheetFacade.this
                                 .insert(directoryFacade.getRoot(),
                                         "bluetooth",
-                                        filename);
+                                        filename,
+                                        uuid);
                 Log.i(TAG, "downloadFinished: " + inserted.getMetadata());
                 notifyInserted(inserted);
                 return inserted;

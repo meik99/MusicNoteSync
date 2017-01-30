@@ -1,9 +1,13 @@
 package at.htl_leonding.musicnotesync.presentation;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Message;
 
+import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 
@@ -12,24 +16,37 @@ import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
  */
 
 public class BluetoothNotesheetOpener {
-    private final Context mContext;
+    private final Activity mActivity;
 
-    public BluetoothNotesheetOpener(Context context){
+    public BluetoothNotesheetOpener(Activity activity){
 
-        mContext = context;
+        mActivity = activity;
     }
 
     public void openNotesheet(String uuid){
-        NotesheetFacade notesheetFacade = new NotesheetFacade(mContext);
+        NotesheetFacade notesheetFacade = new NotesheetFacade(mActivity);
         Notesheet notesheet = notesheetFacade.findByUUID(uuid);
 
         if(notesheet != null){
-            Intent intent = new Intent(mContext, ImageViewActivity.class);
+            Intent intent = new Intent(mActivity, ImageViewActivity.class);
             intent.putExtra(ImageViewActivity.EXTRA_PATH_NAME, notesheet.getPath());
-            mContext.startActivity(intent);
+            mActivity.startActivity(intent);
         }else{
-            AlertDialog dialog = new NotesheetNotFoundAlertDialog(mContext);
-            dialog.show();
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+            dialog.setTitle(R.string.notesheet_not_found);
+            dialog.setMessage(R.string.notesheet_not_found_message);
+            dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.show();
+                }
+            });
         }
     }
 }

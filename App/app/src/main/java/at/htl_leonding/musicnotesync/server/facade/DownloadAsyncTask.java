@@ -4,7 +4,6 @@ import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGetHC4;
 
 import java.io.IOException;
@@ -20,7 +19,8 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private final String mFilename;
     private final String mServerUrl;
     private final DownloadListener[] mDownloadListener;
-    private HttpEntity loadedEntity;
+    private HttpEntity mLoadedEntity;
+    private AndroidHttpClient mClient;
 
 
     public DownloadAsyncTask(String serverUrl,
@@ -35,18 +35,15 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        AndroidHttpClient client = AndroidHttpClient.newInstance("user");
+        mClient = AndroidHttpClient.newInstance("user");
         HttpGetHC4 getNotesheetRequest = new HttpGetHC4(mServerUrl + "/" + mUuid);
         boolean success = false;
         try {
-            HttpResponse response = client.execute(getNotesheetRequest);
-            loadedEntity = response.getEntity();
-
+            mLoadedEntity = mClient.execute(getNotesheetRequest).getEntity();
             success = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        client.close();
         return success;
     }
 
@@ -64,7 +61,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(success);
         for (DownloadListener listener:
                 mDownloadListener) {
-            listener.downloadFinished(success, loadedEntity, mFilename);
+            listener.downloadFinished(success, mLoadedEntity, mFilename, mUuid, mClient);
         }
     }
 }

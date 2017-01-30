@@ -1,6 +1,7 @@
 package at.htl_leonding.musicnotesync.bluetooth.listener;
 
 import android.content.Context;
+import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -55,7 +56,11 @@ public class DownloadNotesheetListener implements DownloadListener {
     }
 
     @Override
-    public void downloadFinished(boolean success, HttpEntity entity, String filename) {
+    public void downloadFinished(boolean success,
+                                 HttpEntity entity,
+                                 String filename,
+                                 String uuid,
+                                 AndroidHttpClient client) {
         if(success == false){
             Log.i(TAG, "downloadFinished: download not successful");
         }else {
@@ -69,8 +74,10 @@ public class DownloadNotesheetListener implements DownloadListener {
                 notesheetFacade.insertFromInputStream(
                         entity.getContent(),
                         "bluetooth",
-                        filename
+                        filename,
+                        uuid
                 );
+                client.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

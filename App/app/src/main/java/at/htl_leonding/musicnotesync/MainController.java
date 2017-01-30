@@ -173,14 +173,14 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
     }
 
     public void openNotesheet(Notesheet notesheet) {
-        /*Intent intent = new Intent(mMainActivity, BluetoothActivity.class);
+        Intent intent = new Intent(mMainActivity, BluetoothActivity.class);
         intent.putExtra(BluetoothActivity.OPERATION, BluetoothActivity.OPEN_NOTESHEET);
         intent.putExtra(BluetoothActivity.ENTITY_ID, notesheet.getId());
-        mMainActivity.startActivity(intent);*/
-        Intent intent = new Intent(mMainActivity, ImageViewActivity.class);
-
-        intent.putExtra("pathName", notesheet.getPath());
         mMainActivity.startActivity(intent);
+//        Intent intent = new Intent(mMainActivity, ImageViewActivity.class);
+//
+//        intent.putExtra("pathName", notesheet.getPath());
+//        mMainActivity.startActivity(intent);
     }
 
     public void tryStartBluetoothServer() {
