@@ -12,14 +12,14 @@
         <finalName>musicnotesyncserver</finalName>
     </build>
     <properties>
-        <maven.build.target>1.8</maven.build.target>
-        <maven.build.source>1.8</maven.build.source>
+        <maven.build.target>1.7</maven.build.target>
+        <maven.build.source>1.7</maven.build.source>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
+            <artifactId>javaee-web-api</artifactId>
             <version>RELEASE</version>
             <scope>provided</scope>
         </dependency>
@@ -35,13 +35,19 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>RELEASE</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.java-persistence</groupId>
             <artifactId>jpa-api</artifactId>
             <version>RELEASE</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

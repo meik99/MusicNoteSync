@@ -17,8 +17,8 @@ import java.util.Locale;
  */
 @Stateless
 public class NotesheetFacade {
-    @PersistenceContext(unitName = "mysqlPU")
-    EntityManager entityManager;
+//    @PersistenceContext(unitName = "mysqlPU")
+//    EntityManager entityManager;
 
     public NotesheetFacade() {
     }

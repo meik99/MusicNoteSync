@@ -1,18 +1,17 @@
 package at.htl.musicnotesync.server.endpoint;
 
 import at.htl.musicnotesync.server.facade.NotesheetFacade;
+import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import sun.nio.ch.IOUtil;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -89,15 +88,34 @@ public class NotesheetEndpoint {
     @Path("{uuid}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response download(@PathParam("uuid") String uuid){
-        File file = new File(uuid);
+        final File file = new File(uuid);
         Response result = null;
 
         if(file.exists() == false){
             result = Response.status(Response.Status.BAD_REQUEST).build();
             return result;
         }
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        result = Response.ok(file, MediaType.APPLICATION_OCTET_STREAM_TYPE).build();
+        byte[] buffer = new byte[(int) file.length()];
+
+        try {
+            stream.read(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        result = Response
+                .ok(buffer, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Length", file.length())
+                .build();
+
+
         return result;
     }
 
