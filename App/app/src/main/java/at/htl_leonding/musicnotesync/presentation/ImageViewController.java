@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.presentation;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
@@ -21,7 +22,7 @@ import static at.htl_leonding.musicnotesync.presentation.ImageViewActivity.EXTRA
  * Created by michael on 1/30/17.
  */
 
-public class ImageViewController implements Server.ServerListener, View.OnClickListener, View.OnDragListener, View.OnScrollChangeListener {
+public class ImageViewController implements Server.ServerListener{
     private static final String TAG = ImageViewController.class.getSimpleName();
     private ImageViewActivity mActivity;
     private ImageViewModel mModel;
@@ -36,9 +37,6 @@ public class ImageViewController implements Server.ServerListener, View.OnClickL
         getFileAsBitmap();
         setupImageView();
 
-        mModel.getImageView().setOnClickListener(this);
-        mModel.getImageView().setOnDragListener(this);
-        mModel.getImageView().setOnScrollChangeListener(this);
         mModel.getImageView().invalidate();
 
         Server.getInstance().addListener(this);
@@ -109,21 +107,5 @@ public class ImageViewController implements Server.ServerListener, View.OnClickL
     @Override
     public void onServerDeviceDisconnected(BluetoothSocket socket) {
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        System.out.printf("clicked");
-    }
-
-    @Override
-    public boolean onDrag(View v, DragEvent event) {
-        System.out.printf("dragged");
-        return false;
-    }
-
-    @Override
-    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        System.out.printf("scrolled");
     }
 }
