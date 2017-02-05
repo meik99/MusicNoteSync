@@ -48,7 +48,7 @@ public class ServerListenerImpl implements Server.ServerListener{
 
     @Override
     public void onServerDeviceConnected(BluetoothSocket socket) {
-
+        Log.i(TAG, "onServerDeviceConnected: " + socket.getRemoteDevice().getName() + " connected");
     }
 
     @Override
@@ -87,14 +87,19 @@ public class ServerListenerImpl implements Server.ServerListener{
                 }else if(data.length == 2){
                     String uuid = data[1];
                     BluetoothNotesheetOpener opener = new BluetoothNotesheetOpener(mActivity);
-                    opener.openNotesheet(uuid);
+                    opener.openNotesheet(socket, uuid);
                 }
+            }
+            else if(data[0].equals(Server.GET)){
+                String uuid = data[1];
+
             }
         }
     }
 
     @Override
     public void onServerDeviceDisconnected(BluetoothSocket socket) {
-
+        Log.i(TAG, "onServerDeviceDisconnected: " + socket.getRemoteDevice().getName() +
+                " disconnected");
     }
 }

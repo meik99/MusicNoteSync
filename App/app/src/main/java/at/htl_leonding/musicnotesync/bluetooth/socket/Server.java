@@ -17,7 +17,10 @@ import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
  */
 
 public class Server implements Runnable, SocketWatcher.SocketWatcherListener {
+    public static final String GET = "GET";
+
     public interface ServerListener {
+
         void onServerDeviceConnected(BluetoothSocket socket);
 
         void onServerMessageReceived(BluetoothSocket socket, String message);

@@ -3,11 +3,14 @@ package at.htl_leonding.musicnotesync.db.facade;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import org.apache.http.HttpEntity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -133,7 +136,7 @@ public class NotesheetFacade {
         }
     }
 
-    public void insertFromInputStream(final InputStream inputStream,
+    public void insertFromInputStream(final byte[] bytes,
                                         final String directory,
                                         final String filename,
                                         final String uuid){
@@ -141,7 +144,6 @@ public class NotesheetFacade {
                 new AsyncTask<Void, Void, Notesheet>() {
             @Override
             protected Notesheet doInBackground(Void... params) {
-                Storage storage = new Storage(mContext);
                 File bluetoothDirector =
                         new File(mContext.getFilesDir()
                                 + File.separator
@@ -159,17 +161,7 @@ public class NotesheetFacade {
                     FileOutputStream fileOutputStream
                             = new FileOutputStream(path, false);
 
-                    StringBuilder builder = new StringBuilder();
-                    byte[] buffer = new byte[1024];
-                    int read = inputStream.read(buffer);
-
-                    if(read > -1){
-                        fileOutputStream.write(buffer, 0, read);
-                    }
-
-                    while ((read = inputStream.read(buffer)) > -1){
-                        fileOutputStream.write(buffer, 0, read);
-                    }
+                    fileOutputStream.write(bytes);
 
                     fileOutputStream.flush();
                     fileOutputStream.close();
@@ -217,9 +209,13 @@ public class NotesheetFacade {
         cv.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH,
                 directoryPath + File.separator + filename);
 
-        long id = db.insert(NotesheetContract.TABLE, null, cv);
-        Notesheet inserted = findById(id);
+        Notesheet inserted = null;
+        try {
+            long id = db.insert(NotesheetContract.TABLE, null, cv);
+            inserted = findById(id);
+        }catch(SQLiteConstraintException ex){
 
+        }
         notifyInserted(inserted);
         return inserted;
     }

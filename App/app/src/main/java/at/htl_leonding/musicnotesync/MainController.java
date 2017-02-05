@@ -379,4 +379,8 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
             }
         });
     }
+
+    public void unregisterServerListener() {
+        Server.getInstance().removeListener(mMainModel.getServerListener());
+    }
 }

@@ -57,7 +57,7 @@ public class DownloadNotesheetListener implements DownloadListener {
 
     @Override
     public void downloadFinished(boolean success,
-                                 HttpEntity entity,
+                                 byte[] bytes,
                                  String filename,
                                  String uuid,
                                  AndroidHttpClient client) {
@@ -69,18 +69,15 @@ public class DownloadNotesheetListener implements DownloadListener {
                     mContext
             );
             filename = filename.replace("\n\r", "").trim();
-            try {
                 addAllListenerToFacade(notesheetFacade, mListener);
                 notesheetFacade.insertFromInputStream(
-                        entity.getContent(),
+                        bytes,
                         "bluetooth",
                         filename,
                         uuid
                 );
                 client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 

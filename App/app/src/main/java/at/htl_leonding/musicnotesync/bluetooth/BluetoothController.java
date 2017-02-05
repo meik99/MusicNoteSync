@@ -100,6 +100,7 @@ public class BluetoothController{
      */
     public boolean enableBluetooth(){
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        boolean sucess = true;
 
         if(bluetoothAdapter == null){
             showToast(R.string.bluetooth_no_support);
@@ -124,7 +125,7 @@ public class BluetoothController{
 
                 mBluetoothActivity.registerReceiver(btStateChanged, bsStateChangedFilter);
                 showToast(R.string.bluetooth_enabled);
-                return true;
+
             }else{
                 showToast(R.string.bluetooth_not_enabled);
                 return false;
@@ -136,8 +137,11 @@ public class BluetoothController{
                 enableDiscoverable(mBluetoothActivity);
             }
             startDiscovery();
-            return true;
         }
+
+        Server.getInstance().addListener(mModel.getServerListener());
+
+        return true;
     }
 
     public static void enableDiscoverable(Activity activity){
@@ -191,6 +195,8 @@ public class BluetoothController{
         }catch (IllegalArgumentException ex){
             Log.i(TAG, "stop: " + ex.getMessage());
         }
+
+        Server.getInstance().removeListener(mModel.getServerListener());
     }
 
     public void startServer() {

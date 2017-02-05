@@ -2,12 +2,16 @@ package at.htl_leonding.musicnotesync.presentation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
+import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
+import at.htl_leonding.musicnotesync.bluetooth.socket.SocketWatcher;
 import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 
@@ -23,7 +27,7 @@ public class BluetoothNotesheetOpener {
         mActivity = activity;
     }
 
-    public void openNotesheet(String uuid){
+    public void openNotesheet(BluetoothSocket socket, String uuid){
         NotesheetFacade notesheetFacade = new NotesheetFacade(mActivity);
         Notesheet notesheet = notesheetFacade.findByUUID(uuid);
 
@@ -47,6 +51,10 @@ public class BluetoothNotesheetOpener {
                     dialog.show();
                 }
             });
+
+            Client client = new Client();
+            client.connect(socket.getRemoteDevice());
+            client.sendMessage("GET;" + uuid);
         }
     }
 }

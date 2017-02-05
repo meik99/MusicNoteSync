@@ -11,7 +11,7 @@ import org.apache.http.HttpEntity;
 public interface DownloadListener {
     void downloadBegin();
     void downloadFinished(boolean success,
-                          HttpEntity entity,
+                          byte[] data,
                           String filename,
                           String uuid,
                           AndroidHttpClient client);
