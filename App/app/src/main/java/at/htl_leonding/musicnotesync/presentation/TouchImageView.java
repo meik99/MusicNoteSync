@@ -37,6 +37,10 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class TouchImageView extends ImageView {
 	
 	private static final String DEBUG = "DEBUG";
@@ -106,12 +110,12 @@ public class TouchImageView extends ImageView {
         super(context, attrs);
         sharedConstructing(context);
     }
-    
+
     public TouchImageView(Context context, AttributeSet attrs, int defStyle) {
     	super(context, attrs, defStyle);
     	sharedConstructing(context);
     }
-    
+
     private void sharedConstructing(Context context) {
         super.setClickable(true);
         this.context = context;
@@ -133,6 +137,31 @@ public class TouchImageView extends ImageView {
         setState(State.NONE);
         onDrawReady = false;
         super.setOnTouchListener(new PrivateOnTouchListener());
+
+    }
+
+//    private List<ZoomListener> mZoomListener;
+//
+//    public void addZoomListener(ZoomListener listener) {
+//        if(listener != null){
+//            mZoomListener.add(listener);
+//        }
+//    }
+//
+//    public void removeZoomListener(ZoomListener listener){
+//        mZoomListener.remove(listener);
+//    }
+
+    private List<ZoomListener> mZoomListener = new ArrayList<>();
+
+    public void addZoomListener(ZoomListener listener) {
+        if (listener != null) {
+            mZoomListener.add(listener);
+        }
+    }
+
+    public void removeZoomListener(ZoomListener listener) {
+        mZoomListener.remove(listener);
     }
 
     @Override
@@ -886,6 +915,11 @@ public class TouchImageView extends ImageView {
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             setState(State.ZOOM);
+
+            for(ZoomListener listener : mZoomListener){
+                listener.onZoomBegin(TouchImageView.this);
+            }
+
             return true;
         }
 
@@ -899,6 +933,11 @@ public class TouchImageView extends ImageView {
         	if (touchImageViewListener != null) {
         		touchImageViewListener.onMove();
         	}
+
+            for(ZoomListener listener : mZoomListener){
+                listener.onZoom(TouchImageView.this);
+            }
+
             return true;
         }
         
@@ -921,6 +960,10 @@ public class TouchImageView extends ImageView {
 	        	DoubleTapZoom doubleTap = new DoubleTapZoom(targetZoom, viewWidth / 2, viewHeight / 2, true);
 	        	compatPostOnAnimation(doubleTap);
         	}
+
+            for(ZoomListener listener : mZoomListener){
+                listener.onZoomEnd(TouchImageView.this);
+            }
         }
     }
     

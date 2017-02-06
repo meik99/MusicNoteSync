@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.presentation;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.RectF;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -10,10 +11,14 @@ import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.ImageView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 
 import static at.htl_leonding.musicnotesync.presentation.ImageViewActivity.EXTRA_PATH_NAME;
@@ -22,8 +27,11 @@ import static at.htl_leonding.musicnotesync.presentation.ImageViewActivity.EXTRA
  * Created by michael on 1/30/17.
  */
 
-public class ImageViewController implements Server.ServerListener{
+public class ImageViewController implements Server.ServerListener, ZoomListener {
+    public static final String COMMAND_ZOOM = "ZOOM";
+
     private static final String TAG = ImageViewController.class.getSimpleName();
+
     private ImageViewActivity mActivity;
     private ImageViewModel mModel;
 
@@ -38,6 +46,8 @@ public class ImageViewController implements Server.ServerListener{
         setupImageView();
 
         mModel.getImageView().invalidate();
+        mModel.getImageView().addZoomListener(this);
+        mModel.setBluetoothSockets(new ArrayList<BluetoothSocket>());
 
         Server.getInstance().addListener(this);
     }
@@ -96,16 +106,74 @@ public class ImageViewController implements Server.ServerListener{
 
     @Override
     public void onServerDeviceConnected(BluetoothSocket socket) {
-
+        if(socket != null && mModel.getBluetoothSockets().contains(socket) == false){
+            mModel.getBluetoothSockets().add(socket);
+        }
     }
 
     @Override
     public void onServerMessageReceived(BluetoothSocket socket, String message) {
+        if(message != null){
+            String[] data = message.split(";");
 
+            if(data.length > 0){
+                if (data[0].equals(COMMAND_ZOOM)){
+                    ZoomHandler handler = new ZoomHandler(data);
+
+                    if(handler.isValid()){
+                        mModel.getImageView().setZoom(
+                                handler.getScale(),
+                                handler.getFocusX(),
+                                handler.getFocusY(),
+                                handler.getScaleType()
+                        );
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onServerDeviceDisconnected(BluetoothSocket socket) {
+        mModel.getBluetoothSockets().remove(socket);
+    }
 
+    @Override
+    public void onZoomBegin(TouchImageView view) {
+//        Log.i(TAG, "onZoom: start zoom");
+    }
+
+    @Override
+    public void onZoom(TouchImageView view) {
+        RectF rectangel = view.getZoomedRect();
+
+        float scale = view.getCurrentZoom();
+        float focusX = rectangel.centerX();
+        float focusY = rectangel.centerY();
+        ImageView.ScaleType scaleType = view.getScaleType();
+
+        StringBuilder message = new StringBuilder();
+        message.append(COMMAND_ZOOM)
+                .append(";")
+                .append(scale)
+                .append(";")
+                .append(focusX)
+                .append(";")
+                .append(focusY)
+                .append(";")
+                .append(scaleType.name());
+        String messageString = message.toString();
+
+        for (BluetoothSocket socket :
+                mModel.getBluetoothSockets()) {
+            Client client = new Client();
+            client.connect(socket.getRemoteDevice());
+            client.sendMessage(messageString);
+        }
+    }
+
+    @Override
+    public void onZoomEnd(TouchImageView view) {
+//        Log.i(TAG, "onZoom: end zoom");
     }
 }
