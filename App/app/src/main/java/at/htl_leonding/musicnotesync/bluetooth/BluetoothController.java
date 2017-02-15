@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -358,7 +359,11 @@ public class BluetoothController{
         StringBuilder builder = new StringBuilder();
         Client client = new Client();
 
-        for(BluetoothDevice clientDevice : mModel.getSelectedBluetoothDevices()){
+        String[] adresses = new String[mModel.getSelectedBluetoothDevices().size()];
+
+        List<BluetoothDevice> selectedBluetoothDevices = mModel.getSelectedBluetoothDevices();
+        for (int i = 0; i < selectedBluetoothDevices.size(); i++) {
+            BluetoothDevice clientDevice = selectedBluetoothDevices.get(i);
             builder.append(Notesheet.class.getSimpleName())
                     .append(";")
                     .append(notesheet.getUUID());
@@ -367,10 +372,13 @@ public class BluetoothController{
             client.sendMessage(builder.toString());
 
             builder = new StringBuilder();
+
+            adresses[i] = selectedBluetoothDevices.get(i).getAddress();
         }
 
         Intent notesheetView = new Intent(mBluetoothActivity, ImageViewActivity.class);
         notesheetView.putExtra(ImageViewActivity.EXTRA_PATH_NAME, notesheet.getPath());
+        notesheetView.putExtra(ImageViewActivity.EXTRA_CLIENTS, adresses);
         mBluetoothActivity.startActivity(notesheetView);
     }
 }

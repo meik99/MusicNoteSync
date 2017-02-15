@@ -38,8 +38,9 @@ import android.widget.OverScroller;
 import android.widget.Scroller;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+
+import at.htl_leonding.musicnotesync.presentation.control.zoom.ZoomListener;
 
 public class TouchImageView extends ImageView {
 	

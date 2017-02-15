@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.presentation;
+package at.htl_leonding.musicnotesync.presentation.control.zoom;
 
 import android.widget.ImageView;
 
@@ -27,6 +27,7 @@ public class ZoomHandler {
         mData = data;
 
         getStrings();
+        convertStrings();
     }
 
     private void getStrings(){
@@ -53,14 +54,15 @@ public class ZoomHandler {
 
     private ImageView.ScaleType convertScaleType() {
         ImageView.ScaleType[] types = ImageView.ScaleType.values();
+        ImageView.ScaleType result = null;
 
         for (ImageView.ScaleType type: types) {
-            if(type.name().equals(mScaleTypeString)){
-                return type;
+            if(type.name().equals(mScaleTypeString.replace("\n\r", ""))){
+                result = type;
             }
         }
 
-        return null;
+        return result;
     }
 
     public ImageView.ScaleType getScaleType() {

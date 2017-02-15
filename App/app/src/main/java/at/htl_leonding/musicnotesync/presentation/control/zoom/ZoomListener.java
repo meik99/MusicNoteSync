@@ -1,4 +1,6 @@
-package at.htl_leonding.musicnotesync.presentation;
+package at.htl_leonding.musicnotesync.presentation.control.zoom;
+
+import at.htl_leonding.musicnotesync.presentation.TouchImageView;
 
 /**
  * Created by mrynkiewicz on 06/02/17.

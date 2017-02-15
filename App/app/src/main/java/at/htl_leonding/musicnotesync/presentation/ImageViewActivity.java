@@ -17,6 +17,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
     private static final String TAG = ImageViewActivity.class.getSimpleName();
     public static final String EXTRA_PATH_NAME = "pathName";
+    public static final String EXTRA_CLIENTS = "clients";
 
     private ImageViewController mController;
 

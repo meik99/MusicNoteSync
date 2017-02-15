@@ -1,9 +1,11 @@
 package at.htl_leonding.musicnotesync.presentation;
 
-import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothDevice;
 import android.graphics.Bitmap;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by michael on 1/30/17.
@@ -14,7 +16,7 @@ public class ImageViewModel {
     private String filename;
     private Bitmap bitmap;
     private TouchImageView imageView;
-    private ArrayList<BluetoothSocket> bluetoothSockets;
+    private List<BluetoothDevice> bluetoothDevices;
 
     public ImageViewModel(ImageViewController imageViewController) {
         mController = imageViewController;
@@ -44,11 +46,15 @@ public class ImageViewModel {
         return imageView;
     }
 
-    public void setBluetoothSockets(ArrayList<BluetoothSocket> bluetoothSockets) {
-        this.bluetoothSockets = bluetoothSockets;
+    public List<BluetoothDevice> getBluetoothDevices() {
+        if(bluetoothDevices == null){
+            bluetoothDevices = new LinkedList<>();
+        }
+
+        return bluetoothDevices;
     }
 
-    public ArrayList<BluetoothSocket> getBluetoothSockets() {
-        return bluetoothSockets;
+    public void setBluetoothDevices(List<BluetoothDevice> bluetoothDevices) {
+        this.bluetoothDevices = bluetoothDevices;
     }
 }

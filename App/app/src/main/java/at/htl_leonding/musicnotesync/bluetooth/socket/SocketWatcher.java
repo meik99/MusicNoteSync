@@ -17,6 +17,7 @@ import java.util.List;
 
 public class SocketWatcher implements Runnable{
     private static final String TAG = SocketWatcher.class.getSimpleName();
+    private static final int BLUETOOTH_BANDWIDTH = 3276800;
 
     public void addListener(SocketWatcherListener socketWatcherListener) {
         this.mListeners.add(socketWatcherListener);
@@ -59,7 +60,7 @@ public class SocketWatcher implements Runnable{
                                         inputStream, Base64.DEFAULT
                                 );
                 try {
-                    byte[] buffer = new byte[256];
+                    byte[] buffer = new byte[BLUETOOTH_BANDWIDTH];
                     int read = -1;
                     StringBuilder builder = new StringBuilder();
 
