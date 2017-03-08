@@ -21,7 +21,7 @@ import static at.htl_leonding.musicnotesync.presentation.ImageViewActivity.EXTRA
  * Created by michael on 1/30/17.
  */
 
-public class ImageViewController implements Server.ServerListener{
+public class ImageViewController implements Server.ServerListener, TouchImageView.OnTouchImageViewListener {
     public static final String ZOOM = "zoom";
 
     private static final String TAG = ImageViewController.class.getSimpleName();
@@ -45,6 +45,7 @@ public class ImageViewController implements Server.ServerListener{
         mModel.getImageView().addZoomListener(
                 new TouchImageViewZoomListener(mActivity, mModel.getBluetoothDevices())
         );
+        mModel.getImageView().setOnTouchImageViewListener(this);
 
         Server.getInstance().addListener(this);
     }
@@ -152,6 +153,11 @@ public class ImageViewController implements Server.ServerListener{
 
     @Override
     public void onServerDeviceDisconnected(BluetoothSocket socket) {
+
+    }
+
+    @Override
+    public void onMove() {
 
     }
 }

@@ -16,10 +16,10 @@ import at.htl_leonding.musicnotesync.server.listener.UploadListener;
  */
 
 public class NotesheetFacade {
-//    private static final String SERVER_URL =
-//            "http://vm91.htl-leonding.ac.at:8080/musicnotesyncserver/api/notesheet";
     private static final String SERVER_URL =
-            "http://10.0.0.6:8080/musicnotesyncserver/api/notesheet";
+            "http://vm91.htl-leonding.ac.at:8080/musicnotesyncserver/api/notesheet";
+//    private static final String SERVER_URL =
+//            "http://10.0.0.6:8080/musicnotesyncserver/api/notesheet";
 //    private static final String SERVER_URL =
 //            "http://192.168.0.10:8080/musicnotesyncserver/api/notesheet";
 
