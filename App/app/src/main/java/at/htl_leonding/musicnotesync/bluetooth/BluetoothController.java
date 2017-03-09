@@ -357,19 +357,28 @@ public class BluetoothController{
 
     public void openNotesheet(Notesheet notesheet) {
         StringBuilder builder = new StringBuilder();
-        Client client = new Client();
-
         String[] adresses = new String[mModel.getSelectedBluetoothDevices().size()];
-
         List<BluetoothDevice> selectedBluetoothDevices = mModel.getSelectedBluetoothDevices();
+
         for (int i = 0; i < selectedBluetoothDevices.size(); i++) {
             BluetoothDevice clientDevice = selectedBluetoothDevices.get(i);
             builder.append(Notesheet.class.getSimpleName())
                     .append(";")
                     .append(notesheet.getUUID());
 
-            client.connect(clientDevice);
-            client.sendMessage(builder.toString());
+            AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
+                @Override
+                protected Void doInBackground(Object... params) {
+                    Client client = new Client();
+                    client.connect((BluetoothDevice) params[0]);
+                    client.sendMessage((String) params[1]);
+
+                    return null;
+                }
+
+            };
+            task.execute(clientDevice, builder.toString());
+
 
             builder = new StringBuilder();
 

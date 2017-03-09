@@ -12,6 +12,8 @@ import java.io.File;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
+import at.htl_leonding.musicnotesync.presentation.control.move.MoveHandler;
+import at.htl_leonding.musicnotesync.presentation.control.move.TouchImageViewMoveListener;
 import at.htl_leonding.musicnotesync.presentation.control.zoom.TouchImageViewZoomListener;
 import at.htl_leonding.musicnotesync.presentation.control.zoom.ZoomHandler;
 
@@ -21,7 +23,8 @@ import static at.htl_leonding.musicnotesync.presentation.ImageViewActivity.EXTRA
  * Created by michael on 1/30/17.
  */
 
-public class ImageViewController implements Server.ServerListener, TouchImageView.OnTouchImageViewListener {
+public class ImageViewController implements Server.ServerListener {
+    public static final String MOVE = "move";
     public static final String ZOOM = "zoom";
 
     private static final String TAG = ImageViewController.class.getSimpleName();
@@ -45,7 +48,9 @@ public class ImageViewController implements Server.ServerListener, TouchImageVie
         mModel.getImageView().addZoomListener(
                 new TouchImageViewZoomListener(mActivity, mModel.getBluetoothDevices())
         );
-        mModel.getImageView().setOnTouchImageViewListener(this);
+        mModel.getImageView().setOnTouchImageViewListener(
+                new TouchImageViewMoveListener(mActivity, mModel.getBluetoothDevices())
+        );
 
         Server.getInstance().addListener(this);
     }
@@ -148,16 +153,25 @@ public class ImageViewController implements Server.ServerListener, TouchImageVie
                     }
                 }
             });
+        }else if(data[0].equals(MOVE)){
+            final MoveHandler handler = new MoveHandler(data);
+            if(handler.isValid()) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mModel.getImageView()
+                                .setScrollPosition(
+                                        handler.getX(),
+                                        handler.getY()
+                                );
+                    }
+                });
+            }
         }
     }
 
     @Override
     public void onServerDeviceDisconnected(BluetoothSocket socket) {
-
-    }
-
-    @Override
-    public void onMove() {
 
     }
 }
