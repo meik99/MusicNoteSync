@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.bluetooth;
+package at.htl_leonding.musicnotesync.blt;
 
 import java.util.Random;
 import java.util.UUID;
@@ -7,8 +7,8 @@ import java.util.jar.Manifest;
 /**
  * Created by michael on 22.08.16.
  */
-public class BluetoothConstants {
-    private BluetoothConstants(){
+public class BltConstants {
+    private BltConstants(){
 
     }
 

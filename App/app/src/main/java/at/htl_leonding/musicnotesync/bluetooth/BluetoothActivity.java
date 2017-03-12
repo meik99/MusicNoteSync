@@ -1,9 +1,12 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +16,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.blt.BltRepository;
+import at.htl_leonding.musicnotesync.blt.BltService;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 
 public class BluetoothActivity extends AppCompatActivity{
@@ -28,6 +33,7 @@ public class BluetoothActivity extends AppCompatActivity{
     private ListView mDeviceList;
     private Button mBtnAction;
     private RelativeLayout mLoadingPanel;
+    private FloatingActionButton mBtnRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,21 @@ public class BluetoothActivity extends AppCompatActivity{
         mController = new BluetoothController(this);
         mDeviceList = (ListView) findViewById(R.id.lvBluetoothDevices);
         mBtnAction = (Button) findViewById(R.id.btnBluetoothAction);
+        mBtnRefresh = (FloatingActionButton) findViewById(R.id.btnRefresh);
 
-        mDeviceList.setAdapter(mController.getDeviceAdapter());
-        mBtnAction.setOnClickListener(mController.getOnClickListener());
         mBtnAction.setText(mController.getActionButtonText());
+        mBtnAction.setOnClickListener(mController.getOnClickListener());
 
+        mDeviceList.setAdapter(new BluetoothDeviceAdapter(this, mController));
+
+        mBtnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BltRepository.getInstance().refresh();
+                BluetoothAdapter.getDefaultAdapter().startDiscovery();
+                mDeviceList.setAdapter(new BluetoothDeviceAdapter(BluetoothActivity.this, mController));
+            }
+        });
     }
 
     @Override
@@ -50,41 +66,15 @@ public class BluetoothActivity extends AppCompatActivity{
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
-        if(requestCode == PermissionHelper.STANDARD_PERMISSION_REQUEST_CODE){
-            boolean allGranted = true;
-
-            for(int resultCode : grantResults){
-                if(resultCode == PackageManager.PERMISSION_DENIED){
-                    allGranted = false;
-                }
-            }
-
-            if(allGranted == true){
-                mController.enableBluetooth();
-            }else{
-                this.finish();
-            }
-        }
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(PermissionHelper.getBluetoothPermissions(this) == true){
-            mController.enableBluetooth();
-        }
     }
 
     @Override
     protected void onPause() {
-        //controller.cancelDiscovery();
-        //controller.stopServer();
         super.onPause();
     }
 

@@ -24,7 +24,6 @@ public class DeviceFoundReceiver extends BroadcastReceiver {
             mBltService.deviceFound(
                     (BluetoothDevice) intent.getParcelableExtra(
                             BluetoothDevice.EXTRA_DEVICE));
-            Toast.makeText(mBltService, "Device found", Toast.LENGTH_SHORT).show();
         }
     }
 }

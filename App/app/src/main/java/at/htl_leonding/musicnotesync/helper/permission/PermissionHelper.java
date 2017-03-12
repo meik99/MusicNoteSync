@@ -2,12 +2,11 @@ package at.htl_leonding.musicnotesync.helper.permission;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+import at.htl_leonding.musicnotesync.blt.BltConstants;
 
 /**
  * Created by michael on 07.07.16.
@@ -74,7 +73,7 @@ public class PermissionHelper {
     public static boolean getBluetoothPermissions(@NonNull Activity activity){
         boolean hasPermission = PermissionHelper.verifyPermissions(
                 activity,
-                BluetoothConstants.PERMISSIONS);
+                BltConstants.PERMISSIONS);
         return hasPermission;
     }
 }

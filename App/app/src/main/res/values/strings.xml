@@ -35,4 +35,5 @@
     <string name="open_notesheet">Open Notesheet</string>
     <string name="notesheet_not_found">Notesheet not found</string>
     <string name="notesheet_not_found_message">This notesheet has not been shared yet!</string>
+    <string name="make_me_visible">Make me visible</string>
 </resources>

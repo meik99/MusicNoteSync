@@ -2,9 +2,7 @@ package at.htl_leonding.musicnotesync.blt;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
 
 import java.io.IOException;
@@ -13,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import at.htl_leonding.musicnotesync.blt.interfaces.MessageReceivedListener;
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
-import at.htl_leonding.musicnotesync.io.InputStreamListener;
 import at.htl_leonding.musicnotesync.io.WatchableBase64InputStream;
 
 /**
@@ -23,6 +18,24 @@ import at.htl_leonding.musicnotesync.io.WatchableBase64InputStream;
  */
 
 public class BltRepository {
+    public interface BltRepositoryListener{
+        void onDeviceAdded();
+        void onRefresh();
+    }
+
+    public List<BluetoothDevice> getFoundDevices() {
+        return foundDevices;
+    }
+
+    public void refresh() {
+        foundDevices.clear();
+
+        for (BltRepositoryListener listener :
+                repositoryListeners) {
+            listener.onRefresh();
+        }
+    }
+
     private static final int MAX_SKIPS = 10;
 
     private class BltConnection {
@@ -35,13 +48,25 @@ public class BltRepository {
 
     private List<BltConnection> connections;
     private List<BluetoothDevice> foundDevices;
+    private List<BltRepositoryListener> repositoryListeners;
     private Queue<String> messageQueue;
     private Thread messageSender;
 
     private BltRepository(){
         connections = new ArrayList<>();
         foundDevices = new ArrayList<>();
+        repositoryListeners = new ArrayList<>();
         messageQueue = new ArrayDeque<>();
+    }
+
+    public void addRepositoryListener(BltRepositoryListener listener){
+        if(listener != null && repositoryListeners.contains(listener) == false){
+            repositoryListeners.add(listener);
+        }
+    }
+
+    public void removeRepositoryListener(BltRepositoryListener listener){
+        repositoryListeners.remove(listener);
     }
 
     void addFoundDevice(BluetoothDevice device){
@@ -56,6 +81,10 @@ public class BltRepository {
 
         if(isKnown == false){
             foundDevices.add(device);
+            for (BltRepositoryListener listener :
+                    repositoryListeners) {
+                listener.onDeviceAdded();
+            }
         }
     }
 
@@ -81,6 +110,33 @@ public class BltRepository {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public BltConnection connect(BluetoothDevice device){
+        for (BltConnection connection :
+                connections) {
+            if (connection.device.getAddress().equals(device.getAddress())){
+                return connection;
+            }
+        }
+
+        try {
+            BluetoothSocket socket =
+                    device.createRfcommSocketToServiceRecord(BltConstants.CONNECTION_UUID);
+            BltConnection connection = new BltConnection();
+
+            connection.device = device;
+            connection.inputStream =
+                    new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
+            connection.outputStream =
+                    new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+
+            this.connections.add(connection);
+            return connection;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

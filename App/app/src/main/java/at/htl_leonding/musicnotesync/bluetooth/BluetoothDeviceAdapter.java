@@ -11,41 +11,44 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.blt.BltRepository;
 
 /**
  * Created by michael on 13.09.16.
  */
-public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
-    private final List<BluetoothDevice> dataSet;
+public class BluetoothDeviceAdapter
+        extends ArrayAdapter<BluetoothDevice>
+        implements BltRepository.BltRepositoryListener{
     private final BluetoothController mBluetoothController;
+    private List<BluetoothDevice> devices;
 
     public BluetoothDeviceAdapter(Context context, BluetoothController bluetoothController) {
         super(context, android.R.layout.simple_list_item_1);
 
-        dataSet = new LinkedList<>();
         mBluetoothController = bluetoothController;
+        BltRepository.getInstance().addRepositoryListener(this);
+        devices = BltRepository.getInstance().getFoundDevices();
     }
 
-    public void setDataSet(List<BluetoothDevice> newDataSet){
-        if(newDataSet != null){
-            dataSet.clear();
-            dataSet.addAll(newDataSet);
-            notifyDataSetChanged();
-        }
+    @Override
+    protected void finalize() throws Throwable {
+        BltRepository.getInstance().removeRepositoryListener(this);
+        super.finalize();
     }
 
     @Override
     public BluetoothDevice getItem(int position) {
-        return dataSet.get(position);
+        return devices.get(position);
     }
 
     @Override
     public int getCount() {
-        return dataSet.size();
+        return devices.size();
     }
 
     @Override
@@ -59,7 +62,6 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
         result.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                connectToDevice(v, position);
                 toggleCheckbox(v);
                 toggleDeviceSelected(position);
             }
@@ -80,39 +82,20 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
     }
 
     private void toggleDeviceSelected(int position){
-        mBluetoothController.toggleDevice(dataSet.get(position));
+        mBluetoothController.toggleDevice(
+                devices.get(position)
+        );
     }
 
-//    private void connectToDevice(View v, int position){
-//        boolean connected = Client.getInstance().connect(getItem(position));
-//        if (connected == true) {
-//            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-//            if (adapter != null) {
-//                adapter.cancelDiscovery();
-//            }
-//            Toast
-//                    .makeText(
-//                            v.getContext(),
-//                            R.string.bluetooth_successful_connect,
-//                            Toast.LENGTH_LONG)
-//                    .show();
-//        } else {
-//            Toast
-//                    .makeText(
-//                            v.getContext(),
-//                            R.string.bluetooth_connect_failure,
-//                            Toast.LENGTH_LONG)
-//                    .show();
-//        }
-////                if(Server.getInstance().isConnected() == false) {
-//
-////                }else{
-////                    Toast
-////                            .makeText(
-////                                    v.getContext(),
-////                                    R.string.bluetooth_device_is_server,
-////                                    Toast.LENGTH_LONG)
-////                            .show();
-////                }
-//    }
+    @Override
+    public void onDeviceAdded() {
+        devices = BltRepository.getInstance().getFoundDevices();
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh() {
+        devices = BltRepository.getInstance().getFoundDevices();
+        this.notifyDataSetChanged();
+    }
 }

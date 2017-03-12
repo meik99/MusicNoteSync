@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+import at.htl_leonding.musicnotesync.blt.BltConstants;
 
 /**
  * Created by michael on 1/8/17.
@@ -66,7 +65,7 @@ public class Server implements Runnable, SocketWatcher.SocketWatcherListener {
             try {
                 BluetoothServerSocket serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(
                         bluetoothAdapter.getName(),
-                        BluetoothConstants.CONNECTION_UUID
+                        BltConstants.CONNECTION_UUID
                 );
 
                 while (mRunning == true) {

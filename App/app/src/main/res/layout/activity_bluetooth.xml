@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -12,17 +12,51 @@
     android:id="@+id/bluetoothActivityLayout"
     tools:context="at.htl_leonding.musicnotesync.bluetooth.BluetoothActivity">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/lvBluetoothDevices"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"/>
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:text="Hello"
         android:id="@+id/btnBluetoothAction"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
-</LinearLayout>
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/btnRefresh"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.333" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:srcCompat="@drawable/ic_refresh_24dp"
+        />
+
+    <ListView
+        android:id="@+id/lvBluetoothDevices"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/btnBluetoothAction"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+</android.support.constraint.ConstraintLayout>

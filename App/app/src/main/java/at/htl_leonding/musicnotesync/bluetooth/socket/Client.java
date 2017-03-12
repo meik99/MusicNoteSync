@@ -6,15 +6,13 @@ import android.util.Base64;
 import android.util.Base64OutputStream;
 import android.util.Log;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import at.htl_leonding.musicnotesync.bluetooth.BluetoothConstants;
+import at.htl_leonding.musicnotesync.blt.BltConstants;
 
 /**
  * Created by michael on 1/8/17.
@@ -42,7 +40,7 @@ public class Client implements SocketWatcher.SocketWatcherListener {
     public void connect(BluetoothDevice device){
         try {
             BluetoothSocket socket = device.createRfcommSocketToServiceRecord(
-                    BluetoothConstants.CONNECTION_UUID
+                    BltConstants.CONNECTION_UUID
             );
             socket.connect();
             if(socket != null){

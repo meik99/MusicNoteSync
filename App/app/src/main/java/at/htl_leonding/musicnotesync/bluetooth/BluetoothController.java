@@ -19,6 +19,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.blt.BltRepository;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothOpenNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothSendNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
@@ -52,7 +53,6 @@ public class BluetoothController{
         mModel = new BluetoothModel(mBluetoothActivity);
 
         mModel.setDeviceAdapter(new BluetoothDeviceAdapter(mBluetoothActivity, this));
-        mModel.setServerListener(new ServerListenerImpl(bluetoothActivity));
     }
 
     public BluetoothDeviceAdapter getDeviceAdapter(){
@@ -146,14 +146,12 @@ public class BluetoothController{
 
     public void sendNotesheetMetadata(final Notesheet notesheet) {
         final List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
-        Client client = new Client();
-        boolean success = false;
 
         for (final BluetoothDevice bluetoothDevice : devices){
             AsyncTask asyncTask = new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object[] params) {
-                    sendMetadataToDevice(notesheet, bluetoothDevice);
+                    BltRepository.getInstance().connect(bluetoothDevice);
                     return null;
                 }
             };
