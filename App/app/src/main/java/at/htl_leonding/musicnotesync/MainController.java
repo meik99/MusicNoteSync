@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.blt.BltService;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothActivity;
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
@@ -59,31 +60,10 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
                 mMainModel.getNotesheetItemClickListener(),
                 mMainModel.getManagementOptionClickListener()
         ));
+
         mMainModel.setServerListener(new ServerListenerImpl(mMainActivity));
         mMainModel.getServerListener().addNotesheetDbListener(this);
         refreshNotesheetArrayAdapter();
-    }
-
-    private  BroadcastReceiver mBtStateChangedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int bltState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
-            if(bltState == BluetoothAdapter.STATE_ON) {
-                startBluetoothServer();
-            }else{
-                stopBluetoothServer();
-            }
-        }
-    };
-
-    private void startBluetoothServer(){
-        Server.getInstance().startServer();
-        Server.getInstance().addListener(mMainModel.getServerListener());
-    }
-
-    private void stopBluetoothServer(){
-        Server.getInstance().stopServer();
-        Server.getInstance().removeListener(mMainModel.getServerListener());
     }
 
     public View.OnClickListener getFabListener() {
@@ -183,31 +163,8 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
 //        mMainActivity.startActivity(intent);
     }
 
-    public void tryStartBluetoothServer() {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if(adapter != null){
-            if(adapter.isEnabled() == false){
-
-                IntentFilter bsStateChangedFilter =
-                        new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-                mMainActivity
-                        .registerReceiver(mBtStateChangedReceiver, bsStateChangedFilter);
-
-                Toast
-                    .makeText(mMainActivity, R.string.ask_for_bluetooth, Toast.LENGTH_LONG)
-                    .show();
-            }else{
-                startBluetoothServer();
-            }
-        }
-    }
-
-    public void unregisterBluetoothFilter(){
-        try {
-            mMainActivity.unregisterReceiver(mBtStateChangedReceiver);
-        }catch(Exception e){
-            //No catch routine because exception is unnecessary
-        }
+    public void startService() {
+        mMainActivity.startService(new Intent(mMainActivity.getBaseContext(), BltService.class));
     }
 
     public NotesheetArrayAdapter getNotesheetArrayAdapter() {
@@ -252,20 +209,6 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
     public void refreshNotesheetArrayAdapter() {
         openDirectory(mMainModel.getCurrentDirectory());
     }
-//
-//    public void moveObjectToDirectory() {
-//        Object movedObject = mMainModel.getMovedObject();
-//        Directory targetDirectory = mMainModel.getCurrentDirectory();
-//
-//        if(movedObject instanceof Notesheet){
-//            Notesheet notesheet = (Notesheet)movedObject;
-//            mMainModel.getNotesheetFacade().move(notesheet, targetDirectory);
-//        }else if(movedObject instanceof Directory){
-//            Directory directory = (Directory)movedObject;
-//            mMainModel.getDirectoryFacade().move(directory, targetDirectory);
-//        }
-//        refreshNotesheetArrayAdapter();
-//    }
 
     public NotesheetClickListener getNotesheetItemClickListener() {
         return mMainModel.getNotesheetItemClickListener();
@@ -378,9 +321,5 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
                 }
             }
         });
-    }
-
-    public void unregisterServerListener() {
-        Server.getInstance().removeListener(mMainModel.getServerListener());
     }
 }

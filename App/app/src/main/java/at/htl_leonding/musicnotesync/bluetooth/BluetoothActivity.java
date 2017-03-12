@@ -85,7 +85,6 @@ public class BluetoothActivity extends AppCompatActivity{
     protected void onPause() {
         //controller.cancelDiscovery();
         //controller.stopServer();
-        mController.stop();
         super.onPause();
     }
 

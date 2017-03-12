@@ -2,7 +2,9 @@ package at.htl_leonding.musicnotesync;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.security.Permission;
+
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
-import at.htl_leonding.musicnotesync.mainactivity.listener.BluetoothBtnClickListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -51,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mController.unregisterBluetoothFilter();
-        mController.unregisterServerListener();
-
         super.onPause();
     }
 
@@ -86,12 +86,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == PermissionHelper.STANDARD_PERMISSION_REQUEST_CODE){
+            boolean allGranted = true;
+            for (int result :
+                    grantResults) {
+                if(result == PackageManager.PERMISSION_DENIED){
+                    allGranted = false;
+                }
+            }
+
+            if(allGranted){
+                mController.startService();
+            }
+        }
+    }
+
+    @Override
     protected void onResume() {
         //mAdapter.setSheets(mController.getNotesheets(null));
         mController.dismissDialog();
 
         if(PermissionHelper.getBluetoothPermissions(this) == true){
-            mController.tryStartBluetoothServer();
+            mController.startService();
         }
         mController.refreshNotesheetArrayAdapter();
 

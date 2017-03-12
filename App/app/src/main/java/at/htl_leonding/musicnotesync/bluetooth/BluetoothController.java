@@ -42,39 +42,6 @@ public class BluetoothController{
     private final BluetoothModel mModel;
     private ProgressDialog loadingDialog;
 
-    private final BroadcastReceiver mDeviceFoundReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            BluetoothDevice foundDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-            mModel.getDeviceAdapter().setDataSet(
-                    mModel.addBluetoothDevice(foundDevice));
-        }
-    };
-
-    private final BroadcastReceiver mBluetoothStateChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
-                    == BluetoothAdapter.STATE_ON) {
-                startBluetoothServer();
-            }else{
-                stopBluetoothServer();
-            }
-        }
-    };
-
-
-    private void startBluetoothServer(){
-        Server.getInstance().startServer();
-        Server.getInstance().addListener(mModel.getServerListener());
-    }
-
-    private void stopBluetoothServer(){
-        Server.getInstance().stopServer();
-        Server.getInstance().removeListener(mModel.getServerListener());
-    }
-
     /**
      * Creates an instance of BluetoothController.
      * @param bluetoothActivity A BluetoothActivity-Instance the BluetoothController-Instance is
@@ -101,47 +68,13 @@ public class BluetoothController{
      */
     public boolean enableBluetooth(){
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        boolean sucess = true;
 
-        if(bluetoothAdapter == null){
-            showToast(R.string.bluetooth_no_support);
-            return false;
-        }
-
-        if(bluetoothAdapter.isEnabled() == false){
-            if(bluetoothAdapter.enable() == true){
-                BroadcastReceiver btStateChanged = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) ==
-                                BluetoothAdapter.STATE_ON) {
-                            context.unregisterReceiver(this);
-                            enableDiscoverable(mBluetoothActivity);
-                            startDiscovery();
-                        }
-                    }
-                };
-                IntentFilter bsStateChangedFilter =
-                        new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-
-                mBluetoothActivity.registerReceiver(btStateChanged, bsStateChangedFilter);
-                showToast(R.string.bluetooth_enabled);
-
-            }else{
-                showToast(R.string.bluetooth_not_enabled);
-                return false;
-            }
-        }else{
-            showToast(R.string.bluetooth_enabled);
+        if(bluetoothAdapter.isEnabled() == true){
             if(bluetoothAdapter.getScanMode() !=
                     BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
                 enableDiscoverable(mBluetoothActivity);
             }
-            startDiscovery();
         }
-
-        Server.getInstance().addListener(mModel.getServerListener());
-
         return true;
     }
 
@@ -153,76 +86,11 @@ public class BluetoothController{
         activity.startActivityForResult(discoverableIntent, SET_DISCOVERABLE_REQUEST_CODE);
     }
 
-    private void startDiscovery(){
-        BluetoothAdapter bluetoothAdapter =
-                BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter != null){
-            IntentFilter deviceFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-
-            try{
-                mBluetoothActivity.unregisterReceiver(mDeviceFoundReceiver);
-            }catch (Exception e){}
-            try{
-                mBluetoothActivity.registerReceiver(mDeviceFoundReceiver, deviceFoundFilter);
-            }catch (Exception e){}
-
-            bluetoothAdapter.startDiscovery();
-        }
-    }
-
     public void showToast(@StringRes int stringRes){
         Toast.makeText(mBluetoothActivity, stringRes, Toast.LENGTH_LONG)
                 .show();
     }
 
-    /**
-     * Call when BluetoothActivity calls onStop() to clean up and
-     * prevent memory leaking objects.
-     */
-    public void stop(){
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter != null){
-            if(bluetoothAdapter.isDiscovering()){
-                bluetoothAdapter.cancelDiscovery();
-            }
-        }
-        try {
-            mBluetoothActivity.unregisterReceiver(mDeviceFoundReceiver);
-        }catch (IllegalArgumentException ex){
-            Log.i(TAG, "stop: " + ex.getMessage());
-        }
-        try {
-            mBluetoothActivity.unregisterReceiver(mBluetoothStateChangeReceiver);
-        }catch (IllegalArgumentException ex){
-            Log.i(TAG, "stop: " + ex.getMessage());
-        }
-
-        Server.getInstance().removeListener(mModel.getServerListener());
-    }
-
-    public void startServer() {
-        IntentFilter bltEnabledFilter =
-                new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-
-        try{
-            mBluetoothActivity.unregisterReceiver(mBluetoothStateChangeReceiver);
-        }catch(Exception e) {
-            //e.printStackTrace();
-        }
-        try {
-            mBluetoothActivity.registerReceiver(mBluetoothStateChangeReceiver, bltEnabledFilter);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        if(BluetoothAdapter.getDefaultAdapter() == null){
-            mBluetoothActivity.setResult(Activity.RESULT_CANCELED);
-            mBluetoothActivity.finish();
-        }
-        else if(BluetoothAdapter.getDefaultAdapter().isEnabled()){
-            startBluetoothServer();
-        }
-    }
 
     public View.OnClickListener getOnClickListener() {
         Intent activityIntent = mBluetoothActivity.getIntent();
