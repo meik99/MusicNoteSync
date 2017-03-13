@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.io.WatchableBase64InputStream;
 
 /**
@@ -27,6 +28,29 @@ public class BltRepository {
         return foundDevices;
     }
 
+    private static final int MAX_SKIPS = 10;
+
+    private class BltConnection {
+
+        public BluetoothDevice device;
+        public WatchableBase64InputStream inputStream;
+        public Base64OutputStream outputStream;
+    }
+    private static BltRepository instance = null;
+
+    private List<BltConnection> connections;
+
+    private List<BluetoothDevice> foundDevices;
+    private List<BltRepositoryListener> repositoryListeners;
+    private Queue<String> messageQueue;
+    private Thread messageSender;
+    private BltRepository(){
+        connections = new ArrayList<>();
+        foundDevices = new ArrayList<>();
+        repositoryListeners = new ArrayList<>();
+        messageQueue = new ArrayDeque<>();
+    }
+
     public void refresh() {
         foundDevices.clear();
 
@@ -34,29 +58,6 @@ public class BltRepository {
                 repositoryListeners) {
             listener.onRefresh();
         }
-    }
-
-    private static final int MAX_SKIPS = 10;
-
-    private class BltConnection {
-        public BluetoothDevice device;
-        public WatchableBase64InputStream inputStream;
-        public Base64OutputStream outputStream;
-    }
-
-    private static BltRepository instance = null;
-
-    private List<BltConnection> connections;
-    private List<BluetoothDevice> foundDevices;
-    private List<BltRepositoryListener> repositoryListeners;
-    private Queue<String> messageQueue;
-    private Thread messageSender;
-
-    private BltRepository(){
-        connections = new ArrayList<>();
-        foundDevices = new ArrayList<>();
-        repositoryListeners = new ArrayList<>();
-        messageQueue = new ArrayDeque<>();
     }
 
     public void addRepositoryListener(BltRepositoryListener listener){
@@ -143,6 +144,7 @@ public class BltRepository {
     public static BltRepository getInstance(){
         if(instance == null){
             instance = new BltRepository();
+            instance.refresh();
         }
         return instance;
     }

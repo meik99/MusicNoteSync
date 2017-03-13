@@ -30,6 +30,7 @@ import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
+import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
 import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
@@ -64,6 +65,7 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
         mMainModel.setServerListener(new ServerListenerImpl(mMainActivity));
         mMainModel.getServerListener().addNotesheetDbListener(this);
         refreshNotesheetArrayAdapter();
+
     }
 
     public View.OnClickListener getFabListener() {
@@ -165,6 +167,12 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
 
     public void startService() {
         mMainActivity.startService(new Intent(mMainActivity.getBaseContext(), BltService.class));
+
+
+        if(BluetoothAdapter.getDefaultAdapter() != null &&
+                PermissionHelper.getBluetoothPermissions(mMainActivity) == true) {
+            BluetoothAdapter.getDefaultAdapter().startDiscovery();
+        }
     }
 
     public NotesheetArrayAdapter getNotesheetArrayAdapter() {

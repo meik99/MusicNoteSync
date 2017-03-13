@@ -54,6 +54,7 @@ public class BluetoothActivity extends AppCompatActivity{
         mBtnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                 BltRepository.getInstance().refresh();
                 BluetoothAdapter.getDefaultAdapter().startDiscovery();
                 mDeviceList.setAdapter(new BluetoothDeviceAdapter(BluetoothActivity.this, mController));

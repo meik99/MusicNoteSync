@@ -25,6 +25,7 @@ public class BltService extends Service {
     public static final String TAG = BltService.class.getSimpleName();
 
     private BluetoothState mBluetoothState;
+    private Thread mBltServer;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -42,24 +43,10 @@ public class BltService extends Service {
     }
 
     private void waitForConnection() {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-        try {
-            BluetoothServerSocket serverSocket = adapter.listenUsingRfcommWithServiceRecord(
-                    adapter.getName(),
-                    BltConstants.CONNECTION_UUID
-            );
-
-            while (mBluetoothState == BluetoothState.ON) {
-                BluetoothSocket clientSocket = serverSocket.accept();
-
-                if(clientSocket != null) {
-                    BltRepository.getInstance().addConnection(clientSocket);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       if(mBltServer == null || mBltServer.isAlive() == false){
+           mBltServer = new Thread(new BltServerThread(this));
+           mBltServer.start();
+       }
     }
 
 
@@ -80,12 +67,7 @@ public class BltService extends Service {
     public void setBluetoothState(BluetoothState bluetoothState) {
         this.mBluetoothState = bluetoothState;
 
-        if(bluetoothState == BluetoothState.ON){
-            startDiscovery();
-            waitForConnection();
-        }else{
-            stopDiscovery();
-        }
+        startSearchAndServer();
     }
 
     @Nullable
@@ -94,31 +76,38 @@ public class BltService extends Service {
         return null;
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        IntentFilter deviceFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        IntentFilter stateChangedFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-
-        this.registerReceiver(new DeviceFoundReceiver(this),deviceFoundFilter);
-        this.registerReceiver(new StateChangedReceiver(this), stateChangedFilter);
-
-
-        if(adapter != null){
-
-            if(adapter.isEnabled()){
-                startDiscovery();
-                waitForConnection();
-            }
-
-            adapter.cancelDiscovery();
-        }
-        return START_STICKY;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        IntentFilter deviceFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        IntentFilter stateChangedFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
 
+        registerReceiver(new DeviceFoundReceiver(this),deviceFoundFilter);
+        registerReceiver(new StateChangedReceiver(this), stateChangedFilter);
+
+
+        startSearchAndServer();
+    }
+
+    private void startSearchAndServer(){
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if(adapter != null){
+
+            if(adapter.isEnabled()){
+                mBluetoothState = BluetoothState.ON;
+                startDiscovery();
+                waitForConnection();
+            }else{
+                mBluetoothState = BluetoothState.OFF;
+                adapter.cancelDiscovery();
+            }
+
+        }
+    }
+
+
+    public BluetoothState getBluetoothState() {
+        return mBluetoothState;
     }
 }
