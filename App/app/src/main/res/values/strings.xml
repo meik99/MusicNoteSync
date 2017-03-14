@@ -30,7 +30,7 @@
     <string name="error_creating_activity">Error while creating activity</string>
     <string name="send_notesheet">Send Notesheet</string>
     <string name="uploading_Notesheet">Uploading Notesheet...</string>
-    <string name="transfer_successful">Transfer sucessfull</string>
+    <string name="transfer_successful">Transfer successfull</string>
     <string name="transfer_unsuccessful">Error receiving notesheet</string>
     <string name="open_notesheet">Open Notesheet</string>
     <string name="notesheet_not_found">Notesheet not found</string>

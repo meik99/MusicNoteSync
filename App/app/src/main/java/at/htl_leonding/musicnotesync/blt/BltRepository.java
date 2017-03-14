@@ -2,12 +2,15 @@ package at.htl_leonding.musicnotesync.blt;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Base64OutputStream;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -23,6 +26,10 @@ public class BltRepository {
         void onDeviceAdded();
         void onRefresh();
     }
+    public interface BltConnectListener{
+        void onConnected(BltConnection connection);
+        void onBulkConnected(List<BltConnection> connections);
+    }
 
     public List<BluetoothDevice> getFoundDevices() {
         return foundDevices;
@@ -30,7 +37,7 @@ public class BltRepository {
 
     private static final int MAX_SKIPS = 10;
 
-    private class BltConnection {
+    public class BltConnection {
 
         public BluetoothDevice device;
         public WatchableBase64InputStream inputStream;
@@ -42,6 +49,8 @@ public class BltRepository {
 
     private List<BluetoothDevice> foundDevices;
     private List<BltRepositoryListener> repositoryListeners;
+
+    private List<BltConnectListener> connectListener = new ArrayList<>();
     private Queue<String> messageQueue;
     private Thread messageSender;
     private BltRepository(){
@@ -114,31 +123,80 @@ public class BltRepository {
         }
     }
 
-    public BltConnection connect(BluetoothDevice device){
+    public void connect(BluetoothDevice device){
+        AsyncTask<BluetoothDevice, Void, Void> task = new AsyncTask<BluetoothDevice, Void, Void>() {
+            @Override
+            protected Void doInBackground(BluetoothDevice... params) {
+                BltConnection connection = connectSyncron(params[0]);
+
+                for(BltConnectListener listener :
+                        BltRepository.getInstance().connectListener){
+                    listener.onConnected(connection);
+                }
+
+                return null;
+            }
+        };
+        task.execute(device);
+    }
+
+    private BltConnection connectSyncron(BluetoothDevice device){
+        boolean isKnown = false;
+
         for (BltConnection connection :
                 connections) {
             if (connection.device.getAddress().equals(device.getAddress())){
+                isKnown = true;
                 return connection;
             }
         }
 
-        try {
-            BluetoothSocket socket =
-                    device.createRfcommSocketToServiceRecord(BltConstants.CONNECTION_UUID);
-            BltConnection connection = new BltConnection();
+        if(isKnown == false) {
+            try {
+                BluetoothSocket socket =
+                        device.createRfcommSocketToServiceRecord(BltConstants.CONNECTION_UUID);
+                BltConnection connection = new BltConnection();
 
-            connection.device = device;
-            connection.inputStream =
-                    new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
-            connection.outputStream =
-                    new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+                connection.device = device;
+                connection.inputStream =
+                        new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
+                connection.outputStream =
+                        new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
 
-            this.connections.add(connection);
-            return connection;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+                BltRepository.getInstance().connections.add(connection);
+                return connection;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        return null;
+    }
+
+
+    public void bulkConnect(List<BluetoothDevice> bluetoothDevices){
+        BluetoothDevice[] devices = new BluetoothDevice[bluetoothDevices.size()];
+        devices = bluetoothDevices.toArray(devices);
+
+        AsyncTask<BluetoothDevice, Void, Void> task = new AsyncTask<BluetoothDevice, Void, Void>() {
+            @Override
+            protected Void doInBackground(BluetoothDevice... params) {
+                List<BltConnection> connections = new LinkedList<>();
+
+                for(BluetoothDevice device: params){
+                    BltConnection connection = connectSyncron(device);
+                    connections.add(connection);
+                }
+
+
+                for(BltConnectListener listener :
+                        BltRepository.getInstance().connectListener){
+                    listener.onBulkConnected(connections);
+                }
+
+                return null;
+            }
+        };
+        task.execute(devices);
     }
 
     public static BltRepository getInstance(){
@@ -192,5 +250,16 @@ public class BltRepository {
             );
             messageSender.start();
         }
+    }
+
+
+    public void addBltConnectListenerListener(BltConnectListener listener){
+        if(listener != null && connectListener.contains(listener) == false){
+            connectListener.add(listener);
+        }
+    }
+
+    public void removeBltConnectListenerListener(BltConnectListener listener){
+        connectListener.remove(listener);
     }
 }

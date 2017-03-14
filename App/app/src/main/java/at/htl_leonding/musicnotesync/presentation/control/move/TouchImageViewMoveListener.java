@@ -2,6 +2,7 @@ package at.htl_leonding.musicnotesync.presentation.control.move;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import at.htl_leonding.musicnotesync.presentation.TouchImageView;
  * Created by michael on 3/9/17.
  */
 public class TouchImageViewMoveListener implements TouchImageView.OnTouchImageViewListener {
+    private static final String TAG = TouchImageViewMoveListener.class.getSimpleName();
     private final List<BluetoothDevice> mBluetoothDevices;
     private final ImageViewActivity mActivity;
 
@@ -32,11 +34,15 @@ public class TouchImageViewMoveListener implements TouchImageView.OnTouchImageVi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                builder.append(ImageViewController.MOVE)
+                builder.append(ImageViewController.ZOOM)
                         .append(";")
-                        .append(view.getScrollPosition().x)
+                        .append(view.getCurrentZoom())
                         .append(";")
-                        .append(view.getScrollPosition().y);
+                        .append(view.getZoomedRect().centerX())
+                        .append(";")
+                        .append(view.getZoomedRect().centerY())
+                        .append(";")
+                        .append(view.getScaleType().name());
 
                 AsyncTask task = new AsyncTask() {
                     @Override

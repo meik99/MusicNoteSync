@@ -34,7 +34,7 @@ import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
 /**
  * Created by michael on 12.09.16.
  */
-public class BluetoothController{
+public class BluetoothController implements BltRepository.BltConnectListener {
     private final static String TAG = BluetoothController.class.getSimpleName();
 
     public static final int SET_DISCOVERABLE_REQUEST_CODE = 100;
@@ -146,48 +146,41 @@ public class BluetoothController{
 
     public void sendNotesheetMetadata(final Notesheet notesheet) {
         final List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
+        mModel.setActiveNotesheet(notesheet);
 
-        for (final BluetoothDevice bluetoothDevice : devices){
-            AsyncTask asyncTask = new AsyncTask() {
-                @Override
-                protected Object doInBackground(Object[] params) {
-                    BltRepository.getInstance().connect(bluetoothDevice);
-                    return null;
-                }
-            };
-            asyncTask.execute();
-        }
+        BltRepository.getInstance().addBltConnectListenerListener(this);
+        BltRepository.getInstance().bulkConnect(devices);
     }
 
-    private void sendMetadataToDevice(Notesheet notesheet, BluetoothDevice device){
-        Client client = new Client();
-        client.connect(device);
-        //TODO: add success Response
-        boolean success = client.sendMessage(notesheet.getMetadata());
-
-
-        Snackbar snackbar = null;
-        if(success == true) {
-            snackbar = Snackbar
-                    .make(
-                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-                            R.string.transfer_successful,
-                            Snackbar.LENGTH_SHORT);
-        }else{
-            snackbar = Snackbar
-                    .make(
-                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-                            R.string.transfer_unsuccessful,
-                            Snackbar.LENGTH_SHORT);
-        }
-        final Snackbar finalSackbar = snackbar;
-        mBluetoothActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                finalSackbar.show();
-            }
-        });
-    }
+//    private void sendMetadataToDevice(Notesheet notesheet, BluetoothDevice device){
+//        Client client = new Client();
+//        client.connect(device);
+//        //TODO: add success Response
+//        boolean success = client.sendMessage(notesheet.getMetadata());
+//
+//
+//        Snackbar snackbar = null;
+//        if(success == true) {
+//            snackbar = Snackbar
+//                    .make(
+//                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+//                            R.string.transfer_successful,
+//                            Snackbar.LENGTH_SHORT);
+//        }else{
+//            snackbar = Snackbar
+//                    .make(
+//                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+//                            R.string.transfer_unsuccessful,
+//                            Snackbar.LENGTH_SHORT);
+//        }
+//        final Snackbar finalSackbar = snackbar;
+//        mBluetoothActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                finalSackbar.show();
+//            }
+//        });
+//    }
 
     public void showLoadingAnimation() {
         loadingDialog = new ProgressDialog(mBluetoothActivity);
@@ -255,5 +248,20 @@ public class BluetoothController{
         notesheetView.putExtra(ImageViewActivity.EXTRA_PATH_NAME, notesheet.getPath());
         notesheetView.putExtra(ImageViewActivity.EXTRA_CLIENTS, adresses);
         mBluetoothActivity.startActivity(notesheetView);
+    }
+
+    @Override
+    public void onConnected(BltRepository.BltConnection connection) {
+
+    }
+
+    @Override
+    public void onBulkConnected(List<BltRepository.BltConnection> connections) {
+        BltRepository.getInstance().removeBltConnectListenerListener(this);
+        BltRepository.getInstance().sendMessage(mModel.getActiveNotesheet().getMetadata());
+
+        Snackbar.make(mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+                R.string.transfer_successful,
+                Snackbar.LENGTH_SHORT).show();
     }
 }

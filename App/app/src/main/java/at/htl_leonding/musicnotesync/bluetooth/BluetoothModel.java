@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
+import at.htl_leonding.musicnotesync.db.contract.Notesheet;
 import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
 import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 
@@ -21,6 +22,7 @@ public class BluetoothModel{
     private Context mContext;
     private ServerListenerImpl serverListener;
     private BluetoothDeviceAdapter mDeviceAdapter;
+    private Notesheet activeNotesheet;
 
     public BluetoothModel(BluetoothActivity bluetoothActivity){
         mDevices = new LinkedList<>();
@@ -126,5 +128,13 @@ public class BluetoothModel{
 
     public BluetoothDeviceAdapter getDeviceAdapter() {
         return mDeviceAdapter;
+    }
+
+    public void setActiveNotesheet(Notesheet activeNotesheet) {
+        this.activeNotesheet = activeNotesheet;
+    }
+
+    public Notesheet getActiveNotesheet() {
+        return activeNotesheet;
     }
 }

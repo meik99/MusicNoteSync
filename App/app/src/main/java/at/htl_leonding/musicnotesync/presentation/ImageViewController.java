@@ -132,7 +132,7 @@ public class ImageViewController implements Server.ServerListener {
     @Override
     public void onServerMessageReceived(BluetoothSocket socket, String message) {
         String[] data = message.split(";");
-        if(data[0].equals(ZOOM)){
+        if(data[0].equals(ZOOM) || data[0].equals(MOVE)){
             final ZoomHandler handler = new ZoomHandler(data);
 
             mActivity.runOnUiThread(new Runnable() {
@@ -153,20 +153,6 @@ public class ImageViewController implements Server.ServerListener {
                     }
                 }
             });
-        }else if(data[0].equals(MOVE)){
-            final MoveHandler handler = new MoveHandler(data);
-            if(handler.isValid()) {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mModel.getImageView()
-                                .setScrollPosition(
-                                        handler.getX(),
-                                        handler.getY()
-                                );
-                    }
-                });
-            }
         }
     }
 
