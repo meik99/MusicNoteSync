@@ -1,6 +1,6 @@
 package at.htl_leonding.musicnotesync.server.listener;
 
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 
 /**
  * Created by michael on 1/15/17.

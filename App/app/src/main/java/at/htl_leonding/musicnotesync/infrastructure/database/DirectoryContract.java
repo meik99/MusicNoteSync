@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.db;
+package at.htl_leonding.musicnotesync.infrastructure.database;
 
 import android.provider.BaseColumns;
 

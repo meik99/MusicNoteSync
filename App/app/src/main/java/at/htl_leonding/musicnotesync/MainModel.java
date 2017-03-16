@@ -7,9 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
 import at.htl_leonding.musicnotesync.io.Storage;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
@@ -22,8 +22,8 @@ public class MainModel {
 
     private FabOnClickListener fabOnClickListener;
     private File photoFile;
-    private NotesheetFacade notesheetFacade;
-    private DirectoryFacade directoryFacade;
+    private NotesheetContext notesheetFacade;
+    private DirectoryContext directoryFacade;
     private Storage storage;
     private NotesheetArrayAdapter notesheetArrayAdapter;
     private Object movedObject;
@@ -34,8 +34,8 @@ public class MainModel {
     private ServerListenerImpl serverListener;
 
     public MainModel(Context context, MainController mainController){
-        notesheetFacade = new NotesheetFacade(context);
-        directoryFacade = new DirectoryFacade(context);
+        notesheetFacade = new NotesheetContext(context);
+        directoryFacade = new DirectoryContext(context);
         storage = new Storage(context);
     }
 
@@ -55,19 +55,19 @@ public class MainModel {
         this.fabOnClickListener = fabOnClickListener;
     }
 
-    public NotesheetFacade getNotesheetFacade() {
+    public NotesheetContext getNotesheetFacade() {
         return notesheetFacade;
     }
 
-    public void setNotesheetFacade(NotesheetFacade notesheetFacade) {
+    public void setNotesheetFacade(NotesheetContext notesheetFacade) {
         this.notesheetFacade = notesheetFacade;
     }
 
-    public DirectoryFacade getDirectoryFacade() {
+    public DirectoryContext getDirectoryFacade() {
         return directoryFacade;
     }
 
-    public void setDirectoryFacade(DirectoryFacade directoryFacade) {
+    public void setDirectoryFacade(DirectoryContext directoryFacade) {
         this.directoryFacade = directoryFacade;
     }
 

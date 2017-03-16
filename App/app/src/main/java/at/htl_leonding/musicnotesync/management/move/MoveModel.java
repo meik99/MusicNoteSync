@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
 import at.htl_leonding.musicnotesync.management.move.listener.NotesheetClickListener;
 
 /**
@@ -20,23 +20,23 @@ public class MoveModel {
     private Directory targetDirectory;
     private NotesheetArrayAdapter notesheetArrayAdapter;
     private NotesheetClickListener notesheetClickListener;
-    private NotesheetFacade notesheetFacade;
-    private DirectoryFacade directoryFacade;
+    private NotesheetContext notesheetFacade;
+    private DirectoryContext directoryFacade;
     private Directory currentDirectory;
 
     protected MoveModel(){
     }
 
-    public NotesheetFacade getNotesheetFacade() {
+    public NotesheetContext getNotesheetFacade() {
         return notesheetFacade;
     }
 
     public void createFacades(Context context) {
-        this.notesheetFacade = new NotesheetFacade(context);
-        this.directoryFacade = new DirectoryFacade(context);
+        this.notesheetFacade = new NotesheetContext(context);
+        this.directoryFacade = new DirectoryContext(context);
     }
 
-    public DirectoryFacade getDirectoryFacade() {
+    public DirectoryContext getDirectoryFacade() {
         return directoryFacade;
     }
 

@@ -2,7 +2,7 @@ package at.htl_leonding.musicnotesync.management.move.listener;
 
 import android.view.View;
 
-import at.htl_leonding.musicnotesync.db.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.management.move.MoveController;
 
 /**

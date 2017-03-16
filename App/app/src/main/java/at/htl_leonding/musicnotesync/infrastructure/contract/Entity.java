@@ -1,6 +1,4 @@
-package at.htl_leonding.musicnotesync.db.contract;
-
-import android.os.Parcelable;
+package at.htl_leonding.musicnotesync.infrastructure.contract;
 
 import java.io.Serializable;
 

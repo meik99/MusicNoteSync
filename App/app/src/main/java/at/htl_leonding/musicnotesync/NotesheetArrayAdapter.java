@@ -11,8 +11,8 @@ import android.widget.TextView;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 import at.htl_leonding.musicnotesync.mainactivity.listener.ShareNotesheetClickListener;
 
 /**

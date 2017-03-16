@@ -7,9 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
 
 /**
  * Created by michael on 12.09.16.
@@ -17,12 +17,13 @@ import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
 public class BluetoothModel{
     private final List<BluetoothDevice> mDevices;
     private final List<BluetoothDevice> mSelectedDevices;
-    private NotesheetFacade notesheetFacade;
-    private DirectoryFacade directoryFacade;
+    private NotesheetContext notesheetFacade;
+    private DirectoryContext directoryFacade;
     private Context mContext;
     private ServerListenerImpl serverListener;
     private BluetoothDeviceAdapter mDeviceAdapter;
     private Notesheet activeNotesheet;
+    private String bluetoothAction;
 
     public BluetoothModel(BluetoothActivity bluetoothActivity){
         mDevices = new LinkedList<>();
@@ -92,16 +93,16 @@ public class BluetoothModel{
         return false;
     }
 
-    public NotesheetFacade getNotesheetFacade() {
+    public NotesheetContext getNotesheetFacade() {
         if(notesheetFacade == null){
-            notesheetFacade = new NotesheetFacade(mContext);
+            notesheetFacade = new NotesheetContext(mContext);
         }
         return notesheetFacade;
     }
 
-    public DirectoryFacade getDirectoryFacade() {
+    public DirectoryContext getDirectoryFacade() {
         if(directoryFacade == null){
-            directoryFacade = new DirectoryFacade(mContext);
+            directoryFacade = new DirectoryContext(mContext);
         }
         return directoryFacade;
     }
@@ -136,5 +137,13 @@ public class BluetoothModel{
 
     public Notesheet getActiveNotesheet() {
         return activeNotesheet;
+    }
+
+    public void setBluetoothAction(String bluetoothAction) {
+        this.bluetoothAction = bluetoothAction;
+    }
+
+    public String getBluetoothAction() {
+        return bluetoothAction;
     }
 }

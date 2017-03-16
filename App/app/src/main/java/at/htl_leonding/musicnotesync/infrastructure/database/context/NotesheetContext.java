@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.db.facade;
+package at.htl_leonding.musicnotesync.infrastructure.database.context;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,33 +10,30 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import at.htl_leonding.musicnotesync.bluetooth.listener.DownloadNotesheetListener;
-import at.htl_leonding.musicnotesync.db.DBHelper;
-import at.htl_leonding.musicnotesync.db.NotesheetContract;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.database.DBHelper;
+import at.htl_leonding.musicnotesync.infrastructure.database.NotesheetContract;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.contract.NotesheetImpl;
 import at.htl_leonding.musicnotesync.io.Storage;
 
 /**
  * Created by michael on 09.07.16.
  */
-public class NotesheetFacade {
+public class NotesheetContext {
 
     public interface NotesheetDbListener{
         void onNotesheetInserted(Notesheet notesheet);
     }
 
-    private static final String TAG = NotesheetFacade.class.getSimpleName();
+    private static final String TAG = NotesheetContext.class.getSimpleName();
 
     private Context mContext;
     private List<NotesheetDbListener> mListeners;
@@ -51,7 +48,7 @@ public class NotesheetFacade {
             mListeners.remove(listener);
     }
 
-    public NotesheetFacade(Context context){
+    public NotesheetContext(Context context){
         if(context == null) {
             throw new IllegalArgumentException("Argument 'mContext' must not be null!");
         }
@@ -91,7 +88,7 @@ public class NotesheetFacade {
         List<Notesheet> result = new LinkedList<>();
 
         if(directory == null){
-            DirectoryFacade df = new DirectoryFacade(mContext);
+            DirectoryContext df = new DirectoryContext(mContext);
             directory = df.getRoot();
         }
 
@@ -168,9 +165,9 @@ public class NotesheetFacade {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                DirectoryFacade directoryFacade = new DirectoryFacade(mContext);
+                DirectoryContext directoryFacade = new DirectoryContext(mContext);
                 Notesheet inserted =
-                        NotesheetFacade.this
+                        NotesheetContext.this
                                 .insert(directoryFacade.getRoot(),
                                         "bluetooth",
                                         filename,
@@ -199,7 +196,7 @@ public class NotesheetFacade {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(dir == null){
-            DirectoryFacade df = new DirectoryFacade(mContext);
+            DirectoryContext df = new DirectoryContext(mContext);
             dir = df.getRoot();
         }
 
@@ -243,7 +240,7 @@ public class NotesheetFacade {
         );
 
         if(cur != null && cur.moveToFirst() == true){
-            DirectoryFacade df = new DirectoryFacade(mContext);
+            DirectoryContext df = new DirectoryContext(mContext);
             String uuid = cur.getString(
                     cur.getColumnIndex(NotesheetContract.NotesheetEntry.COLUMN_UUID)
             );
@@ -294,7 +291,7 @@ public class NotesheetFacade {
     public Notesheet update(@NonNull Notesheet notesheet){
         DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        DirectoryFacade df = new DirectoryFacade(this.mContext);
+        DirectoryContext df = new DirectoryContext(this.mContext);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH, notesheet.getPath());
@@ -323,7 +320,7 @@ public class NotesheetFacade {
 
     public List<Notesheet> findByDirectory(Directory parent) {
         List<Notesheet> result = new LinkedList<>();
-        DirectoryFacade directoryFacade = new DirectoryFacade(mContext);
+        DirectoryContext directoryFacade = new DirectoryContext(mContext);
         DBHelper dbHelper = new DBHelper(mContext);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -349,7 +346,7 @@ public class NotesheetFacade {
 
     private Notesheet createNotesheetFromCursor(Cursor cursor){
         NotesheetImpl notesheet;
-        DirectoryFacade directoryFacade = new DirectoryFacade(mContext);
+        DirectoryContext directoryFacade = new DirectoryContext(mContext);
         String filenameColumn = NotesheetContract.NotesheetEntry.COLUMN_FILE_NAME;
         String filepathColumn = NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH;
         String uuidColumn = NotesheetContract.NotesheetEntry.COLUMN_UUID;

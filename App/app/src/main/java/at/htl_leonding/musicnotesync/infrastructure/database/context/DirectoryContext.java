@@ -1,33 +1,31 @@
-package at.htl_leonding.musicnotesync.db.facade;
+package at.htl_leonding.musicnotesync.infrastructure.database.context;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.db.DBHelper;
-import at.htl_leonding.musicnotesync.db.DatabaseContract;
-import at.htl_leonding.musicnotesync.db.DirectoryChildsContract;
-import at.htl_leonding.musicnotesync.db.DirectoryContract;
-import at.htl_leonding.musicnotesync.db.NotesheetContract;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.database.DBHelper;
+import at.htl_leonding.musicnotesync.infrastructure.database.DirectoryChildsContract;
+import at.htl_leonding.musicnotesync.infrastructure.database.DirectoryContract;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryImpl;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 
 /**
  * Created by michael on 09.07.16.
  */
-public class DirectoryFacade {
-    private static final String TAG = DirectoryFacade.class.getSimpleName();
+public class DirectoryContext {
+    private static final String TAG = DirectoryContext.class.getSimpleName();
     private Context context;
 
-    public DirectoryFacade(Context context){
+    public DirectoryContext(Context context){
         this.context = context;
     }
 
@@ -58,7 +56,7 @@ public class DirectoryFacade {
             DirectoryImpl result = new DirectoryImpl();
             List<Directory> children;
             List<Notesheet> notesheets;
-            NotesheetFacade nf = new NotesheetFacade(context);
+            NotesheetContext nf = new NotesheetContext(context);
 
             result.setId(
                     cursor.getInt(

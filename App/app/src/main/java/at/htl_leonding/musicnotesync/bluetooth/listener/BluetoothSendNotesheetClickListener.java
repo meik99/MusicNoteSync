@@ -1,13 +1,10 @@
 package at.htl_leonding.musicnotesync.bluetooth.listener;
 
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+
 /**
  * Created by michael on 1/7/17.
  */

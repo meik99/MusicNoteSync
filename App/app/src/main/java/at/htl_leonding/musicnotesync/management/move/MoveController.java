@@ -1,11 +1,10 @@
 package at.htl_leonding.musicnotesync.management.move;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 
 import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 import at.htl_leonding.musicnotesync.management.move.listener.NotesheetClickListener;
 import at.htl_leonding.musicnotesync.request.RequestCode;
 

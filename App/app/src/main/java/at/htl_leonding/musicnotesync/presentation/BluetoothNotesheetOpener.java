@@ -3,17 +3,13 @@ package at.htl_leonding.musicnotesync.presentation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Message;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
-import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
-import at.htl_leonding.musicnotesync.bluetooth.socket.SocketWatcher;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
 
 /**
  * Created by michael on 1/28/17.
@@ -28,7 +24,7 @@ public class BluetoothNotesheetOpener {
     }
 
     public void openNotesheet(BluetoothSocket socket, String uuid){
-        NotesheetFacade notesheetFacade = new NotesheetFacade(mActivity);
+        NotesheetContext notesheetFacade = new NotesheetContext(mActivity);
         Notesheet notesheet = notesheetFacade.findByUUID(uuid);
 
         if(notesheet != null){

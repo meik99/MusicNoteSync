@@ -10,11 +10,11 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import at.htl_leonding.musicnotesync.db.DBHelper;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.database.DBHelper;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
+import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryImpl;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,8 +32,8 @@ public class DatabaseTest{
     @Test
     public void createDatabase_DatabaseCreated(){
         Context context = InstrumentationRegistry.getTargetContext();
-        DirectoryFacade df = new DirectoryFacade(context);
-        NotesheetFacade nf = new NotesheetFacade(context);
+        DirectoryContext df = new DirectoryContext(context);
+        NotesheetContext nf = new NotesheetContext(context);
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase dbReadable = dbHelper.getReadableDatabase();
         SQLiteDatabase dbWriteable = dbHelper.getWritableDatabase();
@@ -47,7 +47,7 @@ public class DatabaseTest{
 
     @Test
     public void getRoot_RootDirectoryRetrieved(){
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         Directory root = df.getRoot();
 
         assertNotNull(root);
@@ -56,7 +56,7 @@ public class DatabaseTest{
 
     @Test
     public void findDirectoryById_DirectoryFound(){
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         Directory root = df.getRoot();
         Directory rootById = df.findById(root.getId());
 
@@ -67,7 +67,7 @@ public class DatabaseTest{
 
     @Test
     public void createDirectory_DirectoryCreated(){
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         Directory newDir = df.create("Test Directory");
         Directory root = df.getRoot();
         long newId = newDir.getId();
@@ -85,7 +85,7 @@ public class DatabaseTest{
 
     @Test
     public void moveDirectory_DirectoryMoved(){
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         Directory newDir = df.create("Test Directory");
         Directory referenceDir = null;
         Directory parentDir = df.create("Parent Directory");
@@ -109,7 +109,7 @@ public class DatabaseTest{
 
     @Test
     public void updateDirectory_directoryNameChanged(){
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         Directory directory = df.create("Test Dir");
 
         Assert.assertNotNull(directory);

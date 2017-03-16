@@ -2,7 +2,7 @@
  * Implements methods for communicating with the database
  * Don't use SQLite-Methods anywhere but here
  */
-package at.htl_leonding.musicnotesync.db;
+package at.htl_leonding.musicnotesync.infrastructure.database;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,20 +1,13 @@
 package at.htl.musicnotesync.server.endpoint;
 
 import at.htl.musicnotesync.server.facade.NotesheetFacade;
-import org.apache.commons.io.IOUtils;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import sun.nio.ch.IOUtil;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.*;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by michael on 12/7/16.
@@ -26,62 +19,65 @@ public class NotesheetEndpoint {
     NotesheetFacade notesheetFacade;
 
     @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response upload(MultipartFormDataInput input){
-        String uuid = null;
-        long resultCode = -1;
-        Map<String, List<InputPart>> inputParts = input.getFormDataMap();
-        List<InputPart> inputPartList = inputParts.get("file");
-        inputPartList.addAll(inputParts.get("uuid"));
+    @Consumes({MediaType.APPLICATION_OCTET_STREAM})
+    public Response upload(InputStream inputStream){
+//
+//        String uuid = null;
+//        long resultCode = -1;
+//        Map<String, List<InputPart>> inputParts = input.getFormDataMap();
+//        List<InputPart> inputPartList = inputParts.get("file");
+//        inputPartList.addAll(inputParts.get("uuid"));
+//
+//        if(inputPartList != null && inputPartList.size() > 1){
+//            InputPart filePart = inputPartList.get(0);
+//            InputPart uuidPart = inputPartList.get(1);
+//            MultivaluedMap<String, String> header = filePart.getHeaders();
+//            String filename = header.get("Content-Disposition").get(0);
+//            InputStream inputStream = null;
+//
+//            try {
+//                 inputStream = filePart.getBody(InputStream.class, null);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+////            filename =
+////                    filename
+////                    .substring(filename.indexOf("filename"));
+////            filename =
+////                    filename.substring(filename.indexOf("\"")+1);
+////            filename =
+////                    filename.substring(0, filename.indexOf("\""));
+//            try {
+//                uuid = uuidPart.getBody(String.class, null);
+//                resultCode = notesheetFacade.save(uuid, inputStream);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        Response resultResponse = null;
+//
+//        if(resultCode > 0) {
+//            resultResponse = Response.status(Response.Status.OK).entity(uuid).build();
+//        }else{
+//            if (resultCode == -1){
+//                resultResponse = Response.status(Response.Status.EXPECTATION_FAILED).build();
+//            }
+//            else if(resultCode == -2){
+//                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+//            }
+//            else if(resultCode == -3){
+//                resultResponse = Response.status(Response.Status.BAD_REQUEST).build();
+//            }
+//            else{
+//                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+//            }
+//        }
+//
+//
+//        return resultResponse;
 
-        if(inputPartList != null && inputPartList.size() > 1){
-            InputPart filePart = inputPartList.get(0);
-            InputPart uuidPart = inputPartList.get(1);
-            MultivaluedMap<String, String> header = filePart.getHeaders();
-            String filename = header.get("Content-Disposition").get(0);
-            InputStream inputStream = null;
-
-            try {
-                 inputStream = filePart.getBody(InputStream.class, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//            filename =
-//                    filename
-//                    .substring(filename.indexOf("filename"));
-//            filename =
-//                    filename.substring(filename.indexOf("\"")+1);
-//            filename =
-//                    filename.substring(0, filename.indexOf("\""));
-            try {
-                uuid = uuidPart.getBody(String.class, null);
-                resultCode = notesheetFacade.save(uuid, inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Response resultResponse = null;
-
-        if(resultCode > 0) {
-            resultResponse = Response.status(Response.Status.OK).entity(uuid).build();
-        }else{
-            if (resultCode == -1){
-                resultResponse = Response.status(Response.Status.EXPECTATION_FAILED).build();
-            }
-            else if(resultCode == -2){
-                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            }
-            else if(resultCode == -3){
-                resultResponse = Response.status(Response.Status.BAD_REQUEST).build();
-            }
-            else{
-                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            }
-        }
-
-
-        return resultResponse;
+        return  Response.status(200).build();
     }
 
     @GET

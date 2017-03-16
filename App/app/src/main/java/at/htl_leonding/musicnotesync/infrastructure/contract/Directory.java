@@ -1,4 +1,4 @@
-package at.htl_leonding.musicnotesync.db.contract;
+package at.htl_leonding.musicnotesync.infrastructure.contract;
 
 import java.util.List;
 

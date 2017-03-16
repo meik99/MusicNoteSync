@@ -6,12 +6,11 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
+import at.htl_leonding.musicnotesync.infrastructure.contract.NotesheetImpl;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -25,8 +24,8 @@ import static junit.framework.Assert.assertTrue;
 public class NotesheetTest {
     @Test
     public void createNotesheet_notesheetCreated(){
-        NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        NotesheetContext nf = new NotesheetContext(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         Notesheet inserted = null;
 
         assertNotNull(nf);
@@ -46,8 +45,8 @@ public class NotesheetTest {
 
     @Test
     public void moveNotesheet_notesheetMoved(){
-        NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
-        DirectoryFacade df = new DirectoryFacade(InstrumentationRegistry.getTargetContext());
+        NotesheetContext nf = new NotesheetContext(InstrumentationRegistry.getTargetContext());
+        DirectoryContext df = new DirectoryContext(InstrumentationRegistry.getTargetContext());
         String dirName = "New Directory";
         String fileName = "doesntmatter.jpg";
         Directory dir = df.create(dirName);
@@ -72,7 +71,7 @@ public class NotesheetTest {
 
     @Test
     public void deleteNotesheet_notesheetDeleted(){
-        NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
+        NotesheetContext nf = new NotesheetContext(InstrumentationRegistry.getTargetContext());
         Notesheet notesheet =  nf.insert(null, "to delete");
         long id = notesheet.getId();
 
@@ -88,7 +87,7 @@ public class NotesheetTest {
 
    @Test
     public void updateNotesheet_notesheetUpdated(){
-       NotesheetFacade nf = new NotesheetFacade(InstrumentationRegistry.getTargetContext());
+       NotesheetContext nf = new NotesheetContext(InstrumentationRegistry.getTargetContext());
        long id = nf.insert(null, "Test.png").getId();
        Notesheet notesheet = nf.findById(id);
 

@@ -4,7 +4,7 @@ import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGetHC4;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,29 +41,29 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        mClient = AndroidHttpClient.newInstance(null);
-        HttpGetHC4 getNotesheetRequest = new HttpGetHC4(mServerUrl + "/" + mUuid);
+//        mClient = AndroidHttpClient.newInstance(null);
+//        HttpGetHC4 getNotesheetRequest = new HttpGetHC4(mServerUrl + "/" + mUuid);
         boolean success = false;
-        try {
-            mLoadedEntity = mClient.execute(getNotesheetRequest).getEntity();
-
-            InputStream stream = mLoadedEntity.getContent();
-
-
-            byte[] bytes = new byte[(int) mLoadedEntity.getContentLength()];
-            int read = -1;
-            int offset = 0;
-
-            while((read = stream.read(bytes, offset, bytes.length)) > -1){
-                offset += read;
-            }
-
-            receivedBytes = bytes.clone();
-
-            success = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mLoadedEntity = mClient.execute(getNotesheetRequest).getEntity();
+//
+//            InputStream stream = mLoadedEntity.getContent();
+//
+//
+//            byte[] bytes = new byte[(int) mLoadedEntity.getContentLength()];
+//            int read = -1;
+//            int offset = 0;
+//
+//            while((read = stream.read(bytes, offset, bytes.length)) > -1){
+//                offset += read;
+//            }
+//
+//            receivedBytes = bytes.clone();
+//
+//            success = true;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return success;
     }
 

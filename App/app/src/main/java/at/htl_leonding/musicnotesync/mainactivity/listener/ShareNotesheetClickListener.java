@@ -6,8 +6,7 @@ import android.widget.Toast;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothActivity;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.server.facade.NotesheetFacade;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 
 /**
  * Created by michael on 1/5/17.
@@ -25,7 +24,7 @@ public class ShareNotesheetClickListener implements View.OnClickListener {
             openBluetoothActivity.putExtra (BluetoothActivity.ENTITY_ID, ((Notesheet)item).getId());
             v.getContext().startActivity(openBluetoothActivity);
 //
-//            NotesheetFacade notesheetFacade = new NotesheetFacade(v.getContext());
+//            NotesheetContext notesheetFacade = new NotesheetContext(v.getContext());
 //            boolean success = notesheetFacade.sendNotesheet((Notesheet) item);
 //
 //            if(success == true){

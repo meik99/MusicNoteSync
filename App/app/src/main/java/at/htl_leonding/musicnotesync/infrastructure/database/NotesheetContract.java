@@ -1,9 +1,6 @@
-package at.htl_leonding.musicnotesync.db;
+package at.htl_leonding.musicnotesync.infrastructure.database;
 
 import android.provider.BaseColumns;
-import android.provider.ContactsContract;
-
-import java.security.PublicKey;
 
 /**
  * Created by michael on 06.07.16.

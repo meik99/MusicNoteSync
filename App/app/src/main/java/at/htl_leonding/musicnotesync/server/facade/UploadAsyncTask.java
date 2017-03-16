@@ -11,13 +11,12 @@ import com.android.internal.http.multipart.StringPart;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPostHC4;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 import at.htl_leonding.musicnotesync.server.listener.UploadListener;
 
 /**

@@ -2,18 +2,13 @@ package at.htl_leonding.musicnotesync;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.Serializable;
@@ -22,27 +17,25 @@ import java.util.List;
 import at.htl_leonding.musicnotesync.blt.BltService;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothActivity;
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
-import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Entity;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryFacade;
-import at.htl_leonding.musicnotesync.db.facade.DirectoryImpl;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetFacade;
-import at.htl_leonding.musicnotesync.db.facade.NotesheetImpl;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Entity;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
+import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryImpl;
+import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;
+import at.htl_leonding.musicnotesync.infrastructure.contract.NotesheetImpl;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
 import at.htl_leonding.musicnotesync.mainactivity.listener.FabOnClickListener;
 import at.htl_leonding.musicnotesync.mainactivity.listener.NotesheetClickListener;
 import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
 import at.htl_leonding.musicnotesync.management.RenameNotesheetObjectDialog;
 import at.htl_leonding.musicnotesync.management.move.MoveActivity;
-import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
 import at.htl_leonding.musicnotesync.request.RequestCode;
 
 /**
  * Created by michael on 11.08.16.
  */
-public class MainController implements Serializable, NotesheetFacade.NotesheetDbListener {
+public class MainController implements Serializable, NotesheetContext.NotesheetDbListener {
     private static final String TAG = MainController.class.getSimpleName();
 
     private MainModel mMainModel;
@@ -197,7 +190,7 @@ public class MainController implements Serializable, NotesheetFacade.NotesheetDb
                 break;
                 case RequestCode.ADD_FOLDER_REQUEST_CODE:
                     if(data != null){
-                        DirectoryFacade directoryFacade = mMainModel.getDirectoryFacade();
+                        DirectoryContext directoryFacade = mMainModel.getDirectoryFacade();
                         directoryFacade.move(
                                 directoryFacade.create(
                                         data.getStringExtra("FolderName")

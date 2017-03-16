@@ -2,7 +2,7 @@ package at.htl_leonding.musicnotesync.bluetooth.listener;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothController;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 import at.htl_leonding.musicnotesync.server.listener.UploadListener;
 
 /**

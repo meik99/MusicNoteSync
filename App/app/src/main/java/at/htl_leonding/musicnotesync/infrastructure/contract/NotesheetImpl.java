@@ -1,13 +1,10 @@
-package at.htl_leonding.musicnotesync.db.facade;
+package at.htl_leonding.musicnotesync.infrastructure.contract;
 
 import android.database.Cursor;
 
 import java.io.File;
 
-import at.htl_leonding.musicnotesync.db.NotesheetContract;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
-import at.htl_leonding.musicnotesync.db.contract.Notesheet;
-import at.htl_leonding.musicnotesync.io.Storage;
+import at.htl_leonding.musicnotesync.infrastructure.database.NotesheetContract;
 
 /**
  * Created by michael on 12.08.16.

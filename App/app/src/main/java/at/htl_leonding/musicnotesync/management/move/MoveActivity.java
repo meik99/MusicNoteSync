@@ -8,11 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import at.htl_leonding.musicnotesync.MainActivity;
-import at.htl_leonding.musicnotesync.MainController;
-import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.R;
-import at.htl_leonding.musicnotesync.db.contract.Directory;
 
 public class MoveActivity extends AppCompatActivity {
     RecyclerView mNoteSheetRecyclerView;
