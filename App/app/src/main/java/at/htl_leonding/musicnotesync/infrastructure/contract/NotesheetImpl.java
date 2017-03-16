@@ -64,10 +64,10 @@ public class NotesheetImpl implements Notesheet{
         this.parent = directory;
     }
 
-    @Override
-    public File getFile() {
-        return new File(this.path);
-    }
+//    @Override
+//    public File getFile() {
+//        return new File(this.path);
+//    }
 
     @Override
     public String getMetadata() {

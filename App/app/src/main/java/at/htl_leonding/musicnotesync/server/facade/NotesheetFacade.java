@@ -29,10 +29,10 @@ public class NotesheetFacade {
     public void sendNotesheet(Context context,
                                  Notesheet notesheet,
                                  UploadListener... uploadListeners){
-        File tmpFile = notesheet.getFile();
+        File tmpFile = new File(notesheet.getPath());
 
         if(tmpFile.exists() == false){
-            tmpFile = new File(context.getFilesDir() + File.separator + notesheet.getFile());
+            tmpFile = new File(context.getFilesDir() + File.separator + notesheet.getPath());
             if(tmpFile.exists() == false){
                 for (UploadListener listener : uploadListeners) {
                     listener.onUploadFinished(false, notesheet);

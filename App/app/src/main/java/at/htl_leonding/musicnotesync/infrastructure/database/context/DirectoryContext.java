@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,78 +22,100 @@ import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 /**
  * Created by michael on 09.07.16.
  */
-public class DirectoryContext {
+public class DirectoryContext extends BaseContext<Directory>{
     private static final String TAG = DirectoryContext.class.getSimpleName();
-    private Context context;
+    private static final String ROOT = "ROOT";
 
     public DirectoryContext(Context context){
-        this.context = context;
+        super(context);
+    }
+
+    @Override
+    public List<Directory> findAll(){
+        List<Directory> result = new ArrayList<>();
+
+        Cursor cursor = readableDatabase.rawQuery(
+                String.format("select * from %1$s;", DirectoryContract.TABLE),
+                null
+        );
+
+        if(cursor.moveToFirst()){
+            do {
+                DirectoryImpl directory = new DirectoryImpl();
+                directory.fromCursor(cursor);
+                result.add(directory);
+            }while (cursor.moveToNext());
+        }
+
+        return result;
+    }
+
+    @Override
+    public Directory findById(long id) {
+        Directory result = null;
+
+        Cursor cursor = readableDatabase.rawQuery(
+                String.format("select * from %1$s where id = ?;", DirectoryContract.TABLE),
+                new String[]{String.valueOf(id)}
+        );
+
+        if(cursor.moveToFirst()){
+            DirectoryImpl directory = new DirectoryImpl();
+            directory.fromCursor(cursor);
+            result = directory;
+        }
+
+        return result;
+    }
+
+    @Override
+    public Directory create(Directory entity) {
+        ContentValues contentValues = new ContentValues();
+        Directory result = null;
+        Cursor cursor;
+        long row;
+
+        contentValues.put(DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME, entity.getName());
+
+        row = writeableDatabase.insert(
+                DirectoryContract.TABLE,
+                null,
+                contentValues
+        );
+
+        if(row > -1){
+            cursor = readableDatabase.rawQuery(
+                    String.format("select * from %1$s where ROWID = ?;", DirectoryContract.TABLE),
+                    new String[]{String.valueOf(row)}
+            );
+
+            if(cursor.moveToFirst()){
+                DirectoryImpl directory = new DirectoryImpl();
+                directory.fromCursor(cursor);
+                result =  directory;
+            }
+        }
+
+        return result;
     }
 
     public Directory getRoot(){
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] columns = new String[]{
-            DirectoryContract.DirectoryEntry._ID,
-            DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME
-        };
-        String selection =
-                DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME + " like ?";
-        String[] selectionArgs = new String[]{
-            "ROOT"
-        };
+        List<Directory> directories = findAll();
 
-        Cursor cursor = db.query(
-            DirectoryContract.TABLE,
-            columns,
-            selection,
-            selectionArgs,
-            null,
-            null,
-            null
-        );
-
-        if(cursor.moveToFirst() == true){
-            DirectoryImpl result = new DirectoryImpl();
-            List<Directory> children;
-            List<Notesheet> notesheets;
-            NotesheetContext nf = new NotesheetContext(context);
-
-            result.setId(
-                    cursor.getInt(
-                            cursor.getColumnIndex(
-                                    DirectoryContract.DirectoryEntry._ID
-            )));
-            result.setName(
-                    cursor.getString(
-                            cursor.getColumnIndex(
-                                    DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME
-            )));
-
-            children = getChildren(result);
-            notesheets = nf.getNotesheets(result);
-
-            for(Directory dir : children){
-                result.getChildren().add(dir);
+        for (Directory directory :
+                directories) {
+            if (directory.getName().equals(ROOT)){
+                return directory;
             }
-
-            for(Notesheet note : notesheets){
-                result.getNotesheets().add(note);
-            }
-
-            result.setParent(null);
-
-            return result;
         }
 
-        dbHelper.closeCursor(cursor);
-        db.close();
+        DirectoryImpl directory = new DirectoryImpl();
+        directory.setName(ROOT);
 
-        return null;
+        return create(directory);
     }
 
-
-
+    @Deprecated
     public List<Directory> getChildren(@NonNull  Directory directory){
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -140,6 +163,7 @@ public class DirectoryContext {
         return result;
     }
 
+    @Deprecated
     public Directory move(Directory source, Directory target){
         Directory root = getRoot();
 
@@ -174,99 +198,35 @@ public class DirectoryContext {
         return imp;
     }
 
-    public Directory findById(long id){
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        DirectoryImpl imp = null;
-        String query = "select * from " + DirectoryContract.TABLE +
-                " left outer join " + DirectoryChildsContract.TABLE +
-                " on " + DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID +
-                " = " + id +
-                " where " + DirectoryContract.DirectoryEntry._ID +
-                "=" + id;
-        Cursor cur = db.rawQuery(query, null);
-
-        if(cur.moveToFirst() == true){
-            imp = new DirectoryImpl();
-            int parentId = cur.getInt(
-                                cur.getColumnIndex(
-                                    DirectoryChildsContract
-                                            .DirectoryChildsEntry.COLUMN_PARENT_ID));
-            imp.fromCursor(cur);
-
-            if(imp.getId() != parentId){
-                Directory parent = findById(parentId);
-                imp.setParent(
-                        parent
-                );
-            }else {
-                Directory root = getRoot();
-                imp.setParent(root);
-            }
-        }
-
-        return imp;
-    }
-
-    public Directory create(String name){
-        DirectoryImpl result = new DirectoryImpl();
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues dirValues = new ContentValues();
-        ContentValues dirChildValues = new ContentValues();
-        Directory root = getRoot();
-        long newId = -1;
-
-        dirValues.put(DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME, name);
-
-        newId = db.insert(DirectoryContract.TABLE, null, dirValues);
-
-        if(newId == -1) {
-            return null;
-        }
-
-        dirChildValues.put(DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID, newId);
-        dirChildValues.put(
-                DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID, root.getId());
-
-        long chilEntryId = db.insert(DirectoryChildsContract.TABLE, null, dirChildValues);
-
-        if(chilEntryId == -1){
-            db.delete(
-                    DirectoryContract.TABLE,
-                    "" + DirectoryContract.DirectoryEntry._ID +
-                        " = " + newId, null);
-            return null;
-        }
-
-        return findById(newId);
-    }
-
-    public void delete(Directory directory) {
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        db.delete(
+    @Override
+    public Directory delete(Directory directory) {
+        writeableDatabase.delete(
                 DirectoryContract.TABLE,
                 "" +
                     DirectoryContract.DirectoryEntry._ID +
                     "=" + directory.getId(),
                 null
         );
-        db.delete(
-                DirectoryChildsContract.TABLE,
-                "" +
-                        DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID +
-                        "=" +
-                        directory.getId() +
-                        " or " +
-                        DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID +
-                        " = " +
-                        directory.getId(),
-                null
-        );
+
+        return directory;
     }
 
+    @Override
+    public Directory update(Directory directory){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME, directory.getName());
+        writeableDatabase.update(
+                DirectoryContract.TABLE,
+                contentValues,
+                DirectoryContract.DirectoryEntry._ID + " = ?",
+                new String[]{String.valueOf(directory.getId())}
+        );
+
+        return findById(directory.getId());
+    }
+
+    @Deprecated
     public Directory rename(Directory directory){
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -281,9 +241,5 @@ public class DirectoryContext {
         );
 
         return findById(directory.getId());
-    }
-
-    public Directory update(Directory directory){
-        return rename(directory);
     }
 }

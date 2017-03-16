@@ -190,8 +190,9 @@ public class BluetoothController implements BltRepository.BltConnectListener {
     }
 
     public void sendNotesheet(Notesheet notesheet){
-        NotesheetServerContext context = new NotesheetServerContext(mBluetoothActivity);
-        context.upload(notesheet);
+//        NotesheetServerContext context = new NotesheetServerContext(mBluetoothActivity);
+//        context.upload(notesheet);
+//        context.download(notesheet.getUUID(), "new_file.jpg");
 //
 //        NotesheetUploadListener notesheetUploadListener =
 //                new NotesheetUploadListener(this);

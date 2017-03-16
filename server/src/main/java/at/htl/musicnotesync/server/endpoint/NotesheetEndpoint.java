@@ -5,7 +5,9 @@ import at.htl.musicnotesync.server.facade.NotesheetFacade;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import java.io.*;
 
@@ -15,13 +17,47 @@ import java.io.*;
 @Stateless
 @Path("notesheet")
 public class NotesheetEndpoint {
+    private static final int MEGABYTE = 1024000;
+
     @Inject
     NotesheetFacade notesheetFacade;
 
     @POST
     @Consumes({MediaType.APPLICATION_OCTET_STREAM})
-    public Response upload(InputStream inputStream){
-//
+    public Response upload(@HeaderParam("filename")String uuid,
+                           InputStream inputStream){
+
+        File file = new File(uuid);
+
+        if(file.exists()){
+            file.delete();
+        }
+
+        try {
+            byte[] buffer = new byte[MEGABYTE];
+            int read = -1;
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            while((read = inputStream.read(buffer)) > -1){
+                fileOutputStream.write(buffer, 0, read);
+            }
+
+            fileOutputStream.close();
+            inputStream.close();
+
+            if(file.exists()){
+                return Response.status(Response.Status.OK).build();
+            }else{
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 //        String uuid = null;
 //        long resultCode = -1;
 //        Map<String, List<InputPart>> inputParts = input.getFormDataMap();
@@ -76,8 +112,6 @@ public class NotesheetEndpoint {
 //
 //
 //        return resultResponse;
-
-        return  Response.status(200).build();
     }
 
     @GET
