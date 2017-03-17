@@ -47,37 +47,6 @@ public class BluetoothController implements BltRepository.BltConnectListener {
         mModel.setDeviceAdapter(new BluetoothDeviceAdapter(mBluetoothActivity, this));
     }
 
-    public BluetoothDeviceAdapter getDeviceAdapter(){
-        return mModel.getDeviceAdapter();
-    }
-
-    /**
-     * Checks if device has bluetooth functionality. If functionality is given,
-     * obtains a BluetoothAdapter and enables Bluetooth. <u><b>Does not</b></u> ask for
-     * permissions.
-     * Asks for enabling discoverable and then starts discovering devices.
-     * @return true if Bluetooth has been enabled, else false
-     */
-    public boolean enableBluetooth(){
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if(bluetoothAdapter.isEnabled() == true){
-            if(bluetoothAdapter.getScanMode() !=
-                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
-                enableDiscoverable(mBluetoothActivity);
-            }
-        }
-        return true;
-    }
-
-    public static void enableDiscoverable(Activity activity){
-        Intent discoverableIntent = new
-                Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(
-                BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 600);
-        activity.startActivityForResult(discoverableIntent, SET_DISCOVERABLE_REQUEST_CODE);
-    }
-
     public void showToast(@StringRes int stringRes){
         Toast.makeText(mBluetoothActivity, stringRes, Toast.LENGTH_LONG)
                 .show();
@@ -145,36 +114,6 @@ public class BluetoothController implements BltRepository.BltConnectListener {
         BltRepository.getInstance().bulkConnect(devices);
     }
 
-//    private void sendMetadataToDevice(Notesheet notesheet, BluetoothDevice device){
-//        Client client = new Client();
-//        client.connect(device);
-//        //TODO: add success Response
-//        boolean success = client.sendMessage(notesheet.getMetadata());
-//
-//
-//        Snackbar snackbar = null;
-//        if(success == true) {
-//            snackbar = Snackbar
-//                    .make(
-//                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-//                            R.string.transfer_successful,
-//                            Snackbar.LENGTH_SHORT);
-//        }else{
-//            snackbar = Snackbar
-//                    .make(
-//                            mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-//                            R.string.transfer_unsuccessful,
-//                            Snackbar.LENGTH_SHORT);
-//        }
-//        final Snackbar finalSackbar = snackbar;
-//        mBluetoothActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                finalSackbar.show();
-//            }
-//        });
-//    }
-
     public void showLoadingAnimation() {
         loadingDialog = new ProgressDialog(mBluetoothActivity);
         loadingDialog.setCancelable(false);
@@ -190,15 +129,6 @@ public class BluetoothController implements BltRepository.BltConnectListener {
     }
 
     public void sendNotesheet(Notesheet notesheet){
-//        NotesheetServerContext context = new NotesheetServerContext(mBluetoothActivity);
-//        context.upload(notesheet);
-//        context.download(notesheet.getUUID(), "new_file.jpg");
-//
-//        NotesheetUploadListener notesheetUploadListener =
-//                new NotesheetUploadListener(this);
-//        NotesheetFacade notesheetFacade = new NotesheetFacade();
-//
-//        notesheetFacade.sendNotesheet(mBluetoothActivity, notesheet, notesheetUploadListener);
     }
 
     public void showSnackbar(@StringRes int stringRes) {

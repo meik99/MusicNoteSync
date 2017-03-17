@@ -15,15 +15,25 @@ import java.util.List;
 import java.util.Queue;
 
 import at.htl_leonding.musicnotesync.blt.decorator.WatchableBase64InputStream;
+import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
 
 /**
  * Created by michael on 3/11/17.
  */
 
-public class BltRepository {
+public class BltRepository implements InputStreamListener {
+    @Override
+    public void onMessageReceived(String message) {
+        for (BltRepositoryListener listener :
+                repositoryListeners) {
+            listener.onMessageReceived(message);
+        }
+    }
+
     public interface BltRepositoryListener{
         void onDeviceAdded();
         void onRefresh();
+        void onMessageReceived(String message);
     }
     public interface BltConnectListener{
         void onConnected(BltConnection connection);
@@ -116,6 +126,8 @@ public class BltRepository {
                         new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
                 connection.outputStream =
                         new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+
+                connection.inputStream.addListener(this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
