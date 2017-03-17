@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
@@ -175,24 +176,12 @@ public class MainController implements Serializable {
     }
 
     public void refreshNotesheetArrayAdapter() {
-        openDirectory(mMainModel.getCurrentDirectory());
-    }
-
-    public NotesheetClickListener getNotesheetItemClickListener() {
-        return mMainModel.getNotesheetItemClickListener();
+        mMainActivity.refreshNotesheetArrayAdapter();
     }
 
     public void openDirectory(Directory directory) {
         mMainModel.setCurrentDirectory(directory);
-        mMainModel
-                .getNotesheetArrayAdapter()
-                .setNotesheetObjects(
-                        mMainModel.getDirectoryChildren(directory)
-                );
-    }
-
-    public ManagementOptionsClickListener getManagementOptionClickListener() {
-        return mMainModel.getManagementOptionClickListener();
+        mMainActivity.refreshNotesheetArrayAdapter();
     }
 
     public void startMoveObjectToDirectory(Object notesheetObject) {
@@ -219,12 +208,12 @@ public class MainController implements Serializable {
 
     }
 
-    public void deleteNotesheetObject(Object notesheetObject) {
+    public void deleteNotesheetObject(Entity notesheetObject) {
         if(notesheetObject instanceof Directory){
-            mMainModel.getDirectoryFacade().delete((Directory) notesheetObject);
+            directoryFacade.delete((Directory)notesheetObject);
         }
         else if(notesheetObject instanceof Notesheet){
-            mMainModel.getNotesheetFacade().delete((Notesheet)notesheetObject);
+            notesheetFacade.delete((Notesheet)notesheetObject);
         }
     }
 
@@ -236,13 +225,13 @@ public class MainController implements Serializable {
             notesheet.fromNotesheet((Notesheet)object);
             notesheet.setName(newName);
 
-            mMainModel.getNotesheetFacade().update((notesheet));
+            notesheetFacade.update(notesheet);
         }else if(object instanceof Directory){
             DirectoryImpl directory = new DirectoryImpl();
 
             directory.fromDirectory((Directory)object);
             directory.setName(newName);
-            mMainModel.getDirectoryFacade().update(directory);
+            directoryFacade.update(directory);
         }
         refreshNotesheetArrayAdapter();
     }
@@ -254,40 +243,22 @@ public class MainController implements Serializable {
     }
 
     public boolean goToDirectoryParent() {
-        if(mMainModel.getCurrentDirectory().getParent() != null){
-            openDirectory(
-                    mMainModel.getCurrentDirectory().getParent()
-            );
-            return true;
-        }
+        mMainModel.setCurrentDirectory(
+                directoryFacade.getParent(
+                        mMainModel.getCurrentDirectory())
+        );
+
         return false;
     }
 
-    @Override
-    public void onNotesheetInserted(final Notesheet notesheet) {
-        mMainActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshNotesheetArrayAdapter();
-
-                if(notesheet != null && notesheet.getId() > 0) {
-                    Snackbar.make(
-                            mMainActivity.findViewById(
-                                    R.id.mainLayout),
-                            R.string.transfer_successful,
-                            Snackbar.LENGTH_LONG
-                    )
-                            .show();
-                }else{
-                    Snackbar.make(
-                            mMainActivity.findViewById(
-                                    R.id.mainLayout),
-                            R.string.transfer_unsuccessful,
-                            Snackbar.LENGTH_LONG
-                    )
-                            .show();
-                }
-            }
-        });
+    public List<Entity> getNotesheetObjects() {
+        List<Entity> objects = new ArrayList<>();
+        objects.addAll(
+                directoryFacade.findByDirectory(mMainModel.getCurrentDirectory())
+        );
+        objects.addAll(
+                notesheetFacade.findByDirectory(mMainModel.getCurrentDirectory())
+        );
+        return objects;
     }
 }

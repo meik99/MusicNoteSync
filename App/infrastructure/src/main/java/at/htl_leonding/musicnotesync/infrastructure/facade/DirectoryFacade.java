@@ -2,6 +2,9 @@ package at.htl_leonding.musicnotesync.infrastructure.facade;
 
 import android.content.Context;
 
+import java.util.Collection;
+import java.util.List;
+
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryImpl;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryChildContext;
@@ -33,5 +36,21 @@ public class DirectoryFacade {
         directoryChildContext.create(result, currentDirectory);
 
         return result;
+    }
+
+    public List<Directory> findByDirectory(Directory parentDirectory) {
+        return directoryContext.getChildren(parentDirectory);
+    }
+
+    public Directory update(Directory directory) {
+        return directoryContext.update(directory);
+    }
+
+    public Directory delete(Directory directory) {
+        return directoryContext.delete(directory);
+    }
+
+    public Directory getParent(Directory directory) {
+        return directoryContext.getParent(directory);
     }
 }

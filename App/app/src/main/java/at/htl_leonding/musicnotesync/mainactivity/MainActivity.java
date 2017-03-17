@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private MainController mController;
     private FloatingActionButton mOpenAddDDialogButton;
 
+    private NotesheetArrayAdapter mNotesheetArrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -38,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
         mController = new MainController(this);
         mOpenAddDDialogButton = (FloatingActionButton) findViewById(R.id.fab);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
-
-
-        mOpenAddDDialogButton.setOnClickListener(new OpenAddDialogClickListener(this));
-        mNoteSheetRecyclerView.setAdapter(new NotesheetArrayAdapter(
+        mNotesheetArrayAdapter = new NotesheetArrayAdapter(
                 new NotesheetClickListener(mController),
                 new ManagementOptionsClickListener(mController)
-        ));
+        );
+
+        mOpenAddDDialogButton.setOnClickListener(new OpenAddDialogClickListener(this));
+        mNoteSheetRecyclerView.setAdapter(mNotesheetArrayAdapter);
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -86,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        //mAdapter.setSheets(mController.getNotesheets(null));
-        mController.dismissDialog();
-
         if(PermissionHelper.getBluetoothPermissions(this) == true){
             mController.startService();
         }
@@ -103,5 +102,11 @@ public class MainActivity extends AppCompatActivity {
         if (mController.goToDirectoryParent() == false){
             super.onBackPressed();
         }
+    }
+
+    public void refreshNotesheetArrayAdapter(){
+        mNotesheetArrayAdapter.setNotesheetObjects(
+                mController.getNotesheetObjects()
+        );
     }
 }

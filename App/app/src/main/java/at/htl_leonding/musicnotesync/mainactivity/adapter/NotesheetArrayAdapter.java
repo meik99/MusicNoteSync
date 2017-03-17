@@ -13,6 +13,7 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.Entity;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 import at.htl_leonding.musicnotesync.mainactivity.listener.ShareNotesheetClickListener;
 
@@ -45,7 +46,7 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
     private View.OnClickListener mNotesheetClickListener;
     private View.OnClickListener mManagementOptionsClickListener;
 
-    public void setNotesheetObjects(List<Object> notesheetObjects) {
+    public void setNotesheetObjects(List<Entity> notesheetObjects) {
         mNotesheetObjects = new LinkedList<>();
 
         for(Object obj : notesheetObjects){
@@ -113,6 +114,4 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
     public int getItemCount() {
         return mNotesheetObjects.size();
     }
-
-
 }

@@ -15,7 +15,6 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
-import at.htl_leonding.musicnotesync.io.Storage;
 
 /**
  * Created by mrynkiewicz on 15/03/17.

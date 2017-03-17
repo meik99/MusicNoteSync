@@ -244,6 +244,11 @@ public class DirectoryContext extends BaseContext<Directory>{
 
         cursor.close();
 
+        if(result == null){
+            result = new DirectoryImpl();
+            result.fromDirectory(getRoot());
+        }
+
         return result;
     }
 }
