@@ -239,14 +239,20 @@ public class MainController implements Serializable {
     }
 
     public boolean goToDirectoryParent() {
-        mMainModel.setCurrentDirectory(
-                directoryFacade.getParent(
-                        mMainModel.getCurrentDirectory())
-        );
+        boolean currentDirectoryIsRoot =
+                mMainModel.getCurrentDirectory().getId() ==
+                        directoryFacade.getRootDirectory().getId();
 
-        mMainActivity.refreshNotesheetArrayAdapter();
+        if(currentDirectoryIsRoot == false){
+            mMainModel.setCurrentDirectory(
+                    directoryFacade.getParent(
+                            mMainModel.getCurrentDirectory())
+            );
 
-        return mMainModel.getCurrentDirectory() != directoryFacade.getRootDirectory();
+            openDirectory(mMainModel.getCurrentDirectory());
+        }
+
+        return !currentDirectoryIsRoot;
     }
 
     public List<Entity> getNotesheetObjects() {

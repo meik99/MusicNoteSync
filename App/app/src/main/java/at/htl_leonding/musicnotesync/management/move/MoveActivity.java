@@ -41,4 +41,11 @@ public class MoveActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        if(mMoveController.goToDirectoryParent() == false){
+            super.onBackPressed();
+        }
+    }
 }

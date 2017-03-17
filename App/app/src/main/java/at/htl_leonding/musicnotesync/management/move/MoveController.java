@@ -110,4 +110,21 @@ public class MoveController {
         }
         return fileName;
     }
+
+    public boolean goToDirectoryParent() {
+        boolean currentDirectoryIsRoot =
+                mMoveModel.getCurrentDirectory().getId() ==
+                        directoryFacade.getRootDirectory().getId();
+
+        if(currentDirectoryIsRoot == false){
+            mMoveModel.setCurrentDirectory(
+                    directoryFacade.getParent(
+                            mMoveModel.getCurrentDirectory())
+            );
+
+            openDirectory(mMoveModel.getCurrentDirectory());
+        }
+
+        return !currentDirectoryIsRoot;
+    }
 }
