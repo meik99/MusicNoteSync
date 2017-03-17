@@ -15,7 +15,7 @@ public class NotesheetImpl implements Notesheet{
     String name;
     String path;
     String uuid;
-    Directory parent;
+    long parent;
     long id;
 
     public NotesheetImpl(String string){
@@ -43,7 +43,7 @@ public class NotesheetImpl implements Notesheet{
     }
 
     @Override
-    public Directory getParent() {
+    public long getParentId() {
         return this.parent;
     }
 
@@ -60,7 +60,7 @@ public class NotesheetImpl implements Notesheet{
         this.name = name;
     }
 
-    public void setParent(Directory directory){
+    public void setParentId(long directory){
         this.parent = directory;
     }
 
@@ -82,7 +82,7 @@ public class NotesheetImpl implements Notesheet{
     }
 
     public void fromNotesheet(Notesheet notesheet){
-        this.parent = notesheet.getParent();
+        this.parent = notesheet.getParentId();
         this.name = notesheet.getName();
         this.path = notesheet.getPath();
         this.id = notesheet.getId();

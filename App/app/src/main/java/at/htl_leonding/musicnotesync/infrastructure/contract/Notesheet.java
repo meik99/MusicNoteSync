@@ -9,7 +9,7 @@ public interface Notesheet extends Entity{
     String getPath();
     String getName();
     String getUUID();
-    Directory getParent();
+    long getParentId();
     //File getFile();
     String getMetadata();
 }
