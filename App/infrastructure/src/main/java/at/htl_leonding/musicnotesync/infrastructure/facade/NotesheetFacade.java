@@ -69,6 +69,6 @@ public class NotesheetFacade {
         NotesheetImpl notesheetImpl = new NotesheetImpl();
         notesheetImpl.fromNotesheet(notesheet);
         notesheetImpl.setParentId(targetDirectory.getId());
-        return notesheetContext.update(notesheet);
+        return notesheetContext.update(notesheetImpl);
     }
 }
