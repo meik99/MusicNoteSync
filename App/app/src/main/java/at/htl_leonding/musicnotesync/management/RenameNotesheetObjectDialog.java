@@ -3,10 +3,9 @@ package at.htl_leonding.musicnotesync.management;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBar;
 import android.widget.EditText;
 
-import at.htl_leonding.musicnotesync.MainController;
+import at.htl_leonding.musicnotesync.mainactivity.MainController;
 import at.htl_leonding.musicnotesync.R;
 
 /**

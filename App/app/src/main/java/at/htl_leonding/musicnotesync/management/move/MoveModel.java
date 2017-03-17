@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.htl_leonding.musicnotesync.NotesheetArrayAdapter;
+import at.htl_leonding.musicnotesync.mainactivity.adapter.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetContext;

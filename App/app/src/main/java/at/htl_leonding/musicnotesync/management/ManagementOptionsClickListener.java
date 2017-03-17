@@ -4,7 +4,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import at.htl_leonding.musicnotesync.MainController;
+import at.htl_leonding.musicnotesync.mainactivity.MainController;
 import at.htl_leonding.musicnotesync.R;
 
 /**

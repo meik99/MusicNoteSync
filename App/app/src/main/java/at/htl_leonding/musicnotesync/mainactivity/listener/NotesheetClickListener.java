@@ -2,7 +2,7 @@ package at.htl_leonding.musicnotesync.mainactivity.listener;
 
 import android.view.View;
 
-import at.htl_leonding.musicnotesync.MainController;
+import at.htl_leonding.musicnotesync.mainactivity.MainController;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 

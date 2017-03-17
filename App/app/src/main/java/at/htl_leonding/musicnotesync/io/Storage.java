@@ -80,14 +80,14 @@ public class Storage {
      * @param targetDirectory Directory inside root directory where the file should be copied to.
      *                        Will be created if it doesn't exists
      * @param targetFileName Final name of the copy. If null, name of source file will be used.
-     * @return Returns true if copying succeeded, else false
+     * @return Returns target file if succeeded, else null
      */
-    public boolean copyFileToInternalStorage(@NonNull File sourceFile,
+    public File copyFileToInternalStorage(@NonNull File sourceFile,
                                              @Nullable String targetDirectory,
                                              @Nullable String targetFileName){
 
         if(sourceFile.exists() == false){
-            return false;
+            return null;
         }
 
         //If targetDirectory already starts with a seperator it will be removed to prevent
@@ -115,17 +115,17 @@ public class Storage {
         //Returns false if target directory creation fails
         if(targetDir.exists() == false){
             if(targetDir.mkdir() == false){
-                return false;
+                return null;
             }
         }
 
         if(targetFile.exists() == true){
-            return false;
+            return null;
         }
 
         this.copy(sourceFile, targetFile);
 
-        return true;
+        return targetFile;
     }
 
     private void copy(File sourceFile, File targetFile){
