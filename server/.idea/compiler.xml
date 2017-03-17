@@ -10,9 +10,8 @@
         <module name="server" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="musicnotesyncserver" target="1.5" />
-      <module name="server" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

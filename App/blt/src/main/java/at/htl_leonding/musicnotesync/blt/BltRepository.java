@@ -14,8 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
-import at.htl_leonding.musicnotesync.io.WatchableBase64InputStream;
+import at.htl_leonding.musicnotesync.blt.decorator.WatchableBase64InputStream;
 
 /**
  * Created by michael on 3/11/17.
