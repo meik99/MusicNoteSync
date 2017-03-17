@@ -50,6 +50,8 @@ public class NotesheetContext extends BaseContext<Notesheet>{
                 notesheet.fromCursor(cursor);
                 notesheetList.add(notesheet);
             }while(cursor.moveToNext());
+
+            cursor.close();
         }
 
         return notesheetList;
@@ -68,6 +70,8 @@ public class NotesheetContext extends BaseContext<Notesheet>{
             NotesheetImpl notesheet = new NotesheetImpl();
             notesheet.fromCursor(cursor);
             result = notesheet;
+
+            cursor.close();
         }
 
         return result;
@@ -101,6 +105,8 @@ public class NotesheetContext extends BaseContext<Notesheet>{
                 NotesheetImpl notesheet = new NotesheetImpl();
                 notesheet.fromCursor(cursor);
                 result = notesheet;
+
+                cursor.close();
             }
         }
         return result;
@@ -152,6 +158,8 @@ public class NotesheetContext extends BaseContext<Notesheet>{
         if(cursor.moveToFirst()){
             result = new NotesheetImpl();
             result.fromCursor(cursor);
+
+            cursor.close();
         }
 
         return result;

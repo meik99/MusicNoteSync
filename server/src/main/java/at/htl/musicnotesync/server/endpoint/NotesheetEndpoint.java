@@ -5,9 +5,7 @@ import at.htl.musicnotesync.server.facade.NotesheetFacade;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import java.io.*;
 
@@ -58,60 +56,6 @@ public class NotesheetEndpoint {
             e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-//        String uuid = null;
-//        long resultCode = -1;
-//        Map<String, List<InputPart>> inputParts = input.getFormDataMap();
-//        List<InputPart> inputPartList = inputParts.get("file");
-//        inputPartList.addAll(inputParts.get("uuid"));
-//
-//        if(inputPartList != null && inputPartList.size() > 1){
-//            InputPart filePart = inputPartList.get(0);
-//            InputPart uuidPart = inputPartList.get(1);
-//            MultivaluedMap<String, String> header = filePart.getHeaders();
-//            String filename = header.get("Content-Disposition").get(0);
-//            InputStream inputStream = null;
-//
-//            try {
-//                 inputStream = filePart.getBody(InputStream.class, null);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-////            filename =
-////                    filename
-////                    .substring(filename.indexOf("filename"));
-////            filename =
-////                    filename.substring(filename.indexOf("\"")+1);
-////            filename =
-////                    filename.substring(0, filename.indexOf("\""));
-//            try {
-//                uuid = uuidPart.getBody(String.class, null);
-//                resultCode = notesheetFacade.save(uuid, inputStream);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        Response resultResponse = null;
-//
-//        if(resultCode > 0) {
-//            resultResponse = Response.status(Response.Status.OK).entity(uuid).build();
-//        }else{
-//            if (resultCode == -1){
-//                resultResponse = Response.status(Response.Status.EXPECTATION_FAILED).build();
-//            }
-//            else if(resultCode == -2){
-//                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//            }
-//            else if(resultCode == -3){
-//                resultResponse = Response.status(Response.Status.BAD_REQUEST).build();
-//            }
-//            else{
-//                resultResponse = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//            }
-//        }
-//
-//
-//        return resultResponse;
     }
 
     @GET

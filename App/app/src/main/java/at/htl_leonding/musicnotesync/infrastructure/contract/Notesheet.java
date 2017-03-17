@@ -10,6 +10,5 @@ public interface Notesheet extends Entity{
     String getName();
     String getUUID();
     long getParentId();
-    //File getFile();
     String getMetadata();
 }

@@ -7,7 +7,4 @@ import java.util.List;
  */
 public interface Directory extends Entity{;
     String getName();
-    List<Directory> getChildren();
-    List<Notesheet> getNotesheets();
-    Directory getParent();
 }

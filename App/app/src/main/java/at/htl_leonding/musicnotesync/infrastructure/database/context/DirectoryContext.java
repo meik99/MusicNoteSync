@@ -45,6 +45,8 @@ public class DirectoryContext extends BaseContext<Directory>{
                 directory.fromCursor(cursor);
                 result.add(directory);
             }while (cursor.moveToNext());
+
+            cursor.close();
         }
 
         return result;
@@ -63,6 +65,8 @@ public class DirectoryContext extends BaseContext<Directory>{
             DirectoryImpl directory = new DirectoryImpl();
             directory.fromCursor(cursor);
             result = directory;
+
+            cursor.close();
         }
 
         return result;
@@ -94,6 +98,8 @@ public class DirectoryContext extends BaseContext<Directory>{
                 directory.fromCursor(cursor);
                 result =  directory;
             }
+
+            cursor.close();
         }
 
         return result;
@@ -116,54 +122,6 @@ public class DirectoryContext extends BaseContext<Directory>{
     }
 
     @Deprecated
-    public List<Directory> getChildren(@NonNull  Directory directory){
-        DBHelper dbHelper = new DBHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String query =
-                "select * from " + DirectoryContract.TABLE + ", " + DirectoryChildsContract.TABLE
-                + " where " + DirectoryContract.DirectoryEntry._ID
-                + " = " + DirectoryChildsContract.TABLE + "."  +
-                        DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID
-                + " AND " + DirectoryChildsContract.TABLE + "."  +
-                        DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID
-                + " = " + directory.getId();
-
-        Cursor cursor = null;
-        List<Directory> result = new LinkedList<>();
-        try {
-
-            cursor = db.rawQuery(query, null);
-
-
-            if (cursor != null && cursor.moveToFirst() == true) {
-                Log.d(TAG, "getChildren: Found " + cursor.getCount() + " entries");
-
-                do{
-                    DirectoryImpl dir = new DirectoryImpl();
-                    dir.setId(cursor.getInt(
-                            cursor.getColumnIndex(
-                                    DirectoryContract.DirectoryEntry._ID)));
-                    dir.setName(cursor.getString(
-                            cursor.getColumnIndex(
-                                    DirectoryContract.DirectoryEntry.COLUMN_DIR_NAME)));
-                    dir.setParent(directory);
-                    result.add(dir);
-                }while (cursor.moveToNext());
-            }
-        }catch (SQLException ex){
-            Log.e(TAG, "getChildren: " + ex.getMessage());
-        }
-        finally {
-            dbHelper.closeCursor(cursor);
-        }
-
-        db.close();
-
-        return result;
-    }
-
-    @Deprecated
     public Directory move(Directory source, Directory target){
         Directory root = getRoot();
 
@@ -175,7 +133,7 @@ public class DirectoryContext extends BaseContext<Directory>{
         }
 
         long childId = source.getId();
-        long oldParentId = source.getParent().getId();
+        long oldParentId = getParent(source).getId();
         long newParentId = target.getId();
 
         String query = "update " + DirectoryChildsContract.TABLE + " " +
@@ -193,7 +151,7 @@ public class DirectoryContext extends BaseContext<Directory>{
 
         DirectoryImpl imp = new DirectoryImpl();
         imp.fromDirectory(source);
-        imp.setParent(target);
+//        imp.setParent(target);
 
         return imp;
     }
@@ -241,5 +199,55 @@ public class DirectoryContext extends BaseContext<Directory>{
         );
 
         return findById(directory.getId());
+    }
+
+    public List<Directory> getChildren(Directory parent){
+        List<Directory> children = new ArrayList<>();
+        Cursor cursor = readableDatabase.rawQuery(
+                String.format(
+                        "select * from %1$s where %2$s in (" +
+                                "select %3$s from %4$s where %5$s = ?",
+                        DirectoryContract.TABLE,
+                        DirectoryContract.DirectoryEntry._ID,
+                        DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID,
+                        DirectoryChildsContract.TABLE,
+                        DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID),
+                new String[]{String.valueOf(parent.getId())}
+        );
+
+        if(cursor.moveToFirst()){
+            do{
+                DirectoryImpl directory = new DirectoryImpl();
+                directory.fromCursor(cursor);
+                children.add(directory);
+            }while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return children;
+    }
+
+    public Directory getParent(Directory child){
+        DirectoryImpl result = null;
+        Cursor cursor = readableDatabase
+                .rawQuery(
+                        String.format("select * from %1$s where %2$s = (" +
+                                "select %3$s from %4$s where %5$s = ?)",
+                                DirectoryContract.TABLE,
+                                DirectoryContract.DirectoryEntry._ID,
+                                DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID,
+                                DirectoryChildsContract.TABLE,
+                                DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID),
+                        new String[]{String.valueOf(child.getId())}
+                );
+        if(cursor.moveToFirst()){
+            result = new DirectoryImpl();
+            result.fromCursor(cursor);
+        }
+
+        cursor.close();
+
+        return result;
     }
 }
