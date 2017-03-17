@@ -60,4 +60,15 @@ public class NotesheetFacade {
     public Notesheet delete(Notesheet notesheet) {
         return notesheetContext.delete(notesheet);
     }
+
+    public Notesheet findById(long id) {
+        return notesheetContext.findById(id);
+    }
+
+    public Notesheet move(Notesheet notesheet, Directory targetDirectory) {
+        NotesheetImpl notesheetImpl = new NotesheetImpl();
+        notesheetImpl.fromNotesheet(notesheet);
+        notesheetImpl.setParentId(targetDirectory.getId());
+        return notesheetContext.update(notesheet);
+    }
 }

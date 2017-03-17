@@ -21,26 +21,8 @@ public class ServerListenerImpl implements Server.ServerListener{
     private static final String TAG = ServerListenerImpl.class.getSimpleName();
     private final Activity mActivity;
 
-    private List<NotesheetContext.NotesheetDbListener>
-            mListener;
-
     public ServerListenerImpl(Activity activity){
         mActivity = activity;
-        mListener = new LinkedList<>();
-    }
-
-    public void addNotesheetDbListener(
-            NotesheetContext.NotesheetDbListener listener){
-        if(listener != null){
-            mListener.add(listener);
-        }
-    }
-
-    public void removeNotesheetDbListener(
-            NotesheetContext.NotesheetDbListener listener){
-        if(listener != null){
-            mListener.remove(listener);
-        }
     }
 
     @Override
@@ -70,15 +52,9 @@ public class ServerListenerImpl implements Server.ServerListener{
                     DownloadNotesheetListener downloadNotesheetListener =
                             new DownloadNotesheetListener(mActivity);
 
-                    downloadNotesheetListener.addAllNotesheetDbListener(mListener);
-
                     if(notesheet == null) {
                         facade.downloadNotesheet(uuid, name, downloadNotesheetListener);
                     }else{
-                        for (NotesheetContext.NotesheetDbListener listener :
-                                mListener) {
-                            listener.onNotesheetInserted(notesheet);
-                        }
                     }
                 }else if(data.length == 2){
                     String uuid = data[1];

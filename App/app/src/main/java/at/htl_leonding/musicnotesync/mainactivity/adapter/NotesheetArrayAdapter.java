@@ -49,14 +49,16 @@ public class NotesheetArrayAdapter extends RecyclerView.Adapter<NotesheetArrayAd
     public void setNotesheetObjects(List<Entity> notesheetObjects) {
         mNotesheetObjects = new LinkedList<>();
 
-        for(Object obj : notesheetObjects){
-            if(obj instanceof Directory){
-                Directory directory = (Directory)obj;
-                if(directory.getName().equals("ROOT") == false){
+        if(notesheetObjects != null) {
+            for (Object obj : notesheetObjects) {
+                if (obj instanceof Directory) {
+                    Directory directory = (Directory) obj;
+                    if (directory.getName().equals("ROOT") == false) {
+                        mNotesheetObjects.add(obj);
+                    }
+                } else {
                     mNotesheetObjects.add(obj);
                 }
-            }else{
-                mNotesheetObjects.add(obj);
             }
         }
 

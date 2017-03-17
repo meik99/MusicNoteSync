@@ -5,6 +5,9 @@ import android.content.Context;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.infrastructure.contract.Entity;
+import at.htl_leonding.musicnotesync.infrastructure.facade.DirectoryFacade;
+import at.htl_leonding.musicnotesync.infrastructure.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.mainactivity.adapter.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
@@ -20,24 +23,16 @@ public class MoveModel {
     private Directory targetDirectory;
     private NotesheetArrayAdapter notesheetArrayAdapter;
     private NotesheetClickListener notesheetClickListener;
-    private NotesheetContext notesheetFacade;
-    private DirectoryContext directoryFacade;
+    private NotesheetFacade notesheetFacade;
+    private DirectoryFacade directoryFacade;
     private Directory currentDirectory;
 
     protected MoveModel(){
     }
 
-    public NotesheetContext getNotesheetFacade() {
-        return notesheetFacade;
-    }
-
     public void createFacades(Context context) {
-        this.notesheetFacade = new NotesheetContext(context);
-        this.directoryFacade = new DirectoryContext(context);
-    }
-
-    public DirectoryContext getDirectoryFacade() {
-        return directoryFacade;
+        this.notesheetFacade = new NotesheetFacade(context);
+        this.directoryFacade = new DirectoryFacade(context);
     }
 
     public Object getSelectedObject() {
@@ -73,14 +68,14 @@ public class MoveModel {
         return notesheetClickListener;
     }
 
-    public List<Object> getNotesheetObjects(Directory directory) {
+    public List<Entity> getNotesheetObjects(Directory directory) {
         if(notesheetFacade == null || directoryFacade == null){
             return null;
         }
 
-        List<Object> result = new LinkedList<>();
+        List<Entity> result = new LinkedList<>();
 
-        result.addAll(directoryFacade.getChildren(directory));
+        result.addAll(directoryFacade.findByDirectory(directory));
         result.addAll(notesheetFacade.findByDirectory(directory));
 
         return result;

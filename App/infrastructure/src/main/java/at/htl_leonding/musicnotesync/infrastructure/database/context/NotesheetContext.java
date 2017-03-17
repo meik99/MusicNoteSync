@@ -46,8 +46,9 @@ public class NotesheetContext extends BaseContext<Notesheet>{
     public Notesheet findById(long id) {
         Notesheet result = null;
         Cursor cursor = readableDatabase.rawQuery(
-                "select * from " + NotesheetContract.TABLE +
-                " where id = ?",
+                String.format("select * from %1$s where %2$s = ?",
+                        NotesheetContract.TABLE,
+                        NotesheetContract.NotesheetEntry._ID),
                 new String[]{String.valueOf(id)}
         );
 

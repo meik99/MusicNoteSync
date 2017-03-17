@@ -2,6 +2,12 @@ package at.htl_leonding.musicnotesync.management.move;
 
 import android.app.Activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import at.htl_leonding.musicnotesync.infrastructure.contract.Entity;
+import at.htl_leonding.musicnotesync.infrastructure.facade.DirectoryFacade;
+import at.htl_leonding.musicnotesync.infrastructure.facade.NotesheetFacade;
 import at.htl_leonding.musicnotesync.mainactivity.adapter.NotesheetArrayAdapter;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
@@ -16,13 +22,18 @@ public class MoveController {
     private MoveActivity mMoveActivity;
     private MoveModel mMoveModel;
 
+    private NotesheetFacade notesheetFacade;
+    private DirectoryFacade directoryFacade;
+
     protected MoveController(MoveActivity moveActivity){
         long id;
         String _class;
 
         mMoveActivity = moveActivity;
         mMoveModel = new MoveModel();
-        mMoveModel.createFacades(mMoveActivity);
+
+        notesheetFacade = new NotesheetFacade(moveActivity);
+        directoryFacade = new DirectoryFacade(moveActivity);
 
         id = mMoveActivity.getIntent().getLongExtra("ObjectId", -1);
         _class = mMoveActivity.getIntent().getStringExtra("ObjectClass");
@@ -30,11 +41,11 @@ public class MoveController {
         if(id != -1){
             if(_class.equals("Notesheet")){
                mMoveModel.setSelectedObject(
-                       mMoveModel.getNotesheetFacade().findById(id)
+                       notesheetFacade.findById(id)
                );
            }else if(_class.equals("Directory")){
                 mMoveModel.setSelectedObject(
-                        mMoveModel.getDirectoryFacade().findById(id)
+                        directoryFacade.findById(id)
                 );
             }
         }
@@ -42,7 +53,8 @@ public class MoveController {
         mMoveModel.setNotesheetClickListener(new NotesheetClickListener(this));
         mMoveModel.setNotesheetArrayAdapter(new NotesheetArrayAdapter(
                 mMoveModel.getNotesheetClickListener(), null));
-        openDirectory(mMoveModel.getDirectoryFacade().getRoot());
+
+        openDirectory(directoryFacade.getRootDirectory());
 
     }
 
@@ -54,10 +66,12 @@ public class MoveController {
         Object notesheetObject = mMoveModel.getSelectedObject();
 
         if(notesheetObject instanceof Notesheet){
-            mMoveModel.getNotesheetFacade().move((Notesheet)notesheetObject,
+            notesheetFacade.move(
+                    (Notesheet)notesheetObject,
                     mMoveModel.getCurrentDirectory());
         }else if(notesheetObject instanceof Directory){
-            mMoveModel.getDirectoryFacade().move((Directory)notesheetObject,
+            directoryFacade.move(
+                    (Directory)notesheetObject,
                     mMoveModel.getCurrentDirectory());
         }
         mMoveActivity.setResult(Activity.RESULT_OK);
@@ -65,10 +79,18 @@ public class MoveController {
     }
 
     public void openDirectory(Directory directory) {
-        directory = directory == null ? mMoveModel.getDirectoryFacade().getRoot() : directory;
+        directory = directory == null ? directoryFacade.getRootDirectory() : directory;
+
+        List<Entity> entities = new ArrayList<>();
+        List<Directory> directories = directoryFacade.findByDirectory(directory);
+
+        for (Directory item :
+                directories) {
+            entities.add(item);
+        }
 
         mMoveModel.getNotesheetArrayAdapter().setNotesheetObjects(
-                mMoveModel.getNotesheetObjects(directory)
+                entities
         );
         mMoveModel.setCurrentDirectory(directory);
     }

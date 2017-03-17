@@ -110,10 +110,17 @@ public class NotesheetImpl implements Notesheet{
                         cursor.getColumnIndex(
                                 NotesheetContract.NotesheetEntry.COLUMN_FILE_PATH)
                 );
+        long parentId =
+                cursor.getLong(
+                        cursor.getColumnIndex(
+                                NotesheetContract.NotesheetEntry.COLUMN_DIRECTORY_ID
+                        )
+                );
 
         this.setId(id);
         this.setName(filename);
         this.setPath(filepath);
+        this.setParentId(parentId);
         this.uuid = uuid;
     }
 

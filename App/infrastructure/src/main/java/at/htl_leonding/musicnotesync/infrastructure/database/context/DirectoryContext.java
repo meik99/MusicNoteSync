@@ -56,7 +56,9 @@ public class DirectoryContext extends BaseContext<Directory>{
         Directory result = null;
 
         Cursor cursor = readableDatabase.rawQuery(
-                String.format("select * from %1$s where id = ?;", DirectoryContract.TABLE),
+                String.format("select * from %1$s where %2$s = ?;",
+                        DirectoryContract.TABLE,
+                        DirectoryContract.DirectoryEntry._ID),
                 new String[]{String.valueOf(id)}
         );
 
@@ -201,8 +203,8 @@ public class DirectoryContext extends BaseContext<Directory>{
         List<Directory> children = new ArrayList<>();
         Cursor cursor = readableDatabase.rawQuery(
                 String.format(
-                        "select * from %1$s where %2$s in (" +
-                                "select %3$s from %4$s where %5$s = ?",
+                        "select * from %1$s where %1$s.%2$s in (" +
+                                "select %4$s.%3$s from %4$s where %4$s.%5$s = ?)",
                         DirectoryContract.TABLE,
                         DirectoryContract.DirectoryEntry._ID,
                         DirectoryChildsContract.DirectoryChildsEntry.COLUMN_CHILD_ID,

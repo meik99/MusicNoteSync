@@ -58,9 +58,6 @@ public class MainController implements Serializable {
         mMainModel.setCurrentDirectory(
                 directoryFacade.getRootDirectory()
         );
-
-        refreshNotesheetArrayAdapter();
-
     }
 
     public void storeFileFromFileChooser(String path) {
@@ -248,7 +245,9 @@ public class MainController implements Serializable {
                         mMainModel.getCurrentDirectory())
         );
 
-        return false;
+        mMainActivity.refreshNotesheetArrayAdapter();
+
+        return mMainModel.getCurrentDirectory() != directoryFacade.getRootDirectory();
     }
 
     public List<Entity> getNotesheetObjects() {

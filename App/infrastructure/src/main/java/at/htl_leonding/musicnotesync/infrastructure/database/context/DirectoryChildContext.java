@@ -26,7 +26,7 @@ public class DirectoryChildContext extends BaseContext<DirectoryChild>{
     public List<DirectoryChild> findAll() {
         List<DirectoryChild> result = new ArrayList<>();
         Cursor cursor = readableDatabase.rawQuery(
-                String.format("select * from %1", DirectoryContract.TABLE),
+                String.format("select * from %1$s", DirectoryChildsContract.TABLE),
                 null
         );
 
@@ -43,11 +43,11 @@ public class DirectoryChildContext extends BaseContext<DirectoryChild>{
     }
 
     public DirectoryChild update(DirectoryChild old, DirectoryChild _new){
-        writeableDatabase.rawQuery(
-                String.format("update %1" +
-                        "set %2 = %3," +
-                        "%4 = %5 " +
-                        "where %2 = ? and %4 = ?",
+        writeableDatabase.execSQL(
+                String.format("update %1$s " +
+                        "set %2$s = %3$d, " +
+                        "%4$s = %5$d " +
+                        "where %2$s = ? and %4$s = ?",
                         DirectoryChildsContract.TABLE,
                         DirectoryChildsContract.DirectoryChildsEntry.COLUMN_PARENT_ID,
                         _new.getParentId(),

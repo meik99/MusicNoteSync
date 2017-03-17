@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
+import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryChild;
+import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryChildImpl;
 import at.htl_leonding.musicnotesync.infrastructure.contract.DirectoryImpl;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryChildContext;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
@@ -52,5 +54,28 @@ public class DirectoryFacade {
 
     public Directory getParent(Directory directory) {
         return directoryContext.getParent(directory);
+    }
+
+    public Directory findById(long id) {
+        return directoryContext.findById(id);
+    }
+
+    public Directory move(Directory sourceDirectory, Directory targetDirectory) {
+        DirectoryChildImpl directoryChild = new DirectoryChildImpl();
+
+        List<DirectoryChild> directoryChildren = directoryChildContext.findAll();
+
+        for (DirectoryChild item :
+                directoryChildren) {
+            if(item.getChildId() == sourceDirectory.getId()){
+                directoryChild.setChildId(sourceDirectory.getId());
+                directoryChild.setParentId(targetDirectory.getId());
+
+                directoryChildContext.update(item, directoryChild);
+                return findById(sourceDirectory.getId());
+            }
+        }
+
+        return sourceDirectory;
     }
 }
