@@ -13,6 +13,7 @@ import android.widget.Button;
 import java.io.File;
 import java.io.IOException;
 
+import at.htl_leonding.musicnotesync.mainactivity.MainController;
 import at.htl_leonding.musicnotesync.management.NameFolderActivity;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.intent.CameraIntentHelper;
@@ -27,14 +28,16 @@ public class OpenAddDialogClickListener implements View.OnClickListener{
     private static final String TAG = OpenAddDialogClickListener.class.getSimpleName();
 
     private final Activity activity;
+    private final MainController controller;
 
-    private File mPhotoFile;
     private Dialog mSelectFormatDialog;
 
 
 
-    public OpenAddDialogClickListener(Activity activity){
+    public OpenAddDialogClickListener(Activity activity,
+                                      MainController controller){
         this.activity = activity;
+        this.controller = controller;
     }
 
     @Override
@@ -101,15 +104,12 @@ public class OpenAddDialogClickListener implements View.OnClickListener{
     private void dispatchCameraIntent(){
         try {
 //            mPhotoFile =
-            CameraIntentHelper.dispatchTakePictureIntent(activity);
+            controller.setPhotoFile(CameraIntentHelper.dispatchTakePictureIntent(activity));
         } catch (IOException e) {
             Log.e(TAG, "onClick: " + e.getMessage());
         }
     }
 
-    public File getPhotoFile(){
-        return mPhotoFile;
-    }
 
     public void dismissDialog(){
         if(mSelectFormatDialog != null){

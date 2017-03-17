@@ -139,9 +139,8 @@ public class MainController implements Serializable {
         if(resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case RequestCode.TAKE_PICTURE_REQUEST_CODE:
-                    if(data != null && data.getData() != null){
-                        Uri photoUri = data.getData();
-                        File tmpFile = new File(photoUri.getPath());
+                    if(mMainModel.getPhotoFile() != null){
+                        File tmpFile = mMainModel.getPhotoFile();
 
                         mMainModel.getStorage().copyFileToInternalStorage(
                                 tmpFile, "camera", tmpFile.getName());
@@ -259,5 +258,9 @@ public class MainController implements Serializable {
                 notesheetFacade.findByDirectory(mMainModel.getCurrentDirectory())
         );
         return objects;
+    }
+
+    public void setPhotoFile(File photoFile) {
+        mMainModel.setPhotoFile(photoFile);
     }
 }

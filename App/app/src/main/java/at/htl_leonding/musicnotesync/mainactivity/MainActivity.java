@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mNoteSheetRecyclerView;
     private MainController mController;
-    private FloatingActionButton mOpenAddDDialogButton;
+    private FloatingActionButton mOpenAddDialogButton;
 
     private NotesheetArrayAdapter mNotesheetArrayAdapter;
 
@@ -37,14 +37,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.app_name));
 
         mController = new MainController(this);
-        mOpenAddDDialogButton = (FloatingActionButton) findViewById(R.id.fab);
+        mOpenAddDialogButton = (FloatingActionButton) findViewById(R.id.fab);
         mNoteSheetRecyclerView = (RecyclerView) findViewById(R.id.noteSheetRecyclerView);
         mNotesheetArrayAdapter = new NotesheetArrayAdapter(
                 new NotesheetClickListener(mController),
                 new ManagementOptionsClickListener(mController)
         );
 
-        mOpenAddDDialogButton.setOnClickListener(new OpenAddDialogClickListener(this));
+        mOpenAddDialogButton.setOnClickListener(new OpenAddDialogClickListener(this, mController));
         mNoteSheetRecyclerView.setAdapter(mNotesheetArrayAdapter);
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
