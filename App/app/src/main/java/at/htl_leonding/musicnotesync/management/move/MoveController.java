@@ -86,7 +86,12 @@ public class MoveController {
 
         for (Directory item :
                 directories) {
-            entities.add(item);
+            if(
+                    (mMoveModel.getSelectedObject() instanceof Directory &&
+                    ((Directory)mMoveModel.getSelectedObject()).getId() != item.getId())
+                            || mMoveModel.getSelectedObject() instanceof Notesheet){
+                entities.add(item);
+            }
         }
 
         mMoveModel.getNotesheetArrayAdapter().setNotesheetObjects(
