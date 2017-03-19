@@ -13,6 +13,7 @@ import java.util.List;
 
 import at.htl_leonding.musicnotesync.BaseController;
 import at.htl_leonding.musicnotesync.R;
+import at.htl_leonding.musicnotesync.blt.BltConnection;
 import at.htl_leonding.musicnotesync.blt.BltRepository;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothOpenNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothSendNotesheetClickListener;
@@ -177,12 +178,12 @@ public class BluetoothController extends BaseController{
     }
 
     @Override
-    public void onConnected(BltRepository.BltConnection connection) {
+    public void onConnected(BltConnection connection) {
 
     }
 
     @Override
-    public void onBulkConnected(List<BltRepository.BltConnection> connections) {
+    public void onBulkConnected(List<BltConnection> connections) {
         BltRepository.getInstance().removeBltConnectListenerListener(this);
 
         if(mModel.getBluetoothAction() != null &&

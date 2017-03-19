@@ -25,16 +25,7 @@ import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
  */
 
 public class BltRepository implements InputStreamListener {
-    private static final String TAG = BltRepository.class.getSimpleName();
-
-    @Override
-    public void onMessageReceived(String message) {
-        for (BltRepositoryListener listener :
-                repositoryListeners) {
-            listener.onMessageReceived(message);
-        }
-    }
-
+    //region interfaces
     public interface BltRepositoryListener{
         void onDeviceAdded();
         void onRefresh();
@@ -44,20 +35,11 @@ public class BltRepository implements InputStreamListener {
         void onConnected(BltConnection connection);
         void onBulkConnected(List<BltConnection> connections);
     }
+    //endregion
+    //region fields
 
-    public List<BluetoothDevice> getFoundDevices() {
-        return foundDevices;
-    }
-
+    private static final String TAG = BltRepository.class.getSimpleName();
     private static final int MAX_SKIPS = 10;
-
-    public class BltConnection {
-
-        public BluetoothDevice device;
-        public WatchableInputStream inputStream;
-        public OutputStream outputStream;
-        public BluetoothSocket socket;
-    }
     private static BltRepository instance = null;
 
     private List<BltConnection> connections;
@@ -68,11 +50,30 @@ public class BltRepository implements InputStreamListener {
     private List<BltConnectListener> connectListener = new ArrayList<>();
     private Queue<String> messageQueue;
     private Thread messageSender;
+
+    private int index;
+    private boolean isKnown;
+
+    //endregion
+    //region constructor
     private BltRepository(){
         connections = new ArrayList<>();
         foundDevices = new ArrayList<>();
         repositoryListeners = new ArrayList<>();
         messageQueue = new ArrayDeque<>();
+    }
+    //endregion
+    //region methods
+    @Override
+    public void onMessageReceived(String message) {
+        for (BltRepositoryListener listener :
+                repositoryListeners) {
+            listener.onMessageReceived(message);
+        }
+    }
+
+    public List<BluetoothDevice> getFoundDevices() {
+        return foundDevices;
     }
 
     public void refresh() {
@@ -137,11 +138,7 @@ public class BltRepository implements InputStreamListener {
 
         for (BltConnection conn :
                 connections) {
-            if (conn.device.getAddress().equals(device.getAddress())){
-                isKnown = true;
-                connection =  conn;
-                index = connections.indexOf(conn);
-            }
+            connection = isAddressEqual(device, conn);
         }
 
         if(index > -1) {
@@ -172,6 +169,16 @@ public class BltRepository implements InputStreamListener {
         return connection;
     }
 
+    private BltConnection isAddressEqual(BluetoothDevice device, BltConnection conn) {
+        BltConnection sol = null;
+        if (conn.device.getAddress().equals(device.getAddress())){
+            isKnown = true;
+            sol =  conn;
+            index = connections.indexOf(conn);
+        }
+        return sol;
+    }
+
     void addConnection(BluetoothSocket socket){
         BluetoothDevice device = socket.getRemoteDevice();
         boolean isKnown = false;
@@ -179,10 +186,7 @@ public class BltRepository implements InputStreamListener {
 
         for (BltConnection connection :
                 connections) {
-            if(connection.device.getAddress().equals(device.getAddress())){
-                isKnown = true;
-                index = connections.indexOf(connection);
-            }
+            this.isAddressEqual(device, connection);
         }
 
         if(isKnown == true){
@@ -277,7 +281,7 @@ public class BltRepository implements InputStreamListener {
                                             currentMessage.getBytes(Charset.forName(BltConstants.CHARSET));
                                             Log.d(TAG, "run: " + Arrays.toString(messageBytes));
 
-                                            messageBytes = Base64.decode(currentMessage, Base64.DEFAULT);
+                                            messageBytes = Base64.encode(currentMessage.getBytes(Charset.forName(BltConstants.CHARSET)), Base64.DEFAULT);
                                             connection.socket.getOutputStream().write(
                                                     messageBytes
                                             );
@@ -305,4 +309,5 @@ public class BltRepository implements InputStreamListener {
     public void removeBltConnectListenerListener(BltConnectListener listener){
         connectListener.remove(listener);
     }
+    //endregion
 }

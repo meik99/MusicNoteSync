@@ -2,6 +2,7 @@ package at.htl_leonding.musicnotesync;
 
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.blt.BltConnection;
 import at.htl_leonding.musicnotesync.blt.BltRepository;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 
@@ -37,12 +38,12 @@ public abstract class BaseController implements
     }
 
     @Override
-    public void onConnected(BltRepository.BltConnection connection) {
+    public void onConnected(BltConnection connection) {
 
     }
 
     @Override
-    public void onBulkConnected(List<BltRepository.BltConnection> connections) {
+    public void onBulkConnected(List<BltConnection> connections) {
 
     }
 }
