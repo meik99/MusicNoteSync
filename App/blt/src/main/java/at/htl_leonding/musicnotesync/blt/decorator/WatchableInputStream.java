@@ -80,7 +80,8 @@ public class WatchableInputStream extends InputStream {
                                 if(builder.length() > 0) {
                                     for (InputStreamListener listener :
                                             listeners) {
-                                        listener.onMessageReceived(builder.toString());
+                                        listener.onMessageReceived(
+                                                builder.toString().replace("\r\n", ""));
                                     }
                                 }
                             }

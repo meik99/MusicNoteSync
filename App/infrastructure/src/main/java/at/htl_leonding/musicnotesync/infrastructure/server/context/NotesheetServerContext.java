@@ -23,10 +23,10 @@ import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 public class NotesheetServerContext {
     private static int MEGABYTE = 1024000;
     private static final String PROTOCOL = "http";
-//    private static final String HOST =
-//            "vm91.htl-leonding.ac.at";
     private static final String HOST =
-            "10.0.0.6";
+            "vm91.htl-leonding.ac.at";
+//    private static final String HOST =
+//            "10.0.0.6";
     private static int PORT = 8080;
     private static final String PATH = "/musicnotesyncserver/api/notesheet";
     private final Context mContext;
@@ -151,7 +151,7 @@ public class NotesheetServerContext {
                     e.printStackTrace();
                 }
 
-                return file;
+                return new File("bluetooth"  + File.separator + filename);
             }
         };
         task.execute(uuid, filename);

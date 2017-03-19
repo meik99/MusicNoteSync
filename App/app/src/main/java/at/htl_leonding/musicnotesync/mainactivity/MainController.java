@@ -47,6 +47,7 @@ public class MainController extends BaseController{
     private MainModel mMainModel;
     private MainActivity mMainActivity;
 
+
     public MainController(MainActivity activity){
         super(activity, new MainModel(activity));
         mMainActivity = activity;
@@ -265,5 +266,13 @@ public class MainController extends BaseController{
 
     public void setPhotoFile(File photoFile) {
         mMainModel.setPhotoFile(photoFile);
+    }
+
+
+    @Override
+    public void onMessageReceived(String message) {
+        super.onMessageReceived(message);
+
+        refreshNotesheetArrayAdapter();
     }
 }

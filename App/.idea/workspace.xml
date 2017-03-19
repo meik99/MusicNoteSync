@@ -10,21 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9f3953a-6ab7-42cb-8bcc-5cf30430f2b5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseModel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothController.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothModel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewController.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/control/zoom/TouchImageViewZoomListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/control/zoom/TouchImageViewZoomListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" afterPath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java" afterPath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/infrastructure/build.gradle" afterPath="$PROJECT_DIR$/infrastructure/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/contract/NotesheetImpl.java" afterPath="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/contract/NotesheetImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java" afterPath="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java" afterPath="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java" />
     </list>
     <ignored path="App.iws" />
@@ -60,8 +48,8 @@
       <file leaf-file-name="BaseController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="73" column="54" selection-start-line="73" selection-start-column="54" selection-end-line="73" selection-end-column="54" />
+            <state relative-caret-position="177">
+              <caret line="57" column="100" selection-start-line="57" selection-start-column="100" selection-end-line="57" selection-end-column="100" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -69,12 +57,30 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BluetoothController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="417">
+              <caret line="276" column="5" selection-start-line="276" selection-start-column="5" selection-end-line="276" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BluetoothController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="169" column="10" selection-start-line="169" selection-start-column="10" selection-end-line="169" selection-end-column="10" />
-              <folding />
+            <state relative-caret-position="2265">
+              <caret line="170" column="10" selection-start-line="170" selection-start-column="10" selection-end-line="170" selection-end-column="10" />
+              <folding>
+                <element signature="e#2911#2943#0" expanded="true" />
+                <element signature="e#3409#3432#0" expanded="true" />
+                <element signature="e#3541#3564#0" expanded="true" />
+                <element signature="e#3605#3637#0" expanded="true" />
+                <element signature="e#4615#4673#0" expanded="true" />
+                <element signature="e#4893#4894#0" expanded="true" />
+                <element signature="e#4941#4942#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -92,11 +98,22 @@
       <file leaf-file-name="BaseModel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="123">
-              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+            <state relative-caret-position="237">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#448#449#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NotesheetFacade.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="344">
+              <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -104,28 +121,28 @@
       <file leaf-file-name="NotesheetContext.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/database/context/NotesheetContext.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1335">
-              <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+            <state relative-caret-position="810">
+              <caret line="65" column="21" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BluetoothModel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothModel.java">
+      <file leaf-file-name="NotesheetServerContext.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+            <state relative-caret-position="-150">
+              <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImageViewController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewController.java">
+      <file leaf-file-name="WatchableInputStream.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-492">
-              <caret line="71" column="17" selection-start-line="71" selection-start-column="17" selection-end-line="71" selection-end-column="17" />
+            <state relative-caret-position="311">
+              <caret line="83" column="48" selection-start-line="83" selection-start-column="48" selection-end-line="83" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -136,26 +153,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
               <caret line="52" column="64" selection-start-line="52" selection-start-column="64" selection-end-line="52" selection-end-column="64" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ZoomHandler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/control/zoom/ZoomHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-150">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ImageViewActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -4325,19 +4322,19 @@
         <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltService.java" />
         <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" />
         <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" />
-        <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java" />
-        <option value="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java" />
         <option value="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/contract/NotesheetImpl.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothModel.java" />
-        <option value="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainModel.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/ImageViewController.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/presentation/control/zoom/TouchImageViewZoomListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothController.java" />
+        <option value="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java" />
+        <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java" />
+        <option value="$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java" />
       </list>
     </option>
   </component>
@@ -4398,8 +4395,116 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="infrastructure" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="infrastructure" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="infrastructure" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="context" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="infrastructure" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="infrastructure" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="blt" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blt" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blt" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blt" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blt" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blt" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="decorator" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -5000,7 +5105,14 @@
       <option name="project" value="LOCAL" />
       <updated>1489933207087</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Edited controller to work with new blt repository">
+      <created>1489938380538</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1489938380538</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -5013,7 +5125,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39800444" sideWeight="0.50213444" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40707964" sideWeight="0.49786553" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40707964" sideWeight="0.49786553" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32423207" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32815966" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -5026,7 +5138,7 @@
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497332" sideWeight="0.50388455" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3971239" sideWeight="0.49786553" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3971239" sideWeight="0.49786553" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -5081,31 +5193,44 @@
     <MESSAGE value="MoveActivity now allows going back to parent" />
     <MESSAGE value="Fixed moving wrong notesheet object" />
     <MESSAGE value="Implemented manual Base64-en/de-coding" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented manual Base64-en/de-coding" />
+    <MESSAGE value="Edited controller to work with new blt repository" />
+    <option name="LAST_COMMIT_MESSAGE" value="Edited controller to work with new blt repository" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java</url>
-          <line>131</line>
+          <line>128</line>
           <properties />
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java</url>
-          <line>119</line>
+          <line>116</line>
           <properties />
           <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java</url>
-          <line>276</line>
+          <line>277</line>
           <properties />
           <option name="timeStamp" value="106" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java</url>
+          <line>60</line>
+          <properties />
+          <option name="timeStamp" value="132" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java</url>
+          <line>59</line>
+          <properties />
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="128" />
+      <option name="time" value="134" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -5328,27 +5453,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="148" column="0" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
-          <folding>
-            <element signature="e#4084#6040#0" expanded="false" />
-            <element signature="e#6039#6040#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/contract/NotesheetImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
@@ -5379,19 +5483,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="74" column="21" selection-start-line="74" selection-start-column="21" selection-end-line="74" selection-end-column="21" />
-          <folding>
-            <element signature="e#3209#3210#0" expanded="true" />
-            <element signature="e#3265#3266#0" expanded="true" />
-            <element signature="e#3312#3313#0" expanded="true" />
-            <element signature="e#3368#3369#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="59">
@@ -5403,26 +5494,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/database/context/BaseContext.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/database/context/NotesheetContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1335">
-          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -5440,16 +5515,6 @@
         <state relative-caret-position="255">
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -5477,16 +5542,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="73" column="54" selection-start-line="73" selection-start-column="54" selection-end-line="73" selection-end-column="54" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/listener/BluetoothOpenNotesheetClickListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -5497,8 +5552,77 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/BluetoothController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="169" column="10" selection-start-line="169" selection-start-column="10" selection-end-line="169" selection-end-column="10" />
+        <state relative-caret-position="2265">
+          <caret line="170" column="10" selection-start-line="170" selection-start-column="10" selection-end-line="170" selection-end-column="10" />
+          <folding>
+            <element signature="e#2911#2943#0" expanded="true" />
+            <element signature="e#3409#3432#0" expanded="true" />
+            <element signature="e#3541#3564#0" expanded="true" />
+            <element signature="e#3605#3637#0" expanded="true" />
+            <element signature="e#4615#4673#0" expanded="true" />
+            <element signature="e#4893#4894#0" expanded="true" />
+            <element signature="e#4941#4942#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="237">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#448#449#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableInputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="83" column="48" selection-start-line="83" selection-start-column="48" selection-end-line="83" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="57" column="100" selection-start-line="57" selection-start-column="100" selection-end-line="57" selection-end-column="100" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="276" column="5" selection-start-line="276" selection-start-column="5" selection-end-line="276" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/database/context/NotesheetContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="65" column="21" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/infrastructure/src/main/java/at/htl_leonding/musicnotesync/infrastructure/server/context/NotesheetServerContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-150">
+          <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
           <folding />
         </state>
       </provider>
