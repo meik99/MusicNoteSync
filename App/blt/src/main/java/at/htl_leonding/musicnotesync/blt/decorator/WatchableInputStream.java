@@ -1,7 +1,6 @@
 package at.htl_leonding.musicnotesync.blt.decorator;
 
 import android.util.Base64;
-import android.util.Base64InputStream;
 import android.util.Log;
 
 import java.io.IOException;
@@ -17,22 +16,21 @@ import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
  * Created by michael on 3/12/17.
  */
 
-public class WatchableBase64InputStream extends Base64InputStream {
-    private static final String TAG = WatchableBase64InputStream.class.getSimpleName();
+public class WatchableInputStream extends InputStream {
+    private static final String TAG = WatchableInputStream.class.getSimpleName();
+    private final InputStream in;
     private List<InputStreamListener> listeners;
     private boolean isWatching = false;
     private static final int MEGABYTE = 1024000;
     /**
      * An InputStream that performs Base64 decoding on the data read
      * from the wrapped stream.
-     *
-     * @param in    the InputStream to read the source data from
-     * @param flags bit flags for controlling the decoder; see the
-     *              constants in {@link Base64}
      */
-    public WatchableBase64InputStream(InputStream in, int flags) {
-        super(in, flags);
+    public WatchableInputStream(InputStream in) {
+        //super(in, flags);
+        super();
 
+        this.in = in;
         listeners = new ArrayList<>();
 
         startWatching();
@@ -51,11 +49,11 @@ public class WatchableBase64InputStream extends Base64InputStream {
                             byte[] buffer = new byte[MEGABYTE];
                             int read = -1;
 
-                            if(WatchableBase64InputStream.this != null &&
-                                    WatchableBase64InputStream.this.in != null) {
+                            if(in != null /*&&
+                                    WatchableInputStream.this.in != null*/) {
                                 boolean messageRead = false;
                                 try {
-                                    while(messageRead == false && (read = WatchableBase64InputStream.this.read(buffer)) > -1) {
+                                    while(messageRead == false && (read = in.read(buffer)) > -1) {
                                         buffer = Base64.encode(buffer, 0 , read, Base64.DEFAULT);
 
                                         Log.d(TAG, "Read: " +
@@ -105,5 +103,10 @@ public class WatchableBase64InputStream extends Base64InputStream {
 
     public void removeListener(InputStreamListener listener){
         listeners.remove(listener);
+    }
+
+    @Override
+    public int read() throws IOException {
+        return 0;
     }
 }

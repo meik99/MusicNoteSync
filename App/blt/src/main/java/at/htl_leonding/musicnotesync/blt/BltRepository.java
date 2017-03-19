@@ -3,23 +3,21 @@ package at.htl_leonding.musicnotesync.blt;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Base64;
 import android.util.Base64OutputStream;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import at.htl_leonding.musicnotesync.blt.decorator.WatchableBase64InputStream;
+import at.htl_leonding.musicnotesync.blt.decorator.WatchableInputStream;
 import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
 
 /**
@@ -56,8 +54,8 @@ public class BltRepository implements InputStreamListener {
     public class BltConnection {
 
         public BluetoothDevice device;
-        public WatchableBase64InputStream inputStream;
-        public Base64OutputStream outputStream;
+        public WatchableInputStream inputStream;
+        public OutputStream outputStream;
         public BluetoothSocket socket;
     }
     private static BltRepository instance = null;
@@ -160,12 +158,10 @@ public class BltRepository implements InputStreamListener {
             conn.device = device;
             conn.socket = socket;
             conn.inputStream =
-                    new WatchableBase64InputStream(socket.getInputStream(),
-                            Base64.DEFAULT);
+                    new WatchableInputStream(socket.getInputStream());
             conn.inputStream.addListener(this);
             conn.outputStream =
-                    new Base64OutputStream(socket.getOutputStream(),
-                            Base64.DEFAULT);
+                    socket.getOutputStream();
 
             BltRepository.getInstance().connections.add(conn);
             connection = conn;
@@ -195,13 +191,12 @@ public class BltRepository implements InputStreamListener {
 
         BltConnection connection = new BltConnection();
         connection.device = socket.getRemoteDevice();
+        connection.socket = socket;
         try {
             connection.inputStream =
-                    new WatchableBase64InputStream(socket.getInputStream(),
-                            Base64.DEFAULT);
+                    new WatchableInputStream(socket.getInputStream());
             connection.outputStream =
-                    new Base64OutputStream(socket.getOutputStream(),
-                            Base64.DEFAULT);
+                    connection.socket.getOutputStream();
 
             connection.inputStream.addListener(this);
         } catch (IOException e) {
