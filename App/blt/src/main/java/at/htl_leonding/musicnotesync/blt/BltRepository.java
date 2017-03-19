@@ -277,6 +277,7 @@ public class BltRepository implements InputStreamListener {
                                             currentMessage.getBytes(Charset.forName(BltConstants.CHARSET));
                                             Log.d(TAG, "run: " + Arrays.toString(messageBytes));
 
+                                            messageBytes = Base64.decode(currentMessage, Base64.DEFAULT);
                                             connection.socket.getOutputStream().write(
                                                     messageBytes
                                             );
