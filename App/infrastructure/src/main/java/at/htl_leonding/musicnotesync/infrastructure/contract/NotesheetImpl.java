@@ -19,8 +19,8 @@ public class NotesheetImpl implements Notesheet{
     long parent;
     long id;
 
-    public NotesheetImpl(String string){
-        uuid = string;
+    public NotesheetImpl(String uuid){
+        this.uuid = uuid;
     }
     public NotesheetImpl(){}
 

@@ -55,14 +55,14 @@ public class WatchableInputStream extends InputStream {
                                 try {
                                     while(messageRead == false && (read = in.read(buffer)) > -1) {
 //                                        buffer = Base64.encode(buffer, 0 , read, Base64.DEFAULT);
-                                        buffer = Base64.decode(buffer, Base64.DEFAULT);
+                                        buffer = Base64.decode(buffer, 0, read, Base64.DEFAULT);
 
 
                                         Log.d(TAG, "Read: " +
-                                                new String(buffer, 0, read, Charset.forName(BltConstants.CHARSET)));
+                                                new String(buffer, Charset.forName(BltConstants.CHARSET)));
                                         builder.append(
                                                 new String(
-                                                        buffer, 0, read, Charset.forName(BltConstants.CHARSET))
+                                                        buffer, Charset.forName(BltConstants.CHARSET))
                                         );
 
                                         if(builder.substring(builder.length()-2).equals("\r\n")){

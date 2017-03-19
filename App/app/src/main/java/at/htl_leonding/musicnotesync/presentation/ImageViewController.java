@@ -34,15 +34,16 @@ public class ImageViewController extends BaseController {
     private ImageViewModel mModel;
 
     public ImageViewController(ImageViewActivity activity){
+        super(activity, new ImageViewModel());
         mActivity = activity;
-        mModel = new ImageViewModel(this);
+        mModel = (ImageViewModel) baseModel;
+
         mModel.setImageView(
                 (TouchImageView) mActivity.findViewById(R.id.noteSheetView));
 
         getFilenameFromIntent();
         getFileAsBitmap();
         setupImageView();
-
         getBluetoothDevices();
 
         mModel.getImageView().invalidate();
@@ -61,11 +62,13 @@ public class ImageViewController extends BaseController {
             if(intent.hasExtra(ImageViewActivity.EXTRA_CLIENTS)){
                 String[] addresses = intent.getStringArrayExtra(ImageViewActivity.EXTRA_CLIENTS);
 
-                for (String address : addresses) {
-                    mModel.getBluetoothDevices().add
-                            (
-                                    BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address)
-                            );
+                if(addresses != null) {
+                    for (String address : addresses) {
+                        mModel.getBluetoothDevices().add
+                                (
+                                        BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address)
+                                );
+                    }
                 }
             }
         }

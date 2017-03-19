@@ -98,14 +98,14 @@ public class NotesheetServerContext {
         }
     }
 
-    public Notesheet download(String uuid, String filename){
+    public File download(String uuid, String filename){
         if(uuid == null){
             return null;
         }
 
-        AsyncTask<String, Void, Notesheet> task = new AsyncTask<String, Void, Notesheet>() {
+        AsyncTask<String, Void, File> task = new AsyncTask<String, Void, File>() {
             @Override
-            protected Notesheet doInBackground(String... params) {
+            protected File doInBackground(String... params) {
                 if(params.length < 2){
                     return null;
                 }
@@ -147,12 +147,11 @@ public class NotesheetServerContext {
                     fileOutputStream.close();
                     inputStream.close();
 
-                    //DataFacade.insertNotesheet(uuid, DataFacade.DIRECTORY_BLUETOOTH, filename)
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                return null;
+                return file;
             }
         };
         task.execute(uuid, filename);

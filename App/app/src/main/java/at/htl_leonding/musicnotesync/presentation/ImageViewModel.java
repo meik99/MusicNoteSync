@@ -7,19 +7,20 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.BaseModel;
+
 /**
  * Created by michael on 1/30/17.
  */
 
-public class ImageViewModel {
-    private final ImageViewController mController;
+public class ImageViewModel extends BaseModel {
     private String filename;
     private Bitmap bitmap;
     private TouchImageView imageView;
     private List<BluetoothDevice> bluetoothDevices;
 
-    public ImageViewModel(ImageViewController imageViewController) {
-        mController = imageViewController;
+    public ImageViewModel() {
+        super();
     }
 
     public void setFilename(String filename) {

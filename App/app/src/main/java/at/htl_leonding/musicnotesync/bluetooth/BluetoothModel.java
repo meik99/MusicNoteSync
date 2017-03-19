@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.BaseModel;
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
@@ -14,7 +15,7 @@ import at.htl_leonding.musicnotesync.infrastructure.database.context.NotesheetCo
 /**
  * Created by michael on 12.09.16.
  */
-public class BluetoothModel{
+public class BluetoothModel extends BaseModel {
     private final List<BluetoothDevice> mDevices;
     private final List<BluetoothDevice> mSelectedDevices;
     private NotesheetContext notesheetFacade;
@@ -25,14 +26,9 @@ public class BluetoothModel{
     private Notesheet activeNotesheet;
     private String bluetoothAction;
 
-    public BluetoothModel(BluetoothActivity bluetoothActivity){
+    public BluetoothModel(){
         mDevices = new LinkedList<>();
         mSelectedDevices = new LinkedList<>();
-        mContext = bluetoothActivity;
-    }
-
-    public List<BluetoothDevice> addBluetoothDevice(BluetoothDevice device){
-        return addBluetoothDeviceToList(device, mDevices);
     }
 
     public List<BluetoothDevice> addSelectedBluetoothDevice(BluetoothDevice device){
@@ -100,41 +96,6 @@ public class BluetoothModel{
         return notesheetFacade;
     }
 
-    public DirectoryContext getDirectoryFacade() {
-        if(directoryFacade == null){
-            directoryFacade = new DirectoryContext(mContext);
-        }
-        return directoryFacade;
-    }
-
-    public void setServerListener(ServerListenerImpl serverListener) {
-        this.serverListener = serverListener;
-    }
-
-    public ServerListenerImpl getServerListener() {
-        return serverListener;
-    }
-
-    public void setDeviceAdapter(BluetoothDeviceAdapter deviceAdapter) {
-        this.mDeviceAdapter = deviceAdapter;
-    }
-
-    public BluetoothDeviceAdapter getmDeviceAdapter() {
-        return mDeviceAdapter;
-    }
-
-    public void setmDeviceAdapter(BluetoothDeviceAdapter mDeviceAdapter) {
-        this.mDeviceAdapter = mDeviceAdapter;
-    }
-
-    public BluetoothDeviceAdapter getDeviceAdapter() {
-        return mDeviceAdapter;
-    }
-
-    public void setActiveNotesheet(Notesheet activeNotesheet) {
-        this.activeNotesheet = activeNotesheet;
-    }
-
     public Notesheet getActiveNotesheet() {
         return activeNotesheet;
     }
@@ -145,5 +106,9 @@ public class BluetoothModel{
 
     public String getBluetoothAction() {
         return bluetoothAction;
+    }
+
+    public void setActiveNotesheet(Notesheet activeNotesheet) {
+        this.activeNotesheet = activeNotesheet;
     }
 }

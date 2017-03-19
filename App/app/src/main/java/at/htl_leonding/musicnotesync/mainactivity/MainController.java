@@ -47,14 +47,10 @@ public class MainController extends BaseController{
     private MainModel mMainModel;
     private MainActivity mMainActivity;
 
-    private NotesheetFacade notesheetFacade;
-    private DirectoryFacade directoryFacade;
-
     public MainController(MainActivity activity){
+        super(activity, new MainModel(activity));
         mMainActivity = activity;
-        mMainModel = new MainModel(activity, this);
-        directoryFacade = new DirectoryFacade(activity);
-        notesheetFacade = new NotesheetFacade(activity);
+        mMainModel = (MainModel) baseModel;
 
         mMainModel.setCurrentDirectory(
                 directoryFacade.getRootDirectory()

@@ -71,4 +71,31 @@ public class NotesheetFacade {
         notesheetImpl.setParentId(targetDirectory.getId());
         return notesheetContext.update(notesheetImpl);
     }
+
+    public Notesheet downloadNotesheet(String uuid, String filename, Directory activeDirectory) {
+        Notesheet result = notesheetContext.findByUUID(uuid);
+
+        if(result == null){
+            File file = notesheetServerContext.download(uuid, filename);
+            long id = activeDirectory == null ? 1 : activeDirectory.getId();
+
+            if(file != null){
+                NotesheetImpl notesheet = new NotesheetImpl(uuid);
+                notesheet.setParentId(id);
+                notesheet.setName(filename);
+                notesheet.setPath(file.getPath());
+                result = notesheetContext.create(notesheet);
+            }
+        }
+
+        return result;
+    }
+
+    public Notesheet findByUUID(String uuid) {
+        return notesheetContext.findByUUID(uuid);
+    }
+
+    public void upload(Notesheet notesheet) {
+        notesheetServerContext.upload(notesheet);
+    }
 }

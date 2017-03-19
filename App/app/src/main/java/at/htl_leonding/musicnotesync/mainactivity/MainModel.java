@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.BaseModel;
 import at.htl_leonding.musicnotesync.bluetooth.listener.ServerListenerImpl;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Directory;
 import at.htl_leonding.musicnotesync.infrastructure.database.context.DirectoryContext;
@@ -19,14 +20,14 @@ import at.htl_leonding.musicnotesync.management.ManagementOptionsClickListener;
 /**
  * Created by michael on 11.08.16.
  */
-public class MainModel {
+public class MainModel extends BaseModel {
     private File photoFile;
     private Storage storage;
     private Object movedObject;
     private Directory currentDirectory;
     private Object objectToRename;
 
-    public MainModel(Context context, MainController mainController){
+    public MainModel(Context context){
         storage = new Storage(context);
     }
 

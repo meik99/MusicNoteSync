@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.blt.BltRepository;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
 import at.htl_leonding.musicnotesync.presentation.ImageViewController;
 import at.htl_leonding.musicnotesync.presentation.TouchImageView;
@@ -49,20 +50,21 @@ public class TouchImageViewZoomListener implements ZoomListener {
                         .append(";")
                         .append(view.getScaleType().name());
 
-                AsyncTask task = new AsyncTask() {
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-                        for (BluetoothDevice device :
-                                mBluetoothDevices) {
-                            Client client = new Client();
-                            client.connect(device);
-                            client.sendMessage(builder.toString());
-                        }
-
-                        return null;
-                    }
-                };
-                task.execute();
+                BltRepository.getInstance().sendMessage(builder.toString());
+//                AsyncTask task = new AsyncTask() {
+//                    @Override
+//                    protected Object doInBackground(Object[] params) {
+//                        for (BluetoothDevice device :
+//                                mBluetoothDevices) {
+//                            Client client = new Client();
+//                            client.connect(device);
+//                            client.sendMessage(builder.toString());
+//                        }
+//
+//                        return null;
+//                    }
+//                };
+//                task.execute();
             }
         });
 

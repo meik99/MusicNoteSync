@@ -39,10 +39,9 @@ public class BluetoothController extends BaseController{
      *                          assigned to.
      */
     public BluetoothController(BluetoothActivity bluetoothActivity){
+        super(bluetoothActivity, new BluetoothModel());
         mBluetoothActivity = bluetoothActivity;
-        mModel = new BluetoothModel(mBluetoothActivity);
-
-        mModel.setDeviceAdapter(new BluetoothDeviceAdapter(mBluetoothActivity, this));
+        mModel = (BluetoothModel) baseModel;
     }
 
     public void showToast(@StringRes int stringRes){
@@ -62,11 +61,11 @@ public class BluetoothController extends BaseController{
 
                 return new BluetoothSendNotesheetClickListener(
                         this,
-                        mModel.getNotesheetFacade().findById(entityId));
+                        notesheetFacade.findById(entityId));
             }else if(operationId == BluetoothActivity.OPEN_NOTESHEET){
                 return new BluetoothOpenNotesheetClickListener(
                         this,
-                        mModel.getNotesheetFacade().findById(entityId)
+                        notesheetFacade.findById(entityId)
                 );
             }
         }
@@ -105,6 +104,9 @@ public class BluetoothController extends BaseController{
 
     public void sendNotesheetMetadata(final Notesheet notesheet) {
         final List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
+
+        notesheetFacade.upload(notesheet);
+
         mModel.setActiveNotesheet(notesheet);
         mModel.setBluetoothAction(SEND_METADATA);
 
@@ -140,42 +142,6 @@ public class BluetoothController extends BaseController{
         snackbar.show();
     }
 
-    public void openNotesheet(Notesheet notesheet) {
-        StringBuilder builder = new StringBuilder();
-        String[] adresses = new String[mModel.getSelectedBluetoothDevices().size()];
-        List<BluetoothDevice> selectedBluetoothDevices = mModel.getSelectedBluetoothDevices();
-
-        for (int i = 0; i < selectedBluetoothDevices.size(); i++) {
-            BluetoothDevice clientDevice = selectedBluetoothDevices.get(i);
-            builder.append(Notesheet.class.getSimpleName())
-                    .append(";")
-                    .append(notesheet.getUUID());
-
-            AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
-                @Override
-                protected Void doInBackground(Object... params) {
-                    Client client = new Client();
-                    client.connect((BluetoothDevice) params[0]);
-                    client.sendMessage((String) params[1]);
-
-                    return null;
-                }
-
-            };
-            task.execute(clientDevice, builder.toString());
-
-
-            builder = new StringBuilder();
-
-            adresses[i] = selectedBluetoothDevices.get(i).getAddress();
-        }
-
-        Intent notesheetView = new Intent(mBluetoothActivity, ImageViewActivity.class);
-        notesheetView.putExtra(ImageViewActivity.EXTRA_PATH_NAME, notesheet.getPath());
-        notesheetView.putExtra(ImageViewActivity.EXTRA_CLIENTS, adresses);
-        mBluetoothActivity.startActivity(notesheetView);
-    }
-
     @Override
     public void onConnected(BltRepository.BltConnection connection) {
 
@@ -185,6 +151,7 @@ public class BluetoothController extends BaseController{
     public void onBulkConnected(List<BltRepository.BltConnection> connections) {
         BltRepository.getInstance().removeBltConnectListenerListener(this);
 
+
         if(mModel.getBluetoothAction() != null &&
                 mModel.getBluetoothAction().equals(SEND_METADATA)) {
             BltRepository.getInstance().sendMessage(mModel.getActiveNotesheet().getMetadata());
@@ -193,5 +160,14 @@ public class BluetoothController extends BaseController{
 //                    R.string.transfer_successful,
 //                    Snackbar.LENGTH_SHORT).show();
         }
+
+        super.onBulkConnected(connections);
+    }
+
+    public void openNotesheet(Notesheet notesheet) {
+        BltRepository.getInstance().sendMessage(
+                String.format("%1$s;%2$s", Notesheet.class.getSimpleName(), notesheet.getUUID())
+        );
+        super.openNotesheet(notesheet);
     }
 }
