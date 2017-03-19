@@ -224,9 +224,9 @@ public class BltRepository implements InputStreamListener {
                     connections.add(connection);
                 }
 
-
+                final List<BltConnectListener> tmpListener = connectListener;
                 for(BltConnectListener listener :
-                        BltRepository.getInstance().connectListener){
+                        tmpListener){
                     listener.onBulkConnected(connections);
                 }
 
