@@ -59,9 +59,8 @@ public class NotesheetEndpoint {
     }
 
     @GET
-    @Path("{uuid}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response download(@PathParam("uuid") String uuid){
+    public Response download(@HeaderParam("uuid") String uuid){
         final File file = new File(uuid);
         Response result = null;
 

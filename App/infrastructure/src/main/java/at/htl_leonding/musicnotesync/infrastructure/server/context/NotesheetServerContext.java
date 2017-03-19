@@ -23,10 +23,10 @@ import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
 public class NotesheetServerContext {
     private static int MEGABYTE = 1024000;
     private static final String PROTOCOL = "http";
-    private static final String HOST =
-            "vm91.htl-leonding.ac.at";
 //    private static final String HOST =
-//            "10.0.0.6";
+//            "vm91.htl-leonding.ac.at";
+    private static final String HOST =
+            "10.0.0.6";
     private static int PORT = 8080;
     private static final String PATH = "/musicnotesyncserver/api/notesheet";
     private final Context mContext;
@@ -125,8 +125,7 @@ public class NotesheetServerContext {
                 }
 
                 try {
-                    URL serverUrl = new URL(PROTOCOL, HOST, PORT,
-                            new String(PATH + "/" + URLEncoder.encode(uuid, "UTF-8")));
+                    URL serverUrl = new URL(PROTOCOL, HOST, PORT, PATH);
                     HttpURLConnection connection = (HttpURLConnection) serverUrl.openConnection();
 
                     connection.setDoInput(true);
@@ -134,7 +133,9 @@ public class NotesheetServerContext {
                     connection.setUseCaches(false);
                     connection.setRequestMethod("GET");
                     connection.setRequestProperty("Content-Type", "application/octet-stream");
+                    connection.setRequestProperty("uuid", uuid);
                     connection.setChunkedStreamingMode(MEGABYTE);
+
 
                     InputStream inputStream = connection.getInputStream();
                     FileOutputStream fileOutputStream = new FileOutputStream(file, false);

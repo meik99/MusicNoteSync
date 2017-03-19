@@ -146,9 +146,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refreshNotesheetArrayAdapter(){
-        mNotesheetArrayAdapter.setNotesheetObjects(
-                mController.getNotesheetObjects()
-        );
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mNotesheetArrayAdapter.setNotesheetObjects(
+                        mController.getNotesheetObjects()
+                );
+            }
+        });
     }
 
     @Override
