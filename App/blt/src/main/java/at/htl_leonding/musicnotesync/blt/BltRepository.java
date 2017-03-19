@@ -3,12 +3,17 @@ package at.htl_leonding.musicnotesync.blt;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Base64OutputStream;
+import android.util.Log;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +27,8 @@ import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
  */
 
 public class BltRepository implements InputStreamListener {
+    private static final String TAG = BltRepository.class.getSimpleName();
+
     @Override
     public void onMessageReceived(String message) {
         for (BltRepositoryListener listener :
@@ -267,9 +274,16 @@ public class BltRepository implements InputStreamListener {
                                     for (BltConnection connection :
                                             connections) {
                                         try {
+                                            byte[] messageBytes;
+
                                             currentMessage += "\r\n";
+                                            messageBytes = currentMessage.getBytes();
+                                            Log.d(TAG, "run: " + Arrays.toString(messageBytes));
+                                            currentMessage.getBytes(Charset.forName("8859_1"));
+                                            Log.d(TAG, "run: " + Arrays.toString(messageBytes));
+
                                             connection.socket.getOutputStream().write(
-                                                    currentMessage.getBytes()
+                                                    messageBytes
                                             );
                                             connection.socket.getOutputStream().flush();
                                         } catch (IOException e) {

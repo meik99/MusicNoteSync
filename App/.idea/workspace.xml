@@ -9,10 +9,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b9f3953a-6ab7-42cb-8bcc-5cf30430f2b5" name="Default" comment="">
+    <list default="true" id="b9f3953a-6ab7-42cb-8bcc-5cf30430f2b5" name="Default" comment="Added flushing outputstream and modified base64 en/de-coding">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" afterPath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" afterPath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" />
     </list>
     <ignored path="App.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -69,16 +68,27 @@
       <file leaf-file-name="BltRepository.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="273" column="88" selection-start-line="273" selection-start-column="88" selection-end-line="273" selection-end-column="88" />
+            <state relative-caret-position="285">
+              <caret line="285" column="64" selection-start-line="285" selection-start-column="64" selection-end-line="285" selection-end-column="64" />
               <folding>
-                <element signature="e#3291#3747#0" expanded="true" />
-                <element signature="e#3746#3747#0" expanded="true" />
-                <element signature="e#6645#7299#0" expanded="true" />
-                <element signature="e#7298#7299#0" expanded="true" />
-                <element signature="e#7751#9797#0" expanded="true" />
-                <element signature="e#9796#9797#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#3517#3973#0" expanded="true" />
+                <element signature="e#3972#3973#0" expanded="true" />
+                <element signature="e#6871#7525#0" expanded="true" />
+                <element signature="e#7524#7525#0" expanded="true" />
+                <element signature="e#7977#10453#0" expanded="true" />
+                <element signature="e#10452#10453#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Build.java" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Android/Sdk/sources/android-25/android/os/Build.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="172">
+              <caret line="583" column="32" selection-start-line="583" selection-start-column="32" selection-end-line="583" selection-end-column="32" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -136,23 +146,11 @@
       <file leaf-file-name="WatchableBase64InputStream.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+            <state relative-caret-position="209">
+              <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
               <folding>
                 <element signature="e#1299#3311#0" expanded="true" />
                 <element signature="e#3310#3311#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SocketWatcher.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/bluetooth/socket/SocketWatcher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -4741,7 +4739,14 @@
       <option name="project" value="LOCAL" />
       <updated>1489928516832</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added flushing outputstream and modified base64 en/de-coding">
+      <created>1489929569050</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1489929569050</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -4824,7 +4829,8 @@
     <MESSAGE value="Removing unused connections" />
     <MESSAGE value="Patched receier leak" />
     <MESSAGE value="Watcher in inputstream stops after exceeding max amounts of retries" />
-    <option name="LAST_COMMIT_MESSAGE" value="Watcher in inputstream stops after exceeding max amounts of retries" />
+    <MESSAGE value="Added flushing outputstream and modified base64 en/de-coding" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added flushing outputstream and modified base64 en/de-coding" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -4877,7 +4883,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/NotesheetFacade.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/infrastructure/facade/DirectoryFacade.java" />
     <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/listener/InputStreamListener.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5249,8 +5254,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+        <state relative-caret-position="209">
+          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
           <folding>
             <element signature="e#1299#3311#0" expanded="true" />
             <element signature="e#3310#3311#0" expanded="true" />
@@ -5258,17 +5263,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-25/android/os/Build.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="583" column="32" selection-start-line="583" selection-start-column="32" selection-end-line="583" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="273" column="88" selection-start-line="273" selection-start-column="88" selection-end-line="273" selection-end-column="88" />
+        <state relative-caret-position="285">
+          <caret line="285" column="64" selection-start-line="285" selection-start-column="64" selection-end-line="285" selection-end-column="64" />
           <folding>
-            <element signature="e#3291#3747#0" expanded="true" />
-            <element signature="e#3746#3747#0" expanded="true" />
-            <element signature="e#6645#7299#0" expanded="true" />
-            <element signature="e#7298#7299#0" expanded="true" />
-            <element signature="e#7751#9797#0" expanded="true" />
-            <element signature="e#9796#9797#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#3517#3973#0" expanded="true" />
+            <element signature="e#3972#3973#0" expanded="true" />
+            <element signature="e#6871#7525#0" expanded="true" />
+            <element signature="e#7524#7525#0" expanded="true" />
+            <element signature="e#7977#10453#0" expanded="true" />
+            <element signature="e#10452#10453#0" expanded="true" />
           </folding>
         </state>
       </provider>
