@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.blt.BltConstants;
 import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
 
 /**
@@ -43,6 +44,7 @@ public class WatchableBase64InputStream extends Base64InputStream {
                 new Runnable() {
                     @Override
                     public void run() {
+                        int tryCount = 0;
                         while(isWatching){
                             StringBuilder builder = new StringBuilder();
                             byte[] buffer = new byte[MEGABYTE];
@@ -51,19 +53,23 @@ public class WatchableBase64InputStream extends Base64InputStream {
                             if(WatchableBase64InputStream.this != null &&
                                     WatchableBase64InputStream.this.in != null) {
                                 try {
-                                    do {
-                                        read = WatchableBase64InputStream.this.read(buffer);
+                                    while((read = WatchableBase64InputStream.this.read(buffer)) > -1) {
                                         Log.d(TAG, "Read: " + new String(buffer, 0, read));
                                         builder.append(new String(buffer, 0, read));
-                                    } while (read >= 0);
+                                    }
                                     Log.d(TAG, "run: exit loop");
                                 } catch (IOException | NullPointerException e) {
-                                        e.printStackTrace();
+                                    e.printStackTrace();
+                                    if(tryCount++ >= BltConstants.TRY_MAX){
+                                        isWatching = false;
+                                    }
                                 }
 
-                                for (InputStreamListener listener :
-                                        listeners) {
-                                    listener.onMessageReceived(builder.toString());
+                                if(builder.length() > 0) {
+                                    for (InputStreamListener listener :
+                                            listeners) {
+                                        listener.onMessageReceived(builder.toString());
+                                    }
                                 }
                             }
                         }

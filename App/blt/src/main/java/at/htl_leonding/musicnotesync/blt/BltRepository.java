@@ -170,7 +170,9 @@ public class BltRepository implements InputStreamListener {
             }
         }
 
-        connections.remove(index);
+        if(index > -1) {
+            connections.remove(index);
+        }
 
         try {
             BluetoothSocket socket =
