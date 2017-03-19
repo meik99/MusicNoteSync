@@ -101,7 +101,10 @@ public class BltService extends Service {
             }else{
                 mBluetoothState = BluetoothState.OFF;
                 adapter.cancelDiscovery();
-                mBltServer.stopServer();
+
+                if(mBltServer != null) {
+                    mBltServer.stopServer();
+                }
             }
 
         }

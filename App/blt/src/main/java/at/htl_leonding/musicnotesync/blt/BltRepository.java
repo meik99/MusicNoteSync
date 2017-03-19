@@ -111,27 +111,31 @@ public class BltRepository implements InputStreamListener {
     void addConnection(BluetoothSocket socket){
         BluetoothDevice device = socket.getRemoteDevice();
         boolean isKnown = false;
+        int index = -1;
 
         for (BltConnection connection :
                 connections) {
             if(connection.device.getAddress().equals(device.getAddress())){
                 isKnown = true;
+                index = connections.indexOf(connection);
             }
         }
 
-        if(isKnown == false){
-            BltConnection connection = new BltConnection();
-            connection.device = socket.getRemoteDevice();
-            try {
-                connection.inputStream =
-                        new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
-                connection.outputStream =
-                        new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+        if(isKnown == true){
+            connections.remove(index);
+        }
 
-                connection.inputStream.addListener(this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        BltConnection connection = new BltConnection();
+        connection.device = socket.getRemoteDevice();
+        try {
+            connection.inputStream =
+                    new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
+            connection.outputStream =
+                    new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+
+            connection.inputStream.addListener(this);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -155,37 +159,40 @@ public class BltRepository implements InputStreamListener {
     private BltConnection connectSyncron(BluetoothDevice device){
         boolean isKnown = false;
         BltConnection connection = null;
+        int index = -1;
 
         for (BltConnection conn :
                 connections) {
             if (conn.device.getAddress().equals(device.getAddress())){
                 isKnown = true;
                 connection =  conn;
+                index = connections.indexOf(conn);
             }
         }
 
-        if(isKnown == false) {
-            try {
-                BluetoothSocket socket =
-                        device.createRfcommSocketToServiceRecord(BltConstants.CONNECTION_UUID);
-                socket.connect();
+        connections.remove(index);
 
-                BltConnection conn = new BltConnection();
+        try {
+            BluetoothSocket socket =
+                    device.createRfcommSocketToServiceRecord(BltConstants.CONNECTION_UUID);
+            socket.connect();
 
-                conn.device = device;
-                conn.socket = socket;
-                conn.inputStream =
-                        new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
-                conn.inputStream.addListener(this);
-                conn.outputStream =
-                        new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+            BltConnection conn = new BltConnection();
 
-                BltRepository.getInstance().connections.add(conn);
-                connection = conn;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            conn.device = device;
+            conn.socket = socket;
+            conn.inputStream =
+                    new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
+            conn.inputStream.addListener(this);
+            conn.outputStream =
+                    new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+
+            BltRepository.getInstance().connections.add(conn);
+            connection = conn;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return connection;
     }
 

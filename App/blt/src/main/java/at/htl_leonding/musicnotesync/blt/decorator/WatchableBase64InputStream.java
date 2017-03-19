@@ -2,6 +2,7 @@ package at.htl_leonding.musicnotesync.blt.decorator;
 
 import android.util.Base64;
 import android.util.Base64InputStream;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
  */
 
 public class WatchableBase64InputStream extends Base64InputStream {
+    private static final String TAG = WatchableBase64InputStream.class.getSimpleName();
     private List<InputStreamListener> listeners;
     private boolean isWatching = false;
     private static final int MEGABYTE = 1024000;
@@ -51,17 +53,12 @@ public class WatchableBase64InputStream extends Base64InputStream {
                                 try {
                                     do {
                                         read = WatchableBase64InputStream.this.read(buffer);
+                                        Log.d(TAG, "Read: " + new String(buffer, 0, read));
                                         builder.append(new String(buffer, 0, read));
                                     } while (read >= 0);
+                                    Log.d(TAG, "run: exit loop");
                                 } catch (IOException | NullPointerException e) {
-
-                                    if(e instanceof IOException){
-                                        if(read != -1){
-                                            e.printStackTrace();
-                                        }else{
-                                            isWatching = false;
-                                        }
-                                    }
+                                        e.printStackTrace();
                                 }
 
                                 for (InputStreamListener listener :
