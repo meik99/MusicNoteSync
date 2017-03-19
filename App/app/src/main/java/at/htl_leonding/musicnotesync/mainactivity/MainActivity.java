@@ -34,6 +34,19 @@ public class MainActivity extends AppCompatActivity {
     private NotesheetArrayAdapter mNotesheetArrayAdapter;
     private CheckBox mChkMakeDiscoverable;
 
+
+    private BroadcastReceiver mBltScanModeChange = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int intentState =
+                    intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, -1);
+            if(intentState !=
+                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
+                mChkMakeDiscoverable.setChecked(false);
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,19 +74,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         IntentFilter bltScanModeChanged =
                                 new IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-                        BroadcastReceiver bltScanModeChange = new BroadcastReceiver() {
-                            @Override
-                            public void onReceive(Context context, Intent intent) {
-                                int intentState =
-                                        intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, -1);
-                                if(intentState !=
-                                        BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
-                                    mChkMakeDiscoverable.setChecked(false);
-                                }
-                            }
-                        };
 
-                        registerReceiver(bltScanModeChange, bltScanModeChanged);
+                        registerReceiver(mBltScanModeChange, bltScanModeChanged);
 
                         Intent discoverableIntent =
                                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -143,5 +145,15 @@ public class MainActivity extends AppCompatActivity {
         mNotesheetArrayAdapter.setNotesheetObjects(
                 mController.getNotesheetObjects()
         );
+    }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            unregisterReceiver(mBltScanModeChange);
+        }catch(IllegalArgumentException e){
+            //Not catching because bullshit
+        }
+        super.onDestroy();
     }
 }
