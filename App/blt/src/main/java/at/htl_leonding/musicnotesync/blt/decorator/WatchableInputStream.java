@@ -1,5 +1,6 @@
 package at.htl_leonding.musicnotesync.blt.decorator;
 
+import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 
@@ -78,8 +79,9 @@ public class WatchableInputStream extends InputStream {
                                 }
 
                                 if(builder.length() > 0) {
+                                    final List<InputStreamListener> tmpListener = listeners;
                                     for (InputStreamListener listener :
-                                            listeners) {
+                                            tmpListener) {
                                         listener.onMessageReceived(
                                                 builder.toString().replace("\r\n", ""));
                                     }

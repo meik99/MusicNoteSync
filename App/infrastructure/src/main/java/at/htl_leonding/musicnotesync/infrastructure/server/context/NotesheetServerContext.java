@@ -75,6 +75,7 @@ public class NotesheetServerContext {
                             outputStream.write(buffer, 0, read);
                         }
 
+                        outputStream.flush();
                         outputStream.close();
                         fileInputStream.close();
                     } catch (IOException e) {
@@ -127,7 +128,7 @@ public class NotesheetServerContext {
                     connection.setDoInput(true);
                     connection.setDoOutput(false);
                     connection.setUseCaches(false);
-                    connection.setRequestMethod("GET");
+                    connection.setRequestMethod("PUT");
                     connection.setRequestProperty("Content-Type", "application/octet-stream");
                     connection.setRequestProperty("uuid", uuid);
                     connection.setChunkedStreamingMode(MEGABYTE);

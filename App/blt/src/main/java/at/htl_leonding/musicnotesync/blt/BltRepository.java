@@ -3,6 +3,7 @@ package at.htl_leonding.musicnotesync.blt;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Base64;
 import android.util.Base64OutputStream;
 import android.util.Log;
@@ -66,8 +67,9 @@ public class BltRepository implements InputStreamListener {
     //region methods
     @Override
     public void onMessageReceived(String message) {
+        final List<BltRepositoryListener> tmpRepoListener = repositoryListeners;
         for (BltRepositoryListener listener :
-                repositoryListeners) {
+                tmpRepoListener) {
             listener.onMessageReceived(message);
         }
     }
