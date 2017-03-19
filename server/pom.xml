@@ -12,8 +12,8 @@
         <finalName>musicnotesyncserver</finalName>
     </build>
     <properties>
-        <maven.build.source>1.7</maven.build.source>
         <maven.build.target>1.7</maven.build.target>
+        <maven.build.source>1.7</maven.build.source>
     </properties>
 
     <dependencies>

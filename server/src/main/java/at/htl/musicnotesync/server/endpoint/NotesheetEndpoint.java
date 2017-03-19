@@ -4,6 +4,7 @@ import at.htl.musicnotesync.server.facade.NotesheetFacade;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,8 +13,8 @@ import java.io.*;
 /**
  * Created by michael on 12/7/16.
  */
-@Stateless
-@Path("notesheet")
+//@Stateless
+@Path("/notesheet")
 public class NotesheetEndpoint {
     private static final int MEGABYTE = 1024000;
 
@@ -58,9 +59,15 @@ public class NotesheetEndpoint {
         }
     }
 
-    @GET
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response download(@HeaderParam("uuid") String uuid){
+    public Response download(JsonObject jsonObject){
+        if(jsonObject == null || jsonObject.getString("uuid") == null){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        String uuid = jsonObject.getString("uuid");
+
         final File file = new File(uuid);
         Response result = null;
 

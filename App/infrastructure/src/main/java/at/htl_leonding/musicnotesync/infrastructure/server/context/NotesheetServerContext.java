@@ -30,10 +30,6 @@ public class NotesheetServerContext {
     private static int PORT = 8080;
     private static final String PATH = "/musicnotesyncserver/api/notesheet";
     private final Context mContext;
-    //    private static final String HOST =
-    //            "http://10.0.0.6:8080/musicnotesyncserver/api/notesheet";
-    //    private static final String HOST =
-    //            "http://192.168.0.10:8080/musicnotesyncserver/api/notesheet";
 
     public NotesheetServerContext(Context context){
         mContext = context;
@@ -69,7 +65,7 @@ public class NotesheetServerContext {
                         connection.setRequestProperty("Content-Type", "application/octet-stream");
                         connection.setRequestProperty("Content-Length", "" + file.length());
                         connection.setRequestProperty("filename", uuid);
-                        connection.setFixedLengthStreamingMode(file.length());
+                        connection.setChunkedStreamingMode(MEGABYTE);
 
                         buffer = new byte[MEGABYTE];
                         fileInputStream = new FileInputStream(file);
