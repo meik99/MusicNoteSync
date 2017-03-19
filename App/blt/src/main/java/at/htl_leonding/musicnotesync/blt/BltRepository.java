@@ -161,11 +161,11 @@ public class BltRepository implements InputStreamListener {
             conn.socket = socket;
             conn.inputStream =
                     new WatchableBase64InputStream(socket.getInputStream(),
-                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
+                            Base64.DEFAULT);
             conn.inputStream.addListener(this);
             conn.outputStream =
                     new Base64OutputStream(socket.getOutputStream(),
-                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
+                            Base64.DEFAULT);
 
             BltRepository.getInstance().connections.add(conn);
             connection = conn;
@@ -198,10 +198,10 @@ public class BltRepository implements InputStreamListener {
         try {
             connection.inputStream =
                     new WatchableBase64InputStream(socket.getInputStream(),
-                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
+                            Base64.DEFAULT);
             connection.outputStream =
                     new Base64OutputStream(socket.getOutputStream(),
-                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
+                            Base64.DEFAULT);
 
             connection.inputStream.addListener(this);
         } catch (IOException e) {
@@ -279,7 +279,7 @@ public class BltRepository implements InputStreamListener {
                                             currentMessage += "\r\n";
                                             messageBytes = currentMessage.getBytes();
                                             Log.d(TAG, "run: " + Arrays.toString(messageBytes));
-                                            currentMessage.getBytes(Charset.forName("8859_1"));
+                                            currentMessage.getBytes(Charset.forName(BltConstants.CHARSET));
                                             Log.d(TAG, "run: " + Arrays.toString(messageBytes));
 
                                             connection.socket.getOutputStream().write(

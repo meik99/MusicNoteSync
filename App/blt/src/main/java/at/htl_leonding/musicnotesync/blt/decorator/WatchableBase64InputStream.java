@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +56,14 @@ public class WatchableBase64InputStream extends Base64InputStream {
                                 boolean messageRead = false;
                                 try {
                                     while(messageRead == false && (read = WatchableBase64InputStream.this.read(buffer)) > -1) {
-                                        Log.d(TAG, "Read: " + new String(buffer, 0, read));
-                                        builder.append(new String(buffer, 0, read));
+                                        buffer = Base64.encode(buffer, 0 , read, Base64.DEFAULT);
+
+                                        Log.d(TAG, "Read: " +
+                                                new String(buffer, Charset.forName(BltConstants.CHARSET)));
+                                        builder.append(
+                                                new String(
+                                                        buffer, Charset.forName(BltConstants.CHARSET))
+                                        );
 
                                         if(builder.substring(builder.length()-2).equals("\r\n")){
                                             messageRead = true;

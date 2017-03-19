@@ -19,6 +19,7 @@ public class BltConstants {
     public static int BUFFER_MAX_SIZE = BUFFER_CONTENT_SIZE + BUFFER_FLAG_SIZE;
     public static int BUFFER_FILE_BUFFER = 1024*1024; //1 MB of file buffer
     public static int TRY_MAX = 10;
+    public static String CHARSET = "UTF-8";
 
     /**
      * Has value of -1. Use BUFFER_CONTENT_SIZE and BUFFER_FLAG_SIZE instead

@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         mNoteSheetRecyclerView.setAdapter(mNotesheetArrayAdapter);
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mChkMakeDiscoverable.setChecked(
+                BluetoothAdapter.getDefaultAdapter() != null &&
+                BluetoothAdapter.getDefaultAdapter().getScanMode() ==
+                        BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE);
         mChkMakeDiscoverable.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
