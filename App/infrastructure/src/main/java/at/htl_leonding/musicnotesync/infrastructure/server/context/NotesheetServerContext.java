@@ -118,6 +118,7 @@ public class NotesheetServerContext {
                                 "bluetooth" + File.separator
                 );
                 File file = new File(path + File.separator + filename);
+                File result = null;
 
                 if(path.exists() == false){
                     path.mkdirs();
@@ -147,11 +148,13 @@ public class NotesheetServerContext {
                     fileOutputStream.close();
                     inputStream.close();
 
+                    result = new File("bluetooth"  + File.separator + filename);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    result = null;
                 }
 
-                return new File("bluetooth"  + File.separator + filename);
+                return result;
             }
         };
         task.execute(uuid, filename);
