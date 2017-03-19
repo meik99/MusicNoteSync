@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.BaseController;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.blt.BltService;
 import at.htl_leonding.musicnotesync.bluetooth.BluetoothActivity;
@@ -40,7 +41,7 @@ import at.htl_leonding.musicnotesync.request.RequestCode;
 /**
  * Created by michael on 11.08.16.
  */
-public class MainController implements Serializable {
+public class MainController extends BaseController{
     private static final String TAG = MainController.class.getSimpleName();
 
     private MainModel mMainModel;

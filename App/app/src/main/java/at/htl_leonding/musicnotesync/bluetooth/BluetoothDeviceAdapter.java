@@ -98,4 +98,9 @@ public class BluetoothDeviceAdapter
         devices = BltRepository.getInstance().getFoundDevices();
         this.notifyDataSetChanged();
     }
+
+    @Override
+    public void onMessageReceived(String message) {
+
+    }
 }

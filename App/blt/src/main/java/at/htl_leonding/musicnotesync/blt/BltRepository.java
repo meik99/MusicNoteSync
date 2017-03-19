@@ -51,6 +51,7 @@ public class BltRepository implements InputStreamListener {
         public BluetoothDevice device;
         public WatchableBase64InputStream inputStream;
         public Base64OutputStream outputStream;
+        public BluetoothSocket socket;
     }
     private static BltRepository instance = null;
 
@@ -153,12 +154,13 @@ public class BltRepository implements InputStreamListener {
 
     private BltConnection connectSyncron(BluetoothDevice device){
         boolean isKnown = false;
+        BltConnection connection = null;
 
-        for (BltConnection connection :
+        for (BltConnection conn :
                 connections) {
-            if (connection.device.getAddress().equals(device.getAddress())){
+            if (conn.device.getAddress().equals(device.getAddress())){
                 isKnown = true;
-                return connection;
+                connection =  conn;
             }
         }
 
@@ -166,21 +168,25 @@ public class BltRepository implements InputStreamListener {
             try {
                 BluetoothSocket socket =
                         device.createRfcommSocketToServiceRecord(BltConstants.CONNECTION_UUID);
-                BltConnection connection = new BltConnection();
+                socket.connect();
 
-                connection.device = device;
-                connection.inputStream =
+                BltConnection conn = new BltConnection();
+
+                conn.device = device;
+                conn.socket = socket;
+                conn.inputStream =
                         new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
-                connection.outputStream =
+                conn.inputStream.addListener(this);
+                conn.outputStream =
                         new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
 
-                BltRepository.getInstance().connections.add(connection);
-                return connection;
+                BltRepository.getInstance().connections.add(conn);
+                connection = conn;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return null;
+        return connection;
     }
 
 
@@ -241,13 +247,15 @@ public class BltRepository implements InputStreamListener {
                                         skipCount++;
                                         sendMessage = false;
                                     }
+                                }else{
+                                    sendMessage = true;
                                 }
 
                                 if(sendMessage == true) {
                                     for (BltConnection connection :
                                             connections) {
                                         try {
-                                            connection.outputStream.write(
+                                            connection.socket.getOutputStream().write(
                                                     currentMessage.getBytes()
                                             );
                                         } catch (IOException e) {
@@ -264,7 +272,7 @@ public class BltRepository implements InputStreamListener {
     }
 
 
-    public void addBltConnectListenerListener(BltConnectListener listener){
+    public void addConnectListener(BltConnectListener listener){
         if(listener != null && connectListener.contains(listener) == false){
             connectListener.add(listener);
         }

@@ -25,7 +25,7 @@ public class BltService extends Service {
     public static final String TAG = BltService.class.getSimpleName();
 
     private BluetoothState mBluetoothState;
-    private Thread mBltServer;
+    private BltServerThread mBltServer;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -44,7 +44,7 @@ public class BltService extends Service {
 
     private void waitForConnection() {
        if(mBltServer == null || mBltServer.isAlive() == false){
-           mBltServer = new Thread(new BltServerThread(this));
+           mBltServer = new BltServerThread(this);
            mBltServer.start();
        }
     }
@@ -101,6 +101,7 @@ public class BltService extends Service {
             }else{
                 mBluetoothState = BluetoothState.OFF;
                 adapter.cancelDiscovery();
+                mBltServer.stopServer();
             }
 
         }

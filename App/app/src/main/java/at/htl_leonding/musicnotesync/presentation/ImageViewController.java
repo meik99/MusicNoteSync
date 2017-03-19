@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.io.File;
 
+import at.htl_leonding.musicnotesync.BaseController;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Server;
 import at.htl_leonding.musicnotesync.presentation.control.move.MoveHandler;
@@ -23,7 +24,7 @@ import static at.htl_leonding.musicnotesync.presentation.ImageViewActivity.EXTRA
  * Created by michael on 1/30/17.
  */
 
-public class ImageViewController implements Server.ServerListener {
+public class ImageViewController extends BaseController {
     public static final String MOVE = "move";
     public static final String ZOOM = "zoom";
 
@@ -51,8 +52,6 @@ public class ImageViewController implements Server.ServerListener {
         mModel.getImageView().setOnTouchImageViewListener(
                 new TouchImageViewMoveListener(mActivity, mModel.getBluetoothDevices())
         );
-
-        Server.getInstance().addListener(this);
     }
 
     private void getBluetoothDevices(){
@@ -125,12 +124,7 @@ public class ImageViewController implements Server.ServerListener {
     }
 
     @Override
-    public void onServerDeviceConnected(BluetoothSocket socket) {
-
-    }
-
-    @Override
-    public void onServerMessageReceived(BluetoothSocket socket, String message) {
+    public void onMessageReceived (String message) {
         String[] data = message.split(";");
         if(data[0].equals(ZOOM) || data[0].equals(MOVE)){
             final ZoomHandler handler = new ZoomHandler(data);
@@ -154,10 +148,7 @@ public class ImageViewController implements Server.ServerListener {
                 }
             });
         }
-    }
 
-    @Override
-    public void onServerDeviceDisconnected(BluetoothSocket socket) {
-
+        super.onMessageReceived(message);
     }
 }

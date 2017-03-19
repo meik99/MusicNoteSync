@@ -17,6 +17,7 @@ import at.htl_leonding.musicnotesync.blt.listener.InputStreamListener;
 public class WatchableBase64InputStream extends Base64InputStream {
     private List<InputStreamListener> listeners;
     private boolean isWatching = false;
+    private static final int MEGABYTE = 1024000;
     /**
      * An InputStream that performs Base64 decoding on the data read
      * from the wrapped stream.
@@ -42,21 +43,31 @@ public class WatchableBase64InputStream extends Base64InputStream {
                     public void run() {
                         while(isWatching){
                             StringBuilder builder = new StringBuilder();
-                            byte[] buffer = new byte[Integer.MAX_VALUE];
+                            byte[] buffer = new byte[MEGABYTE];
                             int read = -1;
 
-                            try {
-                                do{
-                                    read = WatchableBase64InputStream.this.read(buffer);
-                                    builder.append(new String(buffer, 0, read));
-                                }while(read >= 0);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            if(WatchableBase64InputStream.this != null &&
+                                    WatchableBase64InputStream.this.in != null) {
+                                try {
+                                    do {
+                                        read = WatchableBase64InputStream.this.read(buffer);
+                                        builder.append(new String(buffer, 0, read));
+                                    } while (read >= 0);
+                                } catch (IOException | NullPointerException e) {
 
-                            for (InputStreamListener listener :
-                                    listeners) {
-                                listener.onMessageReceived(builder.toString());
+                                    if(e instanceof IOException){
+                                        if(read != -1){
+                                            e.printStackTrace();
+                                        }else{
+                                            isWatching = false;
+                                        }
+                                    }
+                                }
+
+                                for (InputStreamListener listener :
+                                        listeners) {
+                                    listener.onMessageReceived(builder.toString());
+                                }
                             }
                         }
                     }

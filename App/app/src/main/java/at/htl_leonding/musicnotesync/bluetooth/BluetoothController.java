@@ -1,8 +1,6 @@
 package at.htl_leonding.musicnotesync.bluetooth;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -13,19 +11,19 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import at.htl_leonding.musicnotesync.BaseController;
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.blt.BltRepository;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothOpenNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothSendNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
-import at.htl_leonding.musicnotesync.infrastructure.server.context.NotesheetServerContext;
 import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
 
 /**
  * Created by michael on 12.09.16.
  */
-public class BluetoothController implements BltRepository.BltConnectListener {
+public class BluetoothController extends BaseController{
     private final static String TAG = BluetoothController.class.getSimpleName();
 
     public static final int SET_DISCOVERABLE_REQUEST_CODE = 100;
@@ -110,7 +108,7 @@ public class BluetoothController implements BltRepository.BltConnectListener {
         mModel.setActiveNotesheet(notesheet);
         mModel.setBluetoothAction(SEND_METADATA);
 
-        BltRepository.getInstance().addBltConnectListenerListener(this);
+        BltRepository.getInstance().addConnectListener(this);
         BltRepository.getInstance().bulkConnect(devices);
     }
 
@@ -129,6 +127,7 @@ public class BluetoothController implements BltRepository.BltConnectListener {
     }
 
     public void sendNotesheet(Notesheet notesheet){
+        sendNotesheetMetadata(notesheet);
     }
 
     public void showSnackbar(@StringRes int stringRes) {
@@ -190,9 +189,9 @@ public class BluetoothController implements BltRepository.BltConnectListener {
                 mModel.getBluetoothAction().equals(SEND_METADATA)) {
             BltRepository.getInstance().sendMessage(mModel.getActiveNotesheet().getMetadata());
 
-            Snackbar.make(mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-                    R.string.transfer_successful,
-                    Snackbar.LENGTH_SHORT).show();
+//            Snackbar.make(mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
+//                    R.string.transfer_successful,
+//                    Snackbar.LENGTH_SHORT).show();
         }
     }
 }

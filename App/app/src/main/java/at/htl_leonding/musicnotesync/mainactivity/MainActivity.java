@@ -1,7 +1,10 @@
 package at.htl_leonding.musicnotesync.mainactivity;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.CheckBox;
 
 import at.htl_leonding.musicnotesync.R;
 import at.htl_leonding.musicnotesync.helper.permission.PermissionHelper;
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mOpenAddDialogButton;
 
     private NotesheetArrayAdapter mNotesheetArrayAdapter;
+    private CheckBox mChkMakeDiscoverable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +49,40 @@ public class MainActivity extends AppCompatActivity {
                 new NotesheetClickListener(mController),
                 new ManagementOptionsClickListener(mController)
         );
+        mChkMakeDiscoverable = (CheckBox) findViewById(R.id.chkMakeDiscoverable);
 
         mOpenAddDialogButton.setOnClickListener(new OpenAddDialogClickListener(this, mController));
         mNoteSheetRecyclerView.setAdapter(mNotesheetArrayAdapter);
         mNoteSheetRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mChkMakeDiscoverable.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        IntentFilter bltScanModeChanged =
+                                new IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+                        BroadcastReceiver bltScanModeChange = new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                int intentState =
+                                        intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, -1);
+                                if(intentState !=
+                                        BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
+                                    mChkMakeDiscoverable.setChecked(false);
+                                }
+                            }
+                        };
+
+                        registerReceiver(bltScanModeChange, bltScanModeChanged);
+
+                        Intent discoverableIntent =
+                                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(
+                                BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                        startActivity(discoverableIntent);
+                    }
+                }
+        );
 
         refreshNotesheetArrayAdapter();
     }
