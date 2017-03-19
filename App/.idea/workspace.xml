@@ -11,7 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b9f3953a-6ab7-42cb-8bcc-5cf30430f2b5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" afterPath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" afterPath="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" />
     </list>
     <ignored path="App.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,8 +47,8 @@
       <file leaf-file-name="BaseController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+            <state relative-caret-position="345">
+              <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -65,18 +66,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BltRepository.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BltRepository.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="195" column="26" selection-start-line="195" selection-start-column="26" selection-end-line="195" selection-end-column="26" />
+            <state relative-caret-position="312">
+              <caret line="273" column="88" selection-start-line="273" selection-start-column="88" selection-end-line="273" selection-end-column="88" />
               <folding>
-                <element signature="e#4313#4769#0" expanded="true" />
-                <element signature="e#4768#4769#0" expanded="true" />
-                <element signature="e#6343#6997#0" expanded="true" />
-                <element signature="e#6996#6997#0" expanded="true" />
-                <element signature="e#7449#9336#0" expanded="true" />
-                <element signature="e#9335#9336#0" expanded="true" />
+                <element signature="e#3291#3747#0" expanded="true" />
+                <element signature="e#3746#3747#0" expanded="true" />
+                <element signature="e#6645#7299#0" expanded="true" />
+                <element signature="e#7298#7299#0" expanded="true" />
+                <element signature="e#7751#9797#0" expanded="true" />
+                <element signature="e#9796#9797#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -112,11 +113,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BltServerThread.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BltServerThread.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltServerThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state relative-caret-position="237">
+              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -135,11 +136,11 @@
       <file leaf-file-name="WatchableBase64InputStream.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="58" column="65" selection-start-line="58" selection-start-column="65" selection-end-line="58" selection-end-column="65" />
+            <state relative-caret-position="194">
+              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
               <folding>
-                <element signature="e#1244#2694#0" expanded="true" />
-                <element signature="e#2693#2694#0" expanded="true" />
+                <element signature="e#1299#3311#0" expanded="true" />
+                <element signature="e#3310#3311#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -4197,10 +4198,10 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml" />
         <option value="$PROJECT_DIR$/captures/at.htl_leonding.musicnotesync_2017.03.18_17.47.txt" />
         <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltService.java" />
-        <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" />
         <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltServerThread.java" />
-        <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainActivity.java" />
+        <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java" />
+        <option value="$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java" />
       </list>
     </option>
   </component>
@@ -4726,7 +4727,21 @@
       <option name="project" value="LOCAL" />
       <updated>1489927508611</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Patched receier leak">
+      <created>1489928009451</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1489928009451</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Watcher in inputstream stops after exceeding max amounts of retries">
+      <created>1489928516832</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1489928516832</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -4739,7 +4754,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39800444" sideWeight="0.50213444" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32743362" sideWeight="0.49786553" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32743362" sideWeight="0.49786553" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32743362" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32815966" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -4751,7 +4766,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3971239" sideWeight="0.49786553" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3971239" sideWeight="0.49786553" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497332" sideWeight="0.50388455" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -4807,7 +4822,9 @@
     <MESSAGE value="MoveActivity now allows going back to parent" />
     <MESSAGE value="Fixed moving wrong notesheet object" />
     <MESSAGE value="Removing unused connections" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removing unused connections" />
+    <MESSAGE value="Patched receier leak" />
+    <MESSAGE value="Watcher in inputstream stops after exceeding max amounts of retries" />
+    <option name="LAST_COMMIT_MESSAGE" value="Watcher in inputstream stops after exceeding max amounts of retries" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -4820,36 +4837,42 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
-          <line>64</line>
-          <properties />
-          <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
-          <line>60</line>
+          <line>66</line>
           <properties />
           <option name="timeStamp" value="106" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
-          <line>56</line>
+          <line>75</line>
           <properties />
-          <option name="timeStamp" value="107" />
+          <option name="timeStamp" value="115" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
-          <line>54</line>
+          <line>74</line>
           <properties />
-          <option name="timeStamp" value="108" />
+          <option name="timeStamp" value="116" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltServerThread.java</url>
-          <line>43</line>
+          <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
+          <line>73</line>
           <properties />
-          <option name="timeStamp" value="109" />
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
+          <line>72</line>
+          <properties />
+          <option name="timeStamp" value="118" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java</url>
+          <line>60</line>
+          <properties />
+          <option name="timeStamp" value="120" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="111" />
+      <option name="time" value="121" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -5198,42 +5221,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="58" column="65" selection-start-line="58" selection-start-column="65" selection-end-line="58" selection-end-column="65" />
-          <folding>
-            <element signature="e#1244#2694#0" expanded="true" />
-            <element signature="e#2693#2694#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="195" column="26" selection-start-line="195" selection-start-column="26" selection-end-line="195" selection-end-column="26" />
-          <folding>
-            <element signature="e#4313#4769#0" expanded="true" />
-            <element signature="e#4768#4769#0" expanded="true" />
-            <element signature="e#6343#6997#0" expanded="true" />
-            <element signature="e#6996#6997#0" expanded="true" />
-            <element signature="e#7449#9336#0" expanded="true" />
-            <element signature="e#9335#9336#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/mainactivity/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -5244,9 +5231,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltServerThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="237">
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/at/htl_leonding/musicnotesync/BaseController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/decorator/WatchableBase64InputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding>
+            <element signature="e#1299#3311#0" expanded="true" />
+            <element signature="e#3310#3311#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blt/src/main/java/at/htl_leonding/musicnotesync/blt/BltRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="273" column="88" selection-start-line="273" selection-start-column="88" selection-end-line="273" selection-end-column="88" />
+          <folding>
+            <element signature="e#3291#3747#0" expanded="true" />
+            <element signature="e#3746#3747#0" expanded="true" />
+            <element signature="e#6645#7299#0" expanded="true" />
+            <element signature="e#7298#7299#0" expanded="true" />
+            <element signature="e#7751#9797#0" expanded="true" />
+            <element signature="e#9796#9797#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -52,10 +52,15 @@ public class WatchableBase64InputStream extends Base64InputStream {
 
                             if(WatchableBase64InputStream.this != null &&
                                     WatchableBase64InputStream.this.in != null) {
+                                boolean messageRead = false;
                                 try {
-                                    while((read = WatchableBase64InputStream.this.read(buffer)) > -1) {
+                                    while(messageRead == false && (read = WatchableBase64InputStream.this.read(buffer)) > -1) {
                                         Log.d(TAG, "Read: " + new String(buffer, 0, read));
                                         builder.append(new String(buffer, 0, read));
+
+                                        if(builder.substring(builder.length()-2).equals("\r\n")){
+                                            messageRead = true;
+                                        }
                                     }
                                     Log.d(TAG, "run: exit loop");
                                 } catch (IOException | NullPointerException e) {

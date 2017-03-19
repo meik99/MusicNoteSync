@@ -108,37 +108,6 @@ public class BltRepository implements InputStreamListener {
         }
     }
 
-    void addConnection(BluetoothSocket socket){
-        BluetoothDevice device = socket.getRemoteDevice();
-        boolean isKnown = false;
-        int index = -1;
-
-        for (BltConnection connection :
-                connections) {
-            if(connection.device.getAddress().equals(device.getAddress())){
-                isKnown = true;
-                index = connections.indexOf(connection);
-            }
-        }
-
-        if(isKnown == true){
-            connections.remove(index);
-        }
-
-        BltConnection connection = new BltConnection();
-        connection.device = socket.getRemoteDevice();
-        try {
-            connection.inputStream =
-                    new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
-            connection.outputStream =
-                    new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
-
-            connection.inputStream.addListener(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void connect(BluetoothDevice device){
         AsyncTask<BluetoothDevice, Void, Void> task = new AsyncTask<BluetoothDevice, Void, Void>() {
             @Override
@@ -184,10 +153,12 @@ public class BltRepository implements InputStreamListener {
             conn.device = device;
             conn.socket = socket;
             conn.inputStream =
-                    new WatchableBase64InputStream(socket.getInputStream(), Base64.DEFAULT);
+                    new WatchableBase64InputStream(socket.getInputStream(),
+                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
             conn.inputStream.addListener(this);
             conn.outputStream =
-                    new Base64OutputStream(socket.getOutputStream(), Base64.DEFAULT);
+                    new Base64OutputStream(socket.getOutputStream(),
+                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
 
             BltRepository.getInstance().connections.add(conn);
             connection = conn;
@@ -198,6 +169,38 @@ public class BltRepository implements InputStreamListener {
         return connection;
     }
 
+    void addConnection(BluetoothSocket socket){
+        BluetoothDevice device = socket.getRemoteDevice();
+        boolean isKnown = false;
+        int index = -1;
+
+        for (BltConnection connection :
+                connections) {
+            if(connection.device.getAddress().equals(device.getAddress())){
+                isKnown = true;
+                index = connections.indexOf(connection);
+            }
+        }
+
+        if(isKnown == true){
+            connections.remove(index);
+        }
+
+        BltConnection connection = new BltConnection();
+        connection.device = socket.getRemoteDevice();
+        try {
+            connection.inputStream =
+                    new WatchableBase64InputStream(socket.getInputStream(),
+                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
+            connection.outputStream =
+                    new Base64OutputStream(socket.getOutputStream(),
+                            Base64.NO_CLOSE | Base64.NO_PADDING | Base64.NO_WRAP);
+
+            connection.inputStream.addListener(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void bulkConnect(List<BluetoothDevice> bluetoothDevices){
         BluetoothDevice[] devices = new BluetoothDevice[bluetoothDevices.size()];
@@ -264,9 +267,11 @@ public class BltRepository implements InputStreamListener {
                                     for (BltConnection connection :
                                             connections) {
                                         try {
+                                            currentMessage += "\r\n";
                                             connection.socket.getOutputStream().write(
                                                     currentMessage.getBytes()
                                             );
+                                            connection.socket.getOutputStream().flush();
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
