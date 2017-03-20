@@ -52,9 +52,6 @@ public class BltRepository implements InputStreamListener {
     private Queue<String> messageQueue;
     private Thread messageSender;
 
-    private int index;
-    private boolean isKnown;
-
     //endregion
     //region constructor
     private BltRepository(){
@@ -66,11 +63,12 @@ public class BltRepository implements InputStreamListener {
     //endregion
     //region methods
     @Override
-    public synchronized void onMessageReceived(String message) {
-        final List<BltRepositoryListener> tmpRepoListener = repositoryListeners;
-        for (BltRepositoryListener listener :
-                tmpRepoListener) {
-            listener.onMessageReceived(message);
+    public void onMessageReceived(String message) {
+        synchronized (instance) {
+            for (BltRepositoryListener listener :
+                    repositoryListeners) {
+                listener.onMessageReceived(message);
+            }
         }
     }
 
@@ -78,26 +76,28 @@ public class BltRepository implements InputStreamListener {
         return foundDevices;
     }
 
-    public synchronized void refresh() {
+    public void refresh() {
         foundDevices.clear();
 
-        for (BltRepositoryListener listener :
-                repositoryListeners) {
-            listener.onRefresh();
+        synchronized (instance) {
+            for (BltRepositoryListener listener :
+                    repositoryListeners) {
+                listener.onRefresh();
+            }
         }
     }
 
-    public synchronized void addRepositoryListener(BltRepositoryListener listener){
+    public void addRepositoryListener(BltRepositoryListener listener){
         if(listener != null && repositoryListeners.contains(listener) == false){
             repositoryListeners.add(listener);
         }
     }
 
-    public synchronized void removeRepositoryListener(BltRepositoryListener listener){
+    public void removeRepositoryListener(BltRepositoryListener listener){
         repositoryListeners.remove(listener);
     }
 
-    synchronized void addFoundDevice(BluetoothDevice device){
+    void addFoundDevice(BluetoothDevice device){
         boolean isKnown = false;
 
         for (BluetoothDevice bluetoothDevice:
@@ -109,9 +109,12 @@ public class BltRepository implements InputStreamListener {
 
         if(isKnown == false){
             foundDevices.add(device);
-            for (BltRepositoryListener listener :
-                    repositoryListeners) {
-                listener.onDeviceAdded();
+
+            synchronized (instance) {
+                for (BltRepositoryListener listener :
+                        repositoryListeners) {
+                    listener.onDeviceAdded();
+                }
             }
         }
     }
@@ -122,9 +125,11 @@ public class BltRepository implements InputStreamListener {
             protected Void doInBackground(BluetoothDevice... params) {
                 BltConnection connection = connectSyncron(params[0]);
 
-                for(BltConnectListener listener :
-                        BltRepository.getInstance().connectListener){
-                    listener.onConnected(connection);
+                synchronized (instance) {
+                    for (BltConnectListener listener :
+                            BltRepository.getInstance().connectListener) {
+                        listener.onConnected(connection);
+                    }
                 }
 
                 return null;
@@ -133,14 +138,15 @@ public class BltRepository implements InputStreamListener {
         task.execute(device);
     }
 
-    private synchronized BltConnection connectSyncron(BluetoothDevice device){
-        boolean isKnown = false;
+    private BltConnection connectSyncron(BluetoothDevice device){
         BltConnection connection = null;
         int index = -1;
 
         for (BltConnection conn :
                 connections) {
-            connection = isAddressEqual(device, conn);
+            if(isAddressEqual(device, conn)){
+                index = connections.indexOf(conn);
+            }
         }
 
         if(index > -1) {
@@ -171,24 +177,26 @@ public class BltRepository implements InputStreamListener {
         return connection;
     }
 
-    private BltConnection isAddressEqual(BluetoothDevice device, BltConnection conn) {
-        BltConnection sol = null;
-        if (conn.device.getAddress().equals(device.getAddress())){
-            isKnown = true;
-            sol =  conn;
-            index = connections.indexOf(conn);
+    private boolean isAddressEqual(BluetoothDevice device, BltConnection connection) {
+        BltConnection result = null;
+
+        if (connection.device.getAddress().equals(device.getAddress())){
+            result =  connection;
         }
-        return sol;
+
+        return result != null;
     }
 
-    synchronized void addConnection(BluetoothSocket socket){
+    void addConnection(BluetoothSocket socket){
         BluetoothDevice device = socket.getRemoteDevice();
         boolean isKnown = false;
         int index = -1;
 
         for (BltConnection connection :
                 connections) {
-            this.isAddressEqual(device, connection);
+            if(isAddressEqual(device, connection)){
+                index = connections.indexOf(connection);
+            }
         }
 
         if(isKnown == true){
@@ -210,7 +218,7 @@ public class BltRepository implements InputStreamListener {
         }
     }
 
-    public synchronized void bulkConnect(List<BluetoothDevice> bluetoothDevices){
+    public void bulkConnect(List<BluetoothDevice> bluetoothDevices){
         BluetoothDevice[] devices = new BluetoothDevice[bluetoothDevices.size()];
         devices = bluetoothDevices.toArray(devices);
 
@@ -224,10 +232,11 @@ public class BltRepository implements InputStreamListener {
                     connections.add(connection);
                 }
 
-                final List<BltConnectListener> tmpListener = connectListener;
-                for(BltConnectListener listener :
-                        tmpListener){
-                    listener.onBulkConnected(connections);
+                synchronized (instance) {
+                    for (BltConnectListener listener :
+                            connectListener) {
+                        listener.onBulkConnected(connections);
+                    }
                 }
 
                 return null;
@@ -244,7 +253,7 @@ public class BltRepository implements InputStreamListener {
         return instance;
     }
 
-    public synchronized void sendMessage(final String message){
+    public void sendMessage(final String message){
         messageQueue.add(message);
         if(messageSender == null || messageSender.isAlive() == false){
             messageSender = new Thread(
@@ -302,13 +311,13 @@ public class BltRepository implements InputStreamListener {
     }
 
 
-    public synchronized void addConnectListener(BltConnectListener listener){
+    public void addConnectListener(BltConnectListener listener){
         if(listener != null && connectListener.contains(listener) == false){
             connectListener.add(listener);
         }
     }
 
-    public synchronized void removeBltConnectListenerListener(BltConnectListener listener){
+    public void removeBltConnectListenerListener(BltConnectListener listener){
         connectListener.remove(listener);
     }
     //endregion

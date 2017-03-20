@@ -23,6 +23,9 @@ public class WatchableInputStream extends InputStream {
     private List<InputStreamListener> listeners;
     private boolean isWatching = false;
     private static final int MEGABYTE = 1024000;
+
+    private static Object lock = new Object();
+
     /**
      * An InputStream that performs Base64 decoding on the data read
      * from the wrapped stream.
@@ -79,11 +82,12 @@ public class WatchableInputStream extends InputStream {
                                 }
 
                                 if(builder.length() > 0) {
-                                    final List<InputStreamListener> tmpListener = listeners;
-                                    for (InputStreamListener listener :
-                                            tmpListener) {
-                                        listener.onMessageReceived(
-                                                builder.toString().replace("\r\n", ""));
+                                    synchronized (lock) {
+                                        for (InputStreamListener listener :
+                                                listeners) {
+                                            listener.onMessageReceived(
+                                                    builder.toString().replace("\r\n", ""));
+                                        }
                                     }
                                 }
                             }
