@@ -46,20 +46,6 @@ public class TouchImageViewZoomListener implements ZoomListener {
                         .append(view.getScaleType().name());
 
                 BltRepository.getInstance().sendMessage(builder.toString());
-//                AsyncTask task = new AsyncTask() {
-//                    @Override
-//                    protected Object doInBackground(Object[] params) {
-//                        for (BluetoothDevice device :
-//                                mBluetoothDevices) {
-//                            Client client = new Client();
-//                            client.connect(device);
-//                            client.sendMessage(builder.toString());
-//                        }
-//
-//                        return null;
-//                    }
-//                };
-//                task.execute();
             }
         });
     }
@@ -82,20 +68,6 @@ public class TouchImageViewZoomListener implements ZoomListener {
                         .append(view.getScaleType().name());
 
                 BltRepository.getInstance().sendMessage(builder.toString());
-//                AsyncTask task = new AsyncTask() {
-//                    @Override
-//                    protected Object doInBackground(Object[] params) {
-//                        for (BluetoothDevice device :
-//                                mBluetoothDevices) {
-//                            Client client = new Client();
-//                            client.connect(device);
-//                            client.sendMessage(builder.toString());
-//                        }
-//
-//                        return null;
-//                    }
-//                };
-//                task.execute();
             }
         });
 
