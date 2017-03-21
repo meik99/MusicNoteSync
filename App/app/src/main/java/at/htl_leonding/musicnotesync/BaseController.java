@@ -67,7 +67,7 @@ public abstract class BaseController implements
                             baseModel.getActiveDirectory());
                 }
 
-                openNotesheet(notesheet);
+                this.openNotesheet(notesheet);
             }
         }
     }

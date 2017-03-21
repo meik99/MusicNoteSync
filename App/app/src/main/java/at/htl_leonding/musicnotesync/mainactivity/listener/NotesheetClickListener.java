@@ -22,7 +22,7 @@ public class NotesheetClickListener implements View.OnClickListener {
             Object object = (Object) itemView.getTag();
 
             if (object instanceof Notesheet) {
-                mMainController.openNotesheet((Notesheet)object);
+                mMainController.syncOpenNotesheet((Notesheet)object);
             }
             else{
                 mMainController.openDirectory((Directory)object);

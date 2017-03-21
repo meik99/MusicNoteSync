@@ -26,7 +26,7 @@ public class NotesheetServerContext {
 //    private static final String HOST =
 //            "vm91.htl-leonding.ac.at";
     private static final String HOST =
-            "10.0.0.6";
+            "10.0.0.3";
     private static int PORT = 8080;
     private static final String PATH = "/musicnotesyncserver/api/notesheet";
     private final Context mContext;

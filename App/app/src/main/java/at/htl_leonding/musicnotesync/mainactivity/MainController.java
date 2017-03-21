@@ -116,7 +116,8 @@ public class MainController extends BaseController{
         return result;
     }
 
-    public void openNotesheet(Notesheet notesheet) {
+
+    public void syncOpenNotesheet(Notesheet notesheet) {
         Intent intent = new Intent(mMainActivity, BluetoothActivity.class);
         intent.putExtra(BluetoothActivity.OPERATION, BluetoothActivity.OPEN_NOTESHEET);
         intent.putExtra(BluetoothActivity.ENTITY_ID, notesheet.getId());

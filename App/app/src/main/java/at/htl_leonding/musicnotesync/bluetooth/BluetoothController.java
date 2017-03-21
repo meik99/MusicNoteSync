@@ -19,6 +19,7 @@ import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothOpenNotesheetCl
 import at.htl_leonding.musicnotesync.bluetooth.listener.BluetoothSendNotesheetClickListener;
 import at.htl_leonding.musicnotesync.bluetooth.socket.Client;
 import at.htl_leonding.musicnotesync.infrastructure.contract.Notesheet;
+import at.htl_leonding.musicnotesync.mainactivity.MainActivity;
 import at.htl_leonding.musicnotesync.presentation.ImageViewActivity;
 
 /**
@@ -29,6 +30,7 @@ public class BluetoothController extends BaseController{
 
     public static final int SET_DISCOVERABLE_REQUEST_CODE = 100;
     private static final String SEND_METADATA = "metadata";
+    private static final String OPEN_NOTESHEET = "open";
 
     private final BluetoothActivity mBluetoothActivity;
     private final BluetoothModel mModel;
@@ -104,12 +106,18 @@ public class BluetoothController extends BaseController{
     }
 
     public void sendNotesheetMetadata(final Notesheet notesheet) {
+        connectToDevices(SEND_METADATA, notesheet);
+    }
+
+    private void connectToDevices(String action, Notesheet activeNoteshet){
         final List<BluetoothDevice> devices = mModel.getSelectedBluetoothDevices();
 
-        notesheetFacade.upload(notesheet);
+        if(action.equals(SEND_METADATA)) {
+            notesheetFacade.upload(activeNoteshet);
+        }
 
-        mModel.setActiveNotesheet(notesheet);
-        mModel.setBluetoothAction(SEND_METADATA);
+        mModel.setActiveNotesheet(activeNoteshet);
+        mModel.setBluetoothAction(action);
 
         BltRepository.getInstance().addConnectListener(this);
         BltRepository.getInstance().bulkConnect(devices);
@@ -153,22 +161,34 @@ public class BluetoothController extends BaseController{
         BltRepository.getInstance().removeBltConnectListenerListener(this);
 
 
-        if(mModel.getBluetoothAction() != null &&
-                mModel.getBluetoothAction().equals(SEND_METADATA)) {
-            BltRepository.getInstance().sendMessage(mModel.getActiveNotesheet().getMetadata());
+        if(mModel.getBluetoothAction() != null){
+            if(mModel.getBluetoothAction().equals(SEND_METADATA)) {
+                Intent startMainActivityIntent = new Intent(context, MainActivity.class);
 
-//            Snackbar.make(mBluetoothActivity.findViewById(R.id.bluetoothActivityLayout),
-//                    R.string.transfer_successful,
-//                    Snackbar.LENGTH_SHORT).show();
+                BltRepository.getInstance().sendMessage(mModel.getActiveNotesheet().getMetadata());
+                Toast
+                        .makeText(context,
+                                R.string.upload_notesheet_successful,
+                                Toast.LENGTH_SHORT)
+                        .show();
+                context.startActivity(startMainActivityIntent);
+
+            }else if(mModel.getBluetoothAction().equals(OPEN_NOTESHEET)){
+                BltRepository.getInstance().sendMessage(
+                        String.format("%1$s;%2$s",
+                                Notesheet.class.getSimpleName(),
+                                mModel.getActiveNotesheet().getUUID()
+                        )
+                );
+            }
         }
 
         super.onBulkConnected(connections);
     }
 
     public void openNotesheet(Notesheet notesheet) {
-        BltRepository.getInstance().sendMessage(
-                String.format("%1$s;%2$s", Notesheet.class.getSimpleName(), notesheet.getUUID())
-        );
+        connectToDevices(OPEN_NOTESHEET, notesheet);
+
         super.openNotesheet(notesheet);
     }
 }
