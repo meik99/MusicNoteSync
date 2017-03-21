@@ -50,7 +50,7 @@ public class ImageViewController extends BaseController {
         mModel.getImageView().addZoomListener(
                 new TouchImageViewZoomListener(mActivity, mModel.getBluetoothDevices())
         );
-        mModel.getImageView().setOnTouchImageViewListener(
+        mModel.getImageView().setOnTouchListener(
                 new TouchImageViewMoveListener(mActivity, mModel.getBluetoothDevices())
         );
     }

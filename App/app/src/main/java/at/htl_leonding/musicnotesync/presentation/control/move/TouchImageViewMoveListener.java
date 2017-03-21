@@ -3,6 +3,8 @@ package at.htl_leonding.musicnotesync.presentation.control.move;
 import android.bluetooth.BluetoothDevice;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import at.htl_leonding.musicnotesync.presentation.TouchImageView;
 /**
  * Created by michael on 3/9/17.
  */
-public class TouchImageViewMoveListener implements TouchImageView.OnTouchImageViewListener {
+public class TouchImageViewMoveListener implements TouchImageView.OnTouchImageViewListener, View.OnTouchListener {
     private static final String TAG = TouchImageViewMoveListener.class.getSimpleName();
     private final List<BluetoothDevice> mBluetoothDevices;
     private final ImageViewActivity mActivity;
@@ -60,5 +62,11 @@ public class TouchImageViewMoveListener implements TouchImageView.OnTouchImageVi
                 task.execute();
             }
         });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        onMove();
+        return true;
     }
 }

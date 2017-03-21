@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import at.htl_leonding.musicnotesync.blt.BltConstants;
@@ -59,8 +60,12 @@ public class WatchableInputStream extends InputStream {
                                 try {
                                     while(messageRead == false && (read = in.read(buffer)) > -1) {
 //                                        buffer = Base64.encode(buffer, 0 , read, Base64.DEFAULT);
-                                        buffer = Base64.decode(buffer, 0, read, Base64.DEFAULT);
-
+                                        try {
+                                            buffer = Base64.decode(buffer, 0, read, Base64.DEFAULT);
+                                        }catch(IllegalArgumentException e){
+                                            Log.e(TAG, "run: " + e.getMessage());
+                                            buffer = Arrays.copyOfRange(buffer, 0, read);
+                                        }
 
                                         Log.d(TAG, "Read: " +
                                                 new String(buffer, Charset.forName(BltConstants.CHARSET)));
@@ -69,7 +74,8 @@ public class WatchableInputStream extends InputStream {
                                                         buffer, Charset.forName(BltConstants.CHARSET))
                                         );
 
-                                        if(builder.substring(builder.length()-2).equals("\r\n")){
+                                        if(builder.substring(builder.length()-2).equals("\r\n") ||
+                                                builder.substring(builder.length()-1).equals("\r")){
                                             messageRead = true;
                                         }
                                     }
