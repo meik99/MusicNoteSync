@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/musicnotesyncserver.iml" filepath="$PROJECT_DIR$/musicnotesyncserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MusicNoteSyncServer.iml" filepath="$PROJECT_DIR$/MusicNoteSyncServer.iml" />
     </modules>
   </component>
 </project>
