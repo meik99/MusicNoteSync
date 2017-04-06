@@ -2,18 +2,12 @@ package at.htl.musicnotesync.server.endpoint;
 
 import at.htl.musicnotesync.server.facade.NotesheetFacade;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 
-/**
- * Created by michael on 12/7/16.
- */
-//@Stateless
 @Path("/notesheet")
 public class NotesheetEndpoint {
     private static final int MEGABYTE = 1024000;
@@ -95,6 +89,7 @@ public class NotesheetEndpoint {
     }
 
     @GET
+    @Produces(MediaType.TEXT_HTML)
     public String usage(){
         StringBuilder usageBuilder = new StringBuilder();
         usageBuilder.append("Usage:")
