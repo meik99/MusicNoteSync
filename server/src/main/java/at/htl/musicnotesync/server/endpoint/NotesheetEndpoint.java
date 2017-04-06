@@ -60,13 +60,8 @@ public class NotesheetEndpoint {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response download(JsonObject jsonObject){
-        if(jsonObject == null || jsonObject.getString("uuid") == null){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        String uuid = jsonObject.getString("uuid");
+    public Response download(@HeaderParam("uuid")String uuid){
 
         final File file = new File(uuid);
         Response result = null;
